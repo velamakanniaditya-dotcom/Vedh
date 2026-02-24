@@ -1,358 +1,389 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Explorer 🌍</title>
-    <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --ocean-dark: #001f3f;
-            --ocean-blue: #0288d1;
-            --earth-green: #4caf50;
-            --gold: #FFD700;
-            --cloud: #e0f7fa;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Explorer 🌍 - Super Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   WORKSHEET THEME - GEOGRAPHY
+══════════════════════════════════════════ */
+:root {
+  --primary: #0ea5e9; /* Ocean Blue */
+  --secondary: #10b981; /* Earth Green */
+  --danger: #fb7185; /* Soft Red */
+  --warning: #fbbf24; /* Warm Yellow */
+  --purple: #a855f7; 
+  --dark: #1e293b; 
+  --paper: #ffffff;
+  --grid: #e0f2fe; /* Light blue grid */
+}
 
-        body {
-            margin: 0;
-            font-family: 'Nunito', sans-serif;
-            background: radial-gradient(circle at center, #0277bd 0%, var(--ocean-dark) 100%);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-        #game-box {
-            width: 90%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 3px solid var(--earth-green);
-            border-radius: 30px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 0 40px rgba(76, 175, 80, 0.4);
-            position: relative;
-        }
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f0f9ff;
+  background-image: linear-gradient(var(--grid) 2px, transparent 2px), linear-gradient(90deg, var(--grid) 2px, transparent 2px);
+  background-size: 40px 40px; 
+  color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
 
-        h1 { font-family: 'Boogaloo', cursive; font-size: 3rem; color: var(--gold); margin: 0 0 10px 0; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        p { margin-bottom: 20px; color: var(--cloud); font-size: 1.1rem; }
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
 
-        .stat-row { display: flex; justify-content: space-around; margin: 15px 0; font-size: 1.2rem; }
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
 
-        #timer-container {
-            width: 100%;
-            height: 15px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border: 2px solid rgba(255,255,255,0.2);
-            overflow: hidden;
-        }
+.screen { display: none; width: 100%; max-width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-        #timer-bar {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #ff5252, var(--gold), var(--earth-green));
-            border-radius: 10px;
-            transition: width 0.1s linear;
-        }
+.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(30, 41, 59, 0.1); text-align: center; position: relative; }
 
-        #question-text {
-            font-size: 1.3rem;
-            font-weight: 900;
-            margin-top: 15px;
-            color: var(--gold);
-        }
+/* Category Grid */
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+.cat-btn {
+  background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 15px 10px;
+  cursor: pointer; font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--dark);
+  box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.cat-icon { font-size: 2.8rem; margin-bottom: 5px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
 
-        #big-visual {
-            font-size: 5rem;
-            margin: 10px 0;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
-            animation: float 3s ease-in-out infinite;
-        }
+/* Modes */
+.mode-btn { width: 100%; display: flex; align-items: center; gap: 15px; background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); }
+.mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+/* Game Area */
+.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+.timer-container { width: 100%; height: 20px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 25px; position: relative; }
+.timer-fill { height: 100%; background: var(--secondary); width: 100%; transition: width 0.3s linear, background-color 0.3s; }
+.time-plus { position: absolute; right: 10px; top: -5px; color: var(--secondary); font-weight: 900; font-size: 1.2rem; opacity: 0; }
+.time-plus.show { animation: floatUpFade 1s ease-out forwards; }
+@keyframes floatUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
 
-        /* Multiple Choice Grid */
-        #options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
+/* Dynamic Problem Layout */
+.flashcard { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; }
+.card-emoji { font-size: 6rem; margin-bottom: 15px; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15)); animation: floatCard 3s infinite ease-in-out; }
+@keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.text-question { font-family: 'Nunito', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--dark); line-height: 1.4; padding: 10px; }
+.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--primary); margin-top: -5px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .option-btn {
-            background: var(--ocean-blue);
-            color: white;
-            padding: 15px 10px;
-            font-size: 1.1rem;
-            border-radius: 15px;
-            border: 2px solid var(--cloud);
-            cursor: pointer;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 800;
-            transition: transform 0.1s, background 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+/* Options Grid */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 10px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.opt-btn.correct { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 6px 0 #059669; }
+.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #e11d48; }
 
-        .option-btn:hover {
-            transform: scale(1.05);
-            background: var(--earth-green);
-        }
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #0284c7; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #0284c7; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #0284c7; }
+.feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
+.feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        .btn {
-            background: linear-gradient(135deg, var(--earth-green), #2e7d32);
-            color: white;
-            padding: 15px 40px;
-            font-size: 1.5rem;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            font-family: 'Boogaloo', cursive;
-            margin-top: 15px;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.5);
-            transition: transform 0.2s;
-        }
-        
-        .btn:hover { transform: scale(1.05); }
-
-        .hidden { display: none !important; }
-        .flash-correct { background: #1b5e20 !important; transition: background 0.1s; }
-        .flash-wrong { background: #b71c1c !important; transition: background 0.1s; }
-
-        /* Floating Home Button */
-        .home-btn {
-            position: absolute; top: 20px; left: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border: 2px solid var(--gold);
-            color: var(--gold);
-            padding: 10px 20px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-family: 'Boogaloo', cursive;
-            font-size: 1.2rem;
-            display: flex; align-items: center; gap: 8px;
-            transition: all 0.2s; z-index: 100;
-        }
-        .home-btn:hover { background: var(--gold); color: var(--ocean-dark); transform: scale(1.05); }
-        .btn-home { background: var(--ocean-blue); border: 2px solid white; box-shadow: 0 4px 15px rgba(2, 136, 209, 0.5); }
-    </style>
+@media(max-width: 500px) {
+  .cat-grid { grid-template-columns: 1fr; }
+  .opt-btn { font-size: 1.2rem; padding: 12px; }
+  .text-question { font-size: 1.4rem; }
+}
+</style>
 </head>
 <body>
 
 <a href="index.html" class="home-btn">🏠 Home</a>
 
-<div id="game-box">
-    <div id="start-screen">
-        <h1>🌍 WORLD EXPLORER</h1>
-        <p>Travel the globe! Match flags, capitals, and landmarks before your plane runs out of fuel.</p>
-        <button class="btn" onclick="startGame()">✈️ TAKE OFF!</button>
+<header>
+  <h1>World Explorer</h1>
+  <div class="subtitle">Geography & Cultures 🗺️</div>
+</header>
+
+<div id="categoryScreen" class="screen active">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">Where are we going today?</h2>
+    <div class="cat-grid">
+      <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('flags')">
+        <span class="cat-icon">🎌</span> Flags
+      </button>
+      <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('landmarks')">
+        <span class="cat-icon">🗼</span> Landmarks
+      </button>
+      <button class="cat-btn" style="border-color: var(--secondary); color: var(--secondary);" onclick="selectCategory('animals')">
+        <span class="cat-icon">🦁</span> Animal Habitats
+      </button>
+      <button class="cat-btn" style="border-color: var(--purple); color: var(--purple);" onclick="selectCategory('trivia')">
+        <span class="cat-icon">🌍</span> Earth Trivia
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modeScreen" class="screen">
+  <div class="worksheet-card">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('categoryScreen')">🔙 Back to Map</button>
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; margin-bottom: 20px; color: var(--dark);">Choose Your Journey</h2>
+    
+    <button class="mode-btn" style="border-color: var(--secondary); box-shadow: 0 6px 0 var(--secondary);" onclick="startGame('relaxed')">
+      <div class="mode-icon">🌟</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Tourist Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">Relaxed! Timer resets every question.</p>
+      </div>
+    </button>
+
+    <button class="mode-btn" style="border-color: var(--warning); box-shadow: 0 6px 0 var(--warning);" onclick="startGame('blast')">
+      <div class="mode-icon">✈️</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Explorer Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">Survival! Get +5s for correct answers.</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="worksheet-card" style="position:relative;">
+    <div class="feedback-star" id="fStar">⭐</div>
+    
+    <div class="top-bar">
+      <div>Score: <span id="scoreDisplay">0</span></div>
+      <div id="modeDisplay" style="color: var(--secondary);">🌟 Tourist</div>
     </div>
 
-    <div id="play-screen" class="hidden">
-        <div class="stat-row">
-            <span>✈️ Miles: <b id="score">0</b></span>
-            <span>🌟 Level: <b id="level">1</b></span>
-        </div>
-        <div id="timer-container"><div id="timer-bar"></div></div>
-        
-        <div id="question-text">Where are we going?</div>
-        <div id="big-visual">🌍</div>
-        
-        <div id="options-grid">
-            <button class="option-btn" onclick="checkAnswer(0)" id="btn-0">Option 1</button>
-            <button class="option-btn" onclick="checkAnswer(1)" id="btn-1">Option 2</button>
-            <button class="option-btn" onclick="checkAnswer(2)" id="btn-2">Option 3</button>
-            <button class="option-btn" onclick="checkAnswer(3)" id="btn-3">Option 4</button>
-        </div>
+    <div class="timer-container">
+      <div class="timer-fill" id="timerFill"></div>
+      <div class="time-plus" id="timePlus">+5s</div>
     </div>
 
-    <div id="end-screen" class="hidden">
-        <h1 id="status-title">🛬 LANDED!</h1>
-        <p>Out of fuel! You traveled a long way!</p>
-        <h2 style="font-size: 2.5rem; color: var(--gold); margin: 10px 0;">Total Miles: <span id="final-score">0</span></h2>
-        <button class="btn" onclick="showStartScreen()">✈️ FLY AGAIN</button>
-        <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 CHOOSE NEW GAME</button>
-    </div>
+    <div id="problemArea" class="flashcard"></div>
+
+    <div class="options-grid" id="optionsContainer">
+      </div>
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Journey Complete!</h2>
+    <div style="font-size: 5rem; margin: 10px 0; color: var(--primary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
+    <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great Exploring!</div>
+    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Explore Somewhere Else 🌍</button>
+  </div>
 </div>
 
 <script>
-    // The World Database!
-    const worldData = [
-        { country: "USA", capital: "Washington D.C.", flag: "🇺🇸", item: "🗽", itemType: "the Statue of Liberty" },
-        { country: "UK", capital: "London", flag: "🇬🇧", item: "💂", itemType: "the Royal Guards" },
-        { country: "France", capital: "Paris", flag: "🇫🇷", item: "🗼", itemType: "the Eiffel Tower" },
-        { country: "Japan", capital: "Tokyo", flag: "🇯🇵", item: "🍣", itemType: "Sushi" },
-        { country: "Australia", capital: "Canberra", flag: "🇦🇺", item: "🦘", itemType: "Kangaroos" },
-        { country: "Brazil", capital: "Brasilia", flag: "🇧🇷", item: "🦜", itemType: "the Amazon Rainforest" },
-        { country: "Canada", capital: "Ottawa", flag: "🇨🇦", item: "🍁", itemType: "Maple Syrup" },
-        { country: "India", capital: "New Delhi", flag: "🇮🇳", item: "🛕", itemType: "the Taj Mahal" },
-        { country: "Egypt", capital: "Cairo", flag: "🇪🇬", item: "🐪", itemType: "the Pyramids" },
-        { country: "Mexico", capital: "Mexico City", flag: "🇲🇽", item: "🌮", itemType: "Tacos" },
-        { country: "China", capital: "Beijing", flag: "🇨🇳", item: "🐼", itemType: "Giant Pandas" },
-        { country: "Italy", capital: "Rome", flag: "🇮🇹", item: "🍕", itemType: "the Colosseum" },
-        { country: "Kenya", capital: "Nairobi", flag: "🇰🇪", item: "🦒", itemType: "Wild Giraffes" },
-        { country: "Argentina", capital: "Buenos Aires", flag: "🇦🇷", item: "🥩", itemType: "Gauchos" },
-        { country: "Peru", capital: "Lima", flag: "🇵🇪", item: "🦙", itemType: "Machu Picchu" }
-    ];
+// --- DATABASES ---
+const FLAGS = [
+  { e: "🇮🇳", a: "India" }, { e: "🇺🇸", a: "USA" }, { e: "🇬🇧", a: "UK" },
+  { e: "🇯🇵", a: "Japan" }, { e: "🇨🇦", a: "Canada" }, { e: "🇦🇺", a: "Australia" },
+  { e: "🇧🇷", a: "Brazil" }, { e: "🇫🇷", a: "France" }, { e: "🇩🇪", a: "Germany" },
+  { e: "🇿🇦", a: "South Africa" }, { e: "🇮🇹", a: "Italy" }, { e: "🇲🇽", a: "Mexico" }
+];
 
-    let score = 0, level = 1, fuel = 100, timer, correctIndex = 0;
+const LANDMARKS = [
+  { e: "🗼", a: "Eiffel Tower" }, { e: "🗽", a: "Statue of Liberty" },
+  { e: "🕌", a: "Taj Mahal" }, { e: "🗿", a: "Moai Statues" },
+  { e: "🏯", a: "Japanese Castle" }, { e: "⛰️", a: "Mount Everest" }
+];
+
+const ANIMALS = [
+  { e: "🐼", a: "Asia (China)" }, { e: "🦁", a: "Africa" },
+  { e: "🦘", a: "Australia" }, { e: "🐧", a: "Antarctica" },
+  { e: "🦅", a: "North America" }, { e: "🦙", a: "South America" },
+  { e: "🐅", a: "Asia (India)" }, { e: "🦒", a: "Africa" }
+];
+
+const TRIVIA = [
+  { q: "What is the largest continent in the world?", a: "Asia", w: ["Africa", "Europe", "North America"] },
+  { q: "Which continent is covered in ice at the South Pole?", a: "Antarctica", w: ["Arctic", "Australia", "Europe"] },
+  { q: "What is the largest ocean on Earth?", a: "Pacific Ocean", w: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean"] },
+  { q: "Which ocean is between America and Europe?", a: "Atlantic Ocean", w: ["Pacific Ocean", "Indian Ocean", "Southern Ocean"] },
+  { q: "Which continent is known as the 'Land Down Under'?", a: "Australia", w: ["South America", "Africa", "Antarctica"] },
+  { q: "What is the tallest mountain in the world?", a: "Mount Everest", w: ["Mount Kilimanjaro", "Mount Fuji", "The Alps"] }
+];
+
+// --- GAME STATE ---
+let currentCategory = '';
+let currentMode = '';
+let score = 0;
+let timeLeft = 0;
+let timeTotal = 0;
+let timerInterval;
+let correctAnswer = null;
+
+const SECONDS_RELAXED = 20; 
+const SECONDS_BLAST_START = 20; 
+const BONUS_TIME = 5; 
+
+const screens = {
+  categoryScreen: document.getElementById('categoryScreen'),
+  modeScreen: document.getElementById('modeScreen'),
+  gameScreen: document.getElementById('gameScreen'),
+  endScreen: document.getElementById('endScreen')
+};
+
+const els = {
+  problem: document.getElementById('problemArea'),
+  opts: document.getElementById('optionsContainer'),
+  score: document.getElementById('scoreDisplay'),
+  timer: document.getElementById('timerFill'),
+  plus: document.getElementById('timePlus'),
+  mode: document.getElementById('modeDisplay'),
+  star: document.getElementById('fStar')
+};
+
+function switchScreen(screenName) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[screenName].classList.add('active');
+  clearInterval(timerInterval);
+}
+
+function selectCategory(cat) {
+  currentCategory = cat;
+  switchScreen('modeScreen');
+}
+
+function startGame(mode) {
+  currentMode = mode;
+  score = 0;
+  els.score.innerText = score;
+  
+  if (mode === 'relaxed') {
+    els.mode.innerHTML = '🌟 Tourist';
+    els.mode.style.color = 'var(--secondary)';
+    timeTotal = SECONDS_RELAXED;
+    timeLeft = SECONDS_RELAXED;
+  } else {
+    els.mode.innerHTML = '✈️ Explorer';
+    els.mode.style.color = 'var(--warning)';
+    timeTotal = SECONDS_BLAST_START;
+    timeLeft = SECONDS_BLAST_START;
+  }
+
+  updateTimerUI();
+  generateQuestion();
+  switchScreen('gameScreen');
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(countdown, 1000);
+}
+
+function countdown() {
+  timeLeft--;
+  updateTimerUI();
+  if (timeLeft <= 0) endGame();
+}
+
+function updateTimerUI() {
+  let percentage = (timeLeft / timeTotal) * 100;
+  if (percentage > 100) percentage = 100; if (percentage < 0) percentage = 0;
+  els.timer.style.width = percentage + '%';
+  if (timeLeft <= 5) els.timer.classList.add('low'); else els.timer.classList.remove('low');
+}
+
+// Helper to grab random wrong answers from an array of objects
+function getWrongAnswers(dataset, correctAns, count) {
+  let options = [correctAns];
+  while (options.length < count) {
+    let randomItem = dataset[Math.floor(Math.random() * dataset.length)].a;
+    if (!options.includes(randomItem)) options.push(randomItem);
+  }
+  return options;
+}
+
+function generateQuestion() {
+  if (currentMode === 'relaxed') { timeLeft = SECONDS_RELAXED; timeTotal = SECONDS_RELAXED; updateTimerUI(); }
+  els.problem.innerHTML = '';
+  let options = [];
+
+  if (currentCategory === 'flags') {
+    let item = FLAGS[Math.floor(Math.random() * FLAGS.length)];
+    correctAnswer = item.a;
+    els.problem.innerHTML = `<div class="hint-text">Which Country?</div><div class="card-emoji" style="font-size: 8rem;">${item.e}</div>`;
+    options = getWrongAnswers(FLAGS, correctAnswer, 4);
+
+  } else if (currentCategory === 'landmarks') {
+    let item = LANDMARKS[Math.floor(Math.random() * LANDMARKS.length)];
+    correctAnswer = item.a;
+    els.problem.innerHTML = `<div class="hint-text">Name the Landmark!</div><div class="card-emoji">${item.e}</div>`;
+    options = getWrongAnswers(LANDMARKS, correctAnswer, 4);
+
+  } else if (currentCategory === 'animals') {
+    let item = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+    correctAnswer = item.a;
+    els.problem.innerHTML = `<div class="hint-text">Where do I live?</div><div class="card-emoji">${item.e}</div>`;
+    options = getWrongAnswers(ANIMALS, correctAnswer, 4);
+
+  } else if (currentCategory === 'trivia') {
+    let item = TRIVIA[Math.floor(Math.random() * TRIVIA.length)];
+    correctAnswer = item.a;
+    els.problem.innerHTML = `<div class="text-question">${item.q}</div>`;
+    options = [correctAnswer, ...item.w];
+  }
+
+  renderOptions(options);
+}
+
+function renderOptions(options) {
+  options.sort(() => Math.random() - 0.5);
+  els.opts.innerHTML = '';
+  
+  // Always use 2x2 grid
+  els.opts.style.gridTemplateColumns = '1fr 1fr';
+
+  options.forEach(opt => {
+    let btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerText = opt;
+    // Adjust font size if text is long
+    if (opt.length > 12) btn.style.fontSize = '1.1rem';
     
-    // Audio Synthesizer
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx;
+    btn.onclick = () => checkAnswer(opt, btn);
+    els.opts.appendChild(btn);
+  });
+}
 
-    function initAudio() {
-        if (!audioCtx) audioCtx = new AudioContext();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+function checkAnswer(selected, btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+  if (selected === correctAnswer) {
+    btn.classList.add('correct');
+    score++; els.score.innerText = score;
+    
+    // Star pop
+    els.star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 30 + 'px';
+    els.star.style.top = btn.offsetTop - 30 + 'px';
+    els.star.classList.remove('pop'); void els.star.offsetWidth; els.star.classList.add('pop');
+
+    if (currentMode === 'blast') {
+      timeLeft += BONUS_TIME; if(timeLeft > timeTotal) timeTotal = timeLeft; 
+      els.plus.classList.remove('show'); void els.plus.offsetWidth; els.plus.classList.add('show');
+      updateTimerUI();
     }
+    setTimeout(generateQuestion, 700);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText === correctAnswer) b.classList.add('correct'); });
+    
+    setTimeout(generateQuestion, 1500); // Give time to read the correct answer
+  }
+}
 
-    function playSound(type) {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        osc.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        if (type === 'ding') {
-            osc.type = 'sine'; // Airplane seatbelt ding
-            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
-            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime + 0.3); // C5
-            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.6);
-        } else if (type === 'buzz') {
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        }
-    }
-
-    function showStartScreen() {
-        document.getElementById('start-screen').className = '';
-        document.getElementById('end-screen').className = 'hidden';
-        document.getElementById('play-screen').className = 'hidden';
-    }
-
-    function startGame() {
-        initAudio();
-        score = 0; level = 1; fuel = 100;
-        document.getElementById('start-screen').className = 'hidden';
-        document.getElementById('end-screen').className = 'hidden';
-        document.getElementById('play-screen').className = '';
-        updateStats();
-        generateMission();
-        startTimer();
-    }
-
-    function generateMission() {
-        // 0 = Flag Mode, 1 = Capital Mode, 2 = Landmark Mode
-        let missionType = Math.floor(Math.random() * 3);
-        
-        // Pick the correct answer
-        let correctData = worldData[Math.floor(Math.random() * worldData.length)];
-        
-        // Pick 3 wrong answers
-        let options = [correctData];
-        while(options.length < 4) {
-            let randomWrong = worldData[Math.floor(Math.random() * worldData.length)];
-            if(!options.includes(randomWrong)) {
-                options.push(randomWrong);
-            }
-        }
-        
-        // Shuffle options
-        options.sort(() => Math.random() - 0.5);
-        correctIndex = options.indexOf(correctData);
-
-        // Update UI based on mission type
-        const questionEl = document.getElementById('question-text');
-        const visualEl = document.getElementById('big-visual');
-
-        for(let i=0; i<4; i++) {
-            let btn = document.getElementById('btn-' + i);
-            if (missionType === 0) {
-                // Flag Mode
-                questionEl.innerText = "Which country's flag is this?";
-                visualEl.innerText = correctData.flag;
-                btn.innerText = options[i].country;
-            } else if (missionType === 1) {
-                // Capital Mode
-                questionEl.innerText = `What is the capital of ${correctData.country} ${correctData.flag}?`;
-                visualEl.innerText = "🏙️";
-                btn.innerText = options[i].capital;
-            } else {
-                // Landmark Mode
-                questionEl.innerText = `Where can you find ${correctData.itemType}?`;
-                visualEl.innerText = correctData.item;
-                btn.innerText = options[i].country;
-            }
-        }
-    }
-
-    function checkAnswer(selectedIndex) {
-        if (selectedIndex === correctIndex) {
-            playSound('ding');
-            score += 100; // 100 miles per correct answer
-            fuel = Math.min(100, fuel + 20); // Add airplane fuel
-            if (score % 500 === 0) level++; // Level up every 5 correct
-            
-            flash('flash-correct');
-            updateStats();
-            generateMission();
-        } else {
-            playSound('buzz');
-            fuel -= 15; // Lose fuel for wrong answer
-            flash('flash-wrong');
-        }
-    }
-
-    function startTimer() {
-        clearInterval(timer);
-        timer = setInterval(() => {
-            let speed = 0.5 + (level * 0.05); // Burns fuel faster at higher levels
-            fuel -= speed; 
-            
-            document.getElementById('timer-bar').style.width = Math.max(0, fuel) + '%';
-            
-            if(fuel < 25) {
-                document.getElementById('timer-bar').style.background = '#ff5252';
-            } else {
-                document.getElementById('timer-bar').style.background = 'linear-gradient(90deg, #ff5252, var(--gold), var(--earth-green))';
-            }
-
-            if (fuel <= 0) gameOver();
-        }, 100);
-    }
-
-    function gameOver() {
-        clearInterval(timer);
-        document.getElementById('play-screen').className = 'hidden';
-        document.getElementById('end-screen').className = '';
-        document.getElementById('final-score').innerText = score;
-    }
-
-    function updateStats() {
-        document.getElementById('score').innerText = score;
-        document.getElementById('level').innerText = level;
-    }
-
-    function flash(cls) {
-        document.body.classList.add(cls);
-        setTimeout(() => document.body.classList.remove(cls), 150);
-    }
+function endGame() {
+  clearInterval(timerInterval);
+  document.getElementById('finalScore').innerText = score;
+  let msg = "Keep Practising! 👍";
+  if (score > 10) msg = "Great Explorer! 🌍";
+  if (score > 20) msg = "Geography Genius! 🏆";
+  document.getElementById('endMessage').innerText = msg;
+  switchScreen('endScreen');
+}
 </script>
 </body>
 </html>
