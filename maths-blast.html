@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maths Blast - Kids Edition</title>
+    <style>
+        :root {
+            --space-dark: #0b0d17;
+            --neon-blue: #00d2ff;
+            --neon-pink: #ff007f;
+            --success: #39ff14;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--space-dark);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px var(--neon-blue);
+            position: relative;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        #problem {
+            font-size: 4rem;
+            margin: 20px 0;
+            text-shadow: 0 0 10px white;
+        }
+
+        #answer-input {
+            width: 150px;
+            font-size: 2.5rem;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            text-align: center;
+            background: #fff;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 15px;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #timer-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            transition: width 0.1s linear;
+        }
+
+        .btn {
+            background: var(--neon-pink);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background: #ff2e97;
+        }
+
+        #message {
+            height: 30px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .hidden { display: none; }
+        
+        .correct-flash { background: #004400 !important; }
+        .wrong-flash { background: #440000 !important; }
+
+        /* Small star background effect */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(white, rgba(255,255,255,0) 2px) transparent;
+            background-size: 50px 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div id="game-container">
+    <div id="start-screen">
+        <h1>🚀 MATHS BLAST</h1>
+        <p>Solve problems to keep your rocket flying!</p>
+        <button class="btn" onclick="startGame()">Blast Off!</button>
+    </div>
+
+    <div id="play-screen" class="hidden">
+        <div class="stats">
+            <span>Score: <span id="score">0</span></span>
+            <span>Lvl: <span id="level">1</span></span>
+        </div>
+
+        <div class="timer-bar">
+            <div id="timer-fill"></div>
+        </div>
+
+        <div id="problem">? + ?</div>
+        
+        <input type="number" id="answer-input" placeholder="?" autocomplete="off">
+        
+        <div id="message"></div>
+    </div>
+
+    <div id="over-screen" class="hidden">
+        <h1>💥 GAME OVER</h1>
+        <p>You scored <span id="final-score">0</span> points!</p>
+        <button class="btn" onclick="startGame()">Try Again</button>
+    </div>
+</div>
+
+<script>
+    let score = 0;
+    let level = 1;
+    let currentAnswer = 0;
+    let timerWidth = 100;
+    let gameInterval;
+    let timerInterval;
+    let timeLeft = 10; // seconds per question
+
+    const problemEl = document.getElementById('problem');
+    const inputEl = document.getElementById('answer-input');
+    const scoreEl = document.getElementById('score');
+    const levelEl = document.getElementById('level');
+    const timerFill = document.getElementById('timer-fill');
+
+    function startGame() {
+        score = 0;
+        level = 1;
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('over-screen').classList.add('hidden');
+        document.getElementById('play-screen').classList.remove('hidden');
+        updateStats();
+        nextQuestion();
+        inputEl.focus();
+    }
+
+    function generateProblem() {
+        let n1, n2, op;
+        
+        // Difficulty scaling
+        if (score < 5) {
+            n1 = Math.floor(Math.random() * 10) + 1;
+            n2 = Math.floor(Math.random() * 10) + 1;
+            op = '+';
+            currentAnswer = n1 + n2;
+        } else if (score < 15) {
+            n1 = Math.floor(Math.random() * 20) + 5;
+            n2 = Math.floor(Math.random() * 10) + 1;
+            op = '-';
+            currentAnswer = n1 - n2;
+        } else {
+            n1 = Math.floor(Math.random() * 12) + 1;
+            n2 = Math.floor(Math.random() * 5) + 1;
+            op = '×';
+            currentAnswer = n1 * n2;
+        }
+
+        problemEl.innerText = `${n1} ${op} ${n2}`;
+    }
+
+    function nextQuestion() {
+        generateProblem();
+        inputEl.value = '';
+        resetTimer();
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timerWidth = 100;
+        timerFill.style.width = '100%';
+        
+        // Speed up based on level
+        let speed = Math.max(2, 10 - Math.floor(score/10));
+        
+        timerInterval = setInterval(() => {
+            timerWidth -= (1 / speed);
+            timerFill.style.width = timerWidth + '%';
+            
+            if (timerWidth <= 0) {
+                gameOver();
+            }
+        }, 100);
+    }
+
+    inputEl.addEventListener('input', () => {
+        if (parseInt(inputEl.value) === currentAnswer) {
+            flashEffect('correct-flash');
+            score++;
+            if (score % 5 === 0) level++;
+            updateStats();
+            nextQuestion();
+        }
+    });
+
+    function flashEffect(className) {
+        document.body.classList.add(className);
+        setTimeout(() => document.body.classList.remove(className), 200);
+    }
+
+    function updateStats() {
+        scoreEl.innerText = score;
+        levelEl.innerText = level;
+    }
+
+    function gameOver() {
+        clearInterval(timerInterval);
+        document.getElementById('play-screen').classList.add('hidden');
+        document.getElementById('over-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+    }
+</script>
+
+</body>
+</html>
