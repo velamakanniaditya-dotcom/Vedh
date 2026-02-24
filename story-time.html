@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Story Time 📖 - Vedh's Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   ROOT & RESET
+══════════════════════════════════════════ */
+:root {
+  --gold: #FFD700; 
+  --deep-blue: #0f172a; --royal-blue: #1e293b;
+  --text-main: #f8fafc; --text-muted: #cbd5e1;
+  --accent-blue: #38bdf8; --accent-purple: #c084fc;
+  --accent-green: #4ade80; --accent-orange: #fb923c;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --card-border: rgba(255, 255, 255, 0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, var(--deep-blue) 0%, #1e1b4b 50%, var(--royal-blue) 100%);
+  min-height: 100vh;
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Starfield Background */
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
+  background-size: 60px 60px, 30px 30px;
+  background-position: 0 0, 15px 15px;
+  animation: twinkleBg 15s linear infinite alternate;
+}
+@keyframes twinkleBg { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+
+.container { max-width:1200px; margin:0 auto; padding:20px; position:relative; z-index:1; }
+
+/* Floating Home Button */
+.home-btn {
+  position: absolute; top: 20px; left: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  padding: 8px 16px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s; z-index: 100;
+}
+.home-btn:hover { background: var(--gold); color: var(--deep-blue); transform: scale(1.05); }
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+header { text-align:center; padding: 40px 0 30px; }
+.book-anim { font-size: 4rem; display:block; animation: floatIcon 3s ease-in-out infinite; filter: drop-shadow(0 0 15px rgba(255,215,0,0.5)); }
+@keyframes floatIcon { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
+
+header h1 {
+  font-family:'Fredoka One', cursive;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: var(--gold);
+  text-shadow: 0 4px 15px rgba(255,215,0,0.3);
+  letter-spacing: 2px;
+  margin-top: 10px;
+}
+header p { color: var(--text-muted); font-size: 1.2rem; font-weight: 600; margin-top: 5px; }
+
+/* ══════════════════════════════════════════
+   STORY CATEGORIES
+══════════════════════════════════════════ */
+.category-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  color: var(--text-main);
+  margin: 40px 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; gap: 10px;
+}
+
+/* ══════════════════════════════════════════
+   STORY GRID
+══════════════════════════════════════════ */
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.story-card {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 20px;
+  padding: 25px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.story-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: var(--card-accent, var(--accent-blue));
+}
+
+.story-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 0 2px var(--card-accent, var(--accent-blue));
+}
+
+.sc-icon { font-size: 3rem; margin-bottom: 15px; display: inline-block; transition: transform 0.3s; }
+.story-card:hover .sc-icon { transform: scale(1.2) rotate(5deg); }
+
+.sc-title { font-family: 'Baloo 2', cursive; font-size: 1.6rem; color: var(--gold); margin-bottom: 10px; line-height: 1.2; }
+.sc-themes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
+.sc-theme-tag {
+  background: rgba(255,255,255,0.1);
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 700; color: var(--text-muted);
+}
+.sc-moral { font-size: 0.95rem; color: var(--text-main); font-style: italic; border-left: 3px solid var(--gold); padding-left: 10px; margin-top: auto; }
+
+/* ══════════════════════════════════════════
+   READING MODAL (The Storybook)
+══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex; justify-content: center; align-items: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  padding: 20px;
+}
+.modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+.storybook {
+  background: #fdfbf7; /* Warm paper color */
+  color: #1e293b;
+  width: 100%; max-width: 800px; max-height: 90vh;
+  border-radius: 20px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  transform: scale(0.95) translateY(20px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+.modal-overlay.active .storybook { transform: scale(1) translateY(0); }
+
+.sb-header {
+  background: var(--card-accent, var(--deep-blue));
+  color: white;
+  padding: 25px 30px;
+  position: relative;
+}
+.sb-close {
+  position: absolute; top: 20px; right: 20px;
+  background: rgba(0,0,0,0.2); border: none; color: white;
+  width: 40px; height: 40px; border-radius: 50%;
+  font-size: 1.5rem; cursor: pointer; transition: background 0.2s;
+  display: flex; justify-content: center; align-items: center;
+}
+.sb-close:hover { background: rgba(0,0,0,0.4); }
+
+.sb-icon { font-size: 3.5rem; margin-bottom: 10px; }
+.sb-title { font-family: 'Baloo 2', cursive; font-size: 2.2rem; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+.sb-content {
+  padding: 30px 40px;
+  overflow-y: auto;
+  font-size: 1.15rem; line-height: 1.8;
+  /* Styling the actual story text */
+}
+
+.sb-content p { margin-bottom: 1.2em; }
+.sb-content h3 { font-family: 'Baloo 2', cursive; color: var(--royal-blue); font-size: 1.6rem; margin: 1.5em 0 0.5em; border-bottom: 2px dashed #cbd5e1; padding-bottom: 5px;}
+.sb-content hr { border: 0; height: 2px; background: rgba(0,0,0,0.1); margin: 2em 0; }
+
+.sb-moral-box {
+  background: #fffbeb; border: 2px solid #fde68a;
+  border-radius: 15px; padding: 20px; margin-top: 30px;
+  text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.sb-moral-box h4 { font-family: 'Fredoka One', cursive; color: #d97706; font-size: 1.3rem; margin-bottom: 10px; }
+.sb-moral-box p { color: #92400e; font-weight: 700; font-size: 1.2rem; margin: 0; }
+
+/* Custom Scrollbar for Storybook */
+.sb-content::-webkit-scrollbar { width: 10px; }
+.sb-content::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 0 0 20px 0; }
+.sb-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.sb-content::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+@media(max-width: 600px) {
+  .story-grid { grid-template-columns: 1fr; }
+  .sb-content { padding: 20px; font-size: 1.05rem; }
+  .sb-title { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<div class="container">
+  <header>
+    <span class="book-anim">📖</span>
+    <h1>Story Time</h1>
+    <p>Stories that build character, confidence, and a powerful mind 🌟</p>
+  </header>
+
+  <div id="library">
+    </div>
+</div>
+
+<div class="modal-overlay" id="readModal" onclick="closeStory(event)">
+  <div class="storybook" onclick="event.stopPropagation()">
+    <div class="sb-header" id="sbHeader">
+      <button class="sb-close" onclick="closeStory(event)">×</button>
+      <div class="sb-icon" id="sbIcon"></div>
+      <h2 class="sb-title" id="sbTitle"></h2>
+    </div>
+    <div class="sb-content" id="sbContent"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// STORY DATABASE
+// ══════════════════════════════════════════════
+const STORIES = [
+  // --- MASTERPIECES ---
+  {
+    id: 1, category: "Masterpieces", catIcon: "🌟", color: "#38bdf8",
+    title: "The Child Who Became Impossible to Ignore", icon: "🏔️",
+    themes: ["Discipline", "Studying", "Confidence", "Leadership"],
+    moral: "Consistent effort quietly builds an extraordinary future",
+    content: `
+      <p>In a peaceful town lived a boy named Arin.</p>
+      <p>Arin was not the smartest in class. Not the fastest. Not the most confident.</p>
+      <p>But he had something powerful — a quiet desire to become better.</p>
+      <p>One evening he asked his father, "Papa, how do some people become very successful and respected?"</p>
+      <p>His father didn't answer immediately. Instead, he said, "Wake up early with me tomorrow."</p>
+      
+      <h3>🌅 The First Lesson: Discipline Before Motivation</h3>
+      <p>At 5:30am, Arin woke reluctantly. His father was already dressed, calm and focused.</p>
+      <p>"Successful people don't wait for motivation," his father said gently. "They build discipline."</p>
+      <p>They sat together. Read for 20 minutes. Planned the day. Studied before school.</p>
+      <p>At first it felt difficult. But something changed within a week.</p>
+      <p>Arin felt ahead of the day. Less rushed. More confident.</p>
+      <p>He realised: <strong>Discipline creates calm confidence.</strong></p>
+
+      <h3>📚 The Second Lesson: Study to Understand, Not Just Score</h3>
+      <p>In class, Arin noticed many students studied only before tests.</p>
+      <p>His father gave him another rule: "Study daily, even when there is no exam."</p>
+      <p>So Arin studied one hour each evening. No phone. No distractions. Just focus.</p>
+      <p>Slowly lessons became easier. Memory improved. Teachers noticed. Confidence grew.</p>
+      <p>Within months, Arin was among the top students. Not because he was born smarter — but because he trained his mind daily.</p>
+
+      <h3>🧠 The Third Lesson: Behaviour Creates Respect</h3>
+      <p>One day a new student joined school. The class was noisy. Unorganised.</p>
+      <p>Arin quietly helped the new student find books, seat, and timetable.</p>
+      <p>The teacher noticed. Soon whenever there was responsibility, teachers chose Arin.</p>
+      <p>Why? He was calm. Polite. Reliable.</p>
+      <p>Arin realised something powerful: <strong>People trust disciplined and respectful individuals.</strong></p>
+
+      <h3>🏔 The Final Realisation</h3>
+      <p>Years passed. Arin became known not just for marks, but for his character.</p>
+      <p>When others delayed work — he finished early.<br>
+      When others complained — he improved things.<br>
+      When others panicked — he stayed calm.</p>
+      <p>One evening he asked his father, "When did everything change for me?"</p>
+      <p>His father smiled. "The day you started small daily discipline."</p>
+      <p>Arin looked back and understood: Success didn't arrive suddenly. It was built quietly, day by day.</p>
+    `
+  },
+  {
+    id: 2, category: "Masterpieces", catIcon: "🌟", color: "#c084fc",
+    title: "The Prince and the Three Gurus", icon: "🕉️",
+    themes: ["Wisdom", "Behaviour", "Knowledge", "Humility"],
+    moral: "True greatness comes from knowledge, discipline, and humility",
+    content: `
+      <p>Long ago, a young prince named Veer was sent to learn from wise teachers.</p>
+      <p>He was intelligent but proud. "I will become the greatest king," he often said.</p>
+      <p>A royal sage decided to guide him. "You will learn from three gurus," the sage said. "Only then will you be ready."</p>
+
+      <h3>🌿 Guru 1: The Guru of Knowledge</h3>
+      <p>The first guru taught science, maths, and strategy. Veer learned quickly and became confident.</p>
+      <p>"I know everything now," he said proudly.</p>
+      <p>The guru smiled gently. "Knowledge without humility becomes arrogance."</p>
+      <p>He handed Veer a full cup of water and kept pouring.</p>
+      <p>"It's overflowing," Veer said.</p>
+      <p>"Just like your mind," the guru replied. "When it's too full of ego, nothing new can enter."</p>
+      <p>Veer understood and bowed respectfully.</p>
+
+      <h3>🔥 Guru 2: The Guru of Discipline</h3>
+      <p>The second guru woke before sunrise daily. Meditation. Study. Practice. Service.</p>
+      <p>"Why such strict routine?" Veer asked.</p>
+      <p>"Because the mind becomes powerful through discipline," the guru said.</p>
+      <p>Months passed. Veer became calmer, stronger, more focused.</p>
+      <p>He realised discipline gave him control over his thoughts and actions.</p>
+
+      <h3>🌼 Guru 3: The Guru of Dharma</h3>
+      <p>The final guru lived simply and helped everyone.</p>
+      <p>"Why serve others when you are so wise?" Veer asked.</p>
+      <p>The guru replied, "Knowledge and power are meaningful only when used to help others."</p>
+      <p>Veer spent months serving villages. He felt something new — respect earned through kindness.</p>
+
+      <h3>👑 The Return</h3>
+      <p>When Veer returned to the kingdom, he was different: Confident but humble. Knowledgeable but respectful. Powerful but kind.</p>
+      <p>People loved and trusted him.</p>
+      <p>The royal sage smiled. "Now you are ready. Not because you learned to rule others… but because you learned to rule yourself."</p>
+    `
+  },
+  
+  // --- GENIUS MINDSET ---
+  {
+    id: 3, category: "Genius Mindset", catIcon: "🧠", color: "#4ade80",
+    title: "The Child Who Built Tomorrow", icon: "🚀",
+    themes: ["Engineering", "Problem Solving", "Mindset"],
+    moral: "When something breaks, don't say 'It's over.' Say 'How can I improve it?'",
+    content: `
+      <p>In a quiet room filled with scattered toys and tiny tools lived a child named Vihaan.</p>
+      <p>While other children played games, Vihaan loved taking things apart. Old clocks. Broken cars. Remote controls.</p>
+      <p>Not to break them… But to understand them.</p>
+      <p>One night, while fixing a small toy robot, the robot blinked and came alive.</p>
+      <p>"Hello, Builder," it said. "My name is Circuit. I appear when someone loves solving problems."</p>
+      <p>Vihaan's eyes widened. "Are you real?"</p>
+      <p>"As real as your ideas," Circuit replied.</p>
+
+      <h3>🔧 The Broken Bridge</h3>
+      <p>Circuit gently projected a glowing image in the air.</p>
+      <p>A city appeared with a broken bridge. Cars waited. People stood stuck.</p>
+      <p>"What do you see?" Circuit asked.</p>
+      <p>"A problem," Vihaan said.</p>
+      <p>"And what does a great engineer see?" Circuit asked.</p>
+      <p>Vihaan thought carefully. "A solution waiting to be built."</p>
+      <p>Circuit smiled. Engineers don't panic when things break. They ask: How can we fix this? How can we make it better than before?</p>
+      <p>Vihaan imagined a stronger bridge. With better supports. Smarter design. Stronger materials.</p>
+      <p>The bridge rebuilt itself in the air.</p>
+
+      <h3>🧠 Engineer Mindset</h3>
+      <p>Circuit spoke softly:</p>
+      <p>"Engineers change the world by improving it piece by piece. Every road, phone, rocket, and building exists because someone decided to solve a problem."</p>
+      <p>Vihaan looked at the small toy robot in his hand. Even fixing this tiny robot mattered.</p>
+      <p>Because building small things trains the mind to build big things.</p>
+    `
+  },
+  {
+    id: 4, category: "Genius Mindset", catIcon: "🧠", color: "#fb923c",
+    title: "The Question Collector", icon: "🧪",
+    themes: ["Science", "Curiosity", "Observation"],
+    moral: "Questions are the beginning of every discovery.",
+    content: `
+      <p>A child named Anaya had a special jar beside her bed.</p>
+      <p>It wasn't filled with candy. It was filled with questions.</p>
+      <p>Why do leaves fall? Why do stars shine? Why do we dream?</p>
+      <p>One night, the jar began to glow. Out floated a tiny being made of light named Quark.</p>
+      <p>"I am made of curiosity," Quark said. "And I visit minds that love to ask why."</p>
+
+      <h3>🔬 The Experiment Room</h3>
+      <p>With a blink, Anaya and Quark stood in a giant invisible laboratory.</p>
+      <p>"Scientists don't just ask questions," Quark said. "They test ideas."</p>
+      <p>A seed appeared.</p>
+      <p>"What will happen if we give it sunlight and water?" Quark asked.</p>
+      <p>"It will grow," Anaya said.</p>
+      <p>The seed sprouted into a plant.</p>
+      <p>Another seed appeared in darkness. It grew slowly and weak.</p>
+      <p>Anaya watched carefully.</p>
+      <p>"Scientists observe," Quark said. "They notice small details others ignore."</p>
+
+      <h3>🧠 Scientist Mindset</h3>
+      <p>"Is it bad to be wrong?" Anaya asked.</p>
+      <p>Quark shook its glowing head. "Every mistake is data. Every failed test teaches something new. Discovery is simply learning step by step."</p>
+      <p>Anaya smiled. "So mistakes help us learn faster?"</p>
+      <p>"Yes," Quark said. "That's how new medicines, machines, and discoveries are made."</p>
+    `
+  },
+
+  // --- HABITS & BEHAVIOUR ---
+  {
+    id: 5, category: "Habits & Behaviour", catIcon: "👑", color: "#f43f5e",
+    title: "The Girl Who Carried Herself Like Royalty", icon: "✨",
+    themes: ["Respect", "Confidence", "Leadership"],
+    moral: "Calm, respectful behaviour creates natural leadership and confidence.",
+    content: `
+      <p>In a large school filled with talented students was a quiet girl named Ishita.</p>
+      <p>She was not the loudest. Not the most talkative. But wherever she went, people respected her.</p>
+      <p>A new student once asked, "Why does everyone listen to you?"</p>
+      <p>Ishita smiled gently. "I just follow a few rules my mother taught me."</p>
+      <p>One day the new student followed her around and observed.</p>
+      <p>Ishita greeted teachers respectfully. Listened fully when others spoke. Spoke calmly, never shouting. Helped without showing off. Finished her work on time.</p>
+      <p>She didn't try to impress. She simply behaved well.</p>
+      
+      <h3>👑 Natural Leadership</h3>
+      <p>During a group project, the class became noisy and disorganised.</p>
+      <p>The teacher looked around and said, "Ishita, please lead the group."</p>
+      <p>Even older students listened to her.</p>
+      <p>After class the new student asked, "How did you become a leader without trying?"</p>
+      <p>Ishita replied softly, "When your behaviour shows respect and discipline, people naturally trust you."</p>
+      <p>Years later, Ishita became head girl of the school. Then a university leader. Then a respected professional.</p>
+      <p>Not because she demanded respect. But because she carried herself with dignity from childhood.</p>
+    `
+  },
+  {
+    id: 6, category: "Habits & Behaviour", catIcon: "👑", color: "#8b5cf6",
+    title: "The 1-Hour Rule", icon: "⏳",
+    themes: ["Focus", "Time Management", "Consistency"],
+    moral: "Daily focused study beats long stressful study.",
+    content: `
+      <p>A boy named Dev wanted to be excellent at studies but loved playing too.</p>
+      <p>So he made one rule: <strong>1 hour of deep study daily. No excuses.</strong></p>
+      <p>Some days he didn't feel like it. He still did it.</p>
+      <p>Months passed.</p>
+      <p>Topics became easy.</p>
+      <p>Confidence grew.</p>
+      <p>By exams, he wasn't stressed. He was prepared.</p>
+      <p>Others studied 6 hours in panic.</p>
+      <p>He studied 1 hour in discipline.</p>
+      <p>He topped.</p>
+    `
+  }
+];
+
+// ══════════════════════════════════════════════
+// RENDER LIBRARY
+// ══════════════════════════════════════════════
+function renderLibrary() {
+  const libraryEl = document.getElementById('library');
+  
+  // Group stories by category
+  const categories = {};
+  STORIES.forEach(story => {
+    if(!categories[story.category]) categories[story.category] = { icon: story.catIcon, items: [] };
+    categories[story.category].items.push(story);
+  });
+
+  // Build HTML
+  let html = '';
+  for(const cat in categories) {
+    html += `<h2 class="category-title">${categories[cat].icon} ${cat}</h2>`;
+    html += `<div class="story-grid">`;
+    
+    categories[cat].items.forEach(story => {
+      let tagsHtml = story.themes.map(t => `<span class="sc-theme-tag">${t}</span>`).join('');
+      
+      html += `
+        <div class="story-card" style="--card-accent: ${story.color};" onclick="openStory(${story.id})">
+          <div class="sc-icon">${story.icon}</div>
+          <h3 class="sc-title">${story.title}</h3>
+          <div class="sc-themes">${tagsHtml}</div>
+          <div class="sc-moral">${story.moral}</div>
+        </div>
+      `;
+    });
+    
+    html += `</div>`;
+  }
+  
+  libraryEl.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+// MODAL CONTROLS
+// ══════════════════════════════════════════════
+function openStory(id) {
+  const story = STORIES.find(s => s.id === id);
+  if(!story) return;
+
+  document.getElementById('sbHeader').style.backgroundColor = story.color;
+  document.getElementById('sbIcon').textContent = story.icon;
+  document.getElementById('sbTitle').textContent = story.title;
+  
+  const contentHtml = `
+    ${story.content}
+    <div class="sb-moral-box">
+      <h4>✨ Moral of the Story</h4>
+      <p>${story.moral}</p>
+    </div>
+  `;
+  document.getElementById('sbContent').innerHTML = contentHtml;
+  
+  // Reset scroll position
+  document.getElementById('sbContent').scrollTop = 0;
+  
+  // Show Modal
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  document.getElementById('readModal').classList.add('active');
+}
+
+function closeStory(e) {
+  // Only close if clicking the background overlay or the close button
+  if(e.target.classList.contains('modal-overlay') || e.target.classList.contains('sb-close')) {
+    document.getElementById('readModal').classList.remove('active');
+    document.body.style.overflow = ''; // Restore background scrolling
+  }
+}
+
+// Initialize
+renderLibrary();
+</script>
+</body>
+</html>
