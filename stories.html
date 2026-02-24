@@ -243,195 +243,234 @@ header p { color: var(--text-muted); font-size: 1.2rem; font-weight: 600; margin
 // STORY DATABASE
 // ══════════════════════════════════════════════
 const STORIES = [
-  // --- MASTERPIECES ---
+  // ════════ VEDH'S ADVENTURES ════════
   {
-    id: 1, category: "Masterpieces", catIcon: "🌟", color: "#38bdf8",
-    title: "The Child Who Became Impossible to Ignore", icon: "🏔️",
-    themes: ["Discipline", "Studying", "Confidence", "Leadership"],
-    moral: "Consistent effort quietly builds an extraordinary future",
+    id: 1, category: "Vedh's Adventures", catIcon: "👑", color: "#f59e0b",
+    title: "Vedh and the Secret of Becoming Extraordinary", icon: "🏔️",
+    themes: ["Discipline", "Focus", "Future Success"],
+    moral: "You don't just grow older. You grow extraordinary by building the right habits today.",
     content: `
-      <p>In a peaceful town lived a boy named Arin.</p>
-      <p>Arin was not the smartest in class. Not the fastest. Not the most confident.</p>
-      <p>But he had something powerful — a quiet desire to become better.</p>
-      <p>One evening he asked his father, "Papa, how do some people become very successful and respected?"</p>
-      <p>His father didn't answer immediately. Instead, he said, "Wake up early with me tomorrow."</p>
+      <p>In a quiet town lived a thoughtful young boy named Vedh. Vedh loved asking questions.</p>
+      <p>“Why do some people become very successful? Why do some leaders seem confident everywhere?”</p>
+      <p>One evening, while looking at the night sky, Vedh whispered, “I want to become someone great one day.”</p>
+      <p>The room became very still. Then a soft golden light appeared. From the light stepped a calm, wise guide dressed simply.</p>
+      <p>“Vedh,” the guide said gently, “I visit children who are ready to become extraordinary. I am your Future Self.”</p>
+
+      <h3>🌅 The Morning Advantage</h3>
+      <p>Suddenly Vedh saw two versions of himself. In one version, he woke late, rushed, and started the day lazily. In the other, he woke calmly, prepared for school, and used mornings wisely.</p>
+      <p>“Extraordinary people,” the guide said softly, “win the morning before the world wakes up.”</p>
+
+      <h3>📚 The Study Superpower</h3>
+      <p>The scene changed to a classroom. Another version of Vedh studied a little every day. He revised. Asked questions. Stayed curious.</p>
+      <p>When exams came, he was calm. “Why is he relaxed?” Vedh asked.</p>
+      <p>“Because daily study builds quiet confidence,” the guide said. “Studying isn’t just for marks. It trains your brain to think clearly.”</p>
+
+      <h3>🧠 Behaviour Creates Respect</h3>
+      <p>Next, Vedh saw a playground. One version of himself interrupted others and rushed. Another version listened, spoke kindly, and waited his turn.</p>
+      <p>Teachers trusted the second Vedh more. Friends respected him more.</p>
+      <p>“People respect children who behave with calm confidence,” the guide replied. “Good behaviour is like a silent crown.”</p>
+    `
+  },
+  {
+    id: 2, category: "Vedh's Adventures", catIcon: "👑", color: "#8b5cf6",
+    title: "Vedh Discovers His Brain is a Superpower", icon: "🧠",
+    themes: ["Intelligence", "Learning", "Brain Training"],
+    moral: "You don’t become smart suddenly. You become smart daily.",
+    content: `
+      <p>One afternoon after school, Vedh dropped his bag and said: “Why do some children understand everything so fast? Are they just born smarter?”</p>
+      <p>That night, as Vedh slept, his room filled with tiny glowing sparks that formed a floating figure made of light.</p>
+      <p>“Vedh,” it said gently, “I am Neuron, a guide from inside your brain. Tonight you’ll discover your real superpower.”</p>
+
+      <h3>🏋️‍♂️ The Brain Gym</h3>
+      <p>Suddenly Vedh found himself inside a giant glowing space. It looked like a gym — but instead of weights, there were books, puzzles, ideas, and questions floating everywhere.</p>
+      <p>“Welcome to your Brain Gym,” Neuron said. “Every time you think, study, or focus… your brain grows stronger here.”</p>
+      <p>Golden pathways lit up whenever he solved something. They dimmed when he got distracted.</p>
+
+      <h3>⏳ The 20-Minute Secret</h3>
+      <p>Neuron showed two versions of Vedh. One studied only before exams and felt stressed. Another Vedh studied just 20–30 minutes daily.</p>
+      <p>After weeks, the second Vedh’s brain gym glowed brightly with strong pathways.</p>
+      <p>“Children who study a little every day never panic later,” said Neuron.</p>
+    `
+  },
+  {
+    id: 3, category: "Vedh's Adventures", catIcon: "👑", color: "#10b981",
+    title: "Vedh and the Power of Good Behaviour", icon: "🌟",
+    themes: ["Politeness", "Respect", "Character"],
+    moral: "Politeness and respect make people trust and support you everywhere.",
+    content: `
+      <p>At a family gathering, many children were running, shouting, and interrupting. Vedh’s grandfather quietly watched.</p>
+      <p>Vedh greeted the elders politely. He waited his turn to speak. He said “please” and “thank you.”</p>
+      <p>Later, his grandfather called him over.</p>
+      <p>“Do you know why people like being around you?” he asked.</p>
+      <p>Vedh shook his head.</p>
+
+      <h3>🛡️ The Quiet Superpower</h3>
+      <p>“Because good behaviour makes others feel respected and comfortable,” his grandfather explained. “People always support children who behave well.”</p>
+      <p>Vedh noticed something that day: Adults trusted him more. People listened when he spoke. He felt calm and confident.</p>
+      <p>That night he understood: Good behaviour is like a quiet superpower.</p>
+    `
+  },
+
+  // ════════ GENIUS MINDSET ════════
+  {
+    id: 4, category: "Genius Mindset", catIcon: "🧠", color: "#ec4899",
+    title: "The Child Who Asked 'Why?'", icon: "💡",
+    themes: ["Curiosity", "Science", "Discovery"],
+    moral: "Your brain grows stronger every time you wonder how things work.",
+    content: `
+      <p>In a quiet town lived a child named Ari. Ari was not the loudest in class, nor the fastest runner. But Ari had something powerful. Ari asked… “Why?”</p>
+      <p>One night, floating beside the bed was a tiny glowing robot named Nova.</p>
+      <p>“I’m your curiosity guide,” Nova said. “I appear when someone asks real questions. That’s how all great scientists begin.”</p>
+
+      <h3>🚀 Journey Beyond the Roof</h3>
+      <p>With a gentle hum, Nova and Ari floated upward into space. Earth glowed below like a blue marble.</p>
+      <p>“Why don’t we fall off Earth?” Ari asked.</p>
+      <p>“Because of gravity. Everything with mass pulls on everything else,” Nova said. “It’s like an invisible hug that holds the universe together.”</p>
       
-      <h3>🌅 The First Lesson: Discipline Before Motivation</h3>
-      <p>At 5:30am, Arin woke reluctantly. His father was already dressed, calm and focused.</p>
-      <p>"Successful people don't wait for motivation," his father said gently. "They build discipline."</p>
-      <p>They sat together. Read for 20 minutes. Planned the day. Studied before school.</p>
-      <p>At first it felt difficult. But something changed within a week.</p>
-      <p>Arin felt ahead of the day. Less rushed. More confident.</p>
-      <p>He realised: <strong>Discipline creates calm confidence.</strong></p>
-
-      <h3>📚 The Second Lesson: Study to Understand, Not Just Score</h3>
-      <p>In class, Arin noticed many students studied only before tests.</p>
-      <p>His father gave him another rule: "Study daily, even when there is no exam."</p>
-      <p>So Arin studied one hour each evening. No phone. No distractions. Just focus.</p>
-      <p>Slowly lessons became easier. Memory improved. Teachers noticed. Confidence grew.</p>
-      <p>Within months, Arin was among the top students. Not because he was born smarter — but because he trained his mind daily.</p>
-
-      <h3>🧠 The Third Lesson: Behaviour Creates Respect</h3>
-      <p>One day a new student joined school. The class was noisy. Unorganised.</p>
-      <p>Arin quietly helped the new student find books, seat, and timetable.</p>
-      <p>The teacher noticed. Soon whenever there was responsibility, teachers chose Arin.</p>
-      <p>Why? He was calm. Polite. Reliable.</p>
-      <p>Arin realised something powerful: <strong>People trust disciplined and respectful individuals.</strong></p>
-
-      <h3>🏔 The Final Realisation</h3>
-      <p>Years passed. Arin became known not just for marks, but for his character.</p>
-      <p>When others delayed work — he finished early.<br>
-      When others complained — he improved things.<br>
-      When others panicked — he stayed calm.</p>
-      <p>One evening he asked his father, "When did everything change for me?"</p>
-      <p>His father smiled. "The day you started small daily discipline."</p>
-      <p>Arin looked back and understood: Success didn't arrive suddenly. It was built quietly, day by day.</p>
+      <h3>🌌 The Big Realisation</h3>
+      <p>Soon they floated far enough to see the Milky Way galaxy. “There are so many stars,” Ari whispered. “Does one small person even matter?”</p>
+      <p>Nova’s voice became serious. “Every discovery ever made began with one person asking a question. Why does an apple fall? Why do stars shine? Can humans fly?”</p>
+      <p>“Those questions built rockets, computers, medicines, and telescopes. Curiosity builds inventors. Thinkers build solutions.”</p>
     `
   },
   {
-    id: 2, category: "Masterpieces", catIcon: "🌟", color: "#c084fc",
-    title: "The Prince and the Three Gurus", icon: "🕉️",
-    themes: ["Wisdom", "Behaviour", "Knowledge", "Humility"],
-    moral: "True greatness comes from knowledge, discipline, and humility",
+    id: 5, category: "Genius Mindset", catIcon: "🧠", color: "#f97316",
+    title: "The Child Who Saw Opportunities", icon: "🔭",
+    themes: ["Leadership", "Problem Solving", "Future Thinker"],
+    moral: "Look for ways to help and improve. Opportunities are everywhere for those who notice.",
     content: `
-      <p>Long ago, a young prince named Veer was sent to learn from wise teachers.</p>
-      <p>He was intelligent but proud. "I will become the greatest king," he often said.</p>
-      <p>A royal sage decided to guide him. "You will learn from three gurus," the sage said. "Only then will you be ready."</p>
+      <p>A child named Arjun loved observing the world. At school, he noticed problems others ignored: A messy classroom. Kids forgetting lunch. Broken football nets.</p>
+      <p>“Someone should fix that,” others said. Arjun thought differently: “Maybe I can.”</p>
+      <p>One night, a golden compass appeared beside his bed. “I am Vision,” it said. “I guide those who see opportunities where others see problems.”</p>
 
-      <h3>🌿 Guru 1: The Guru of Knowledge</h3>
-      <p>The first guru taught science, maths, and strategy. Veer learned quickly and became confident.</p>
-      <p>"I know everything now," he said proudly.</p>
-      <p>The guru smiled gently. "Knowledge without humility becomes arrogance."</p>
-      <p>He handed Veer a full cup of water and kept pouring.</p>
-      <p>"It's overflowing," Veer said.</p>
-      <p>"Just like your mind," the guru replied. "When it's too full of ego, nothing new can enter."</p>
-      <p>Veer understood and bowed respectfully.</p>
-
-      <h3>🔥 Guru 2: The Guru of Discipline</h3>
-      <p>The second guru woke before sunrise daily. Meditation. Study. Practice. Service.</p>
-      <p>"Why such strict routine?" Veer asked.</p>
-      <p>"Because the mind becomes powerful through discipline," the guru said.</p>
-      <p>Months passed. Veer became calmer, stronger, more focused.</p>
-      <p>He realised discipline gave him control over his thoughts and actions.</p>
-
-      <h3>🌼 Guru 3: The Guru of Dharma</h3>
-      <p>The final guru lived simply and helped everyone.</p>
-      <p>"Why serve others when you are so wise?" Veer asked.</p>
-      <p>The guru replied, "Knowledge and power are meaningful only when used to help others."</p>
-      <p>Veer spent months serving villages. He felt something new — respect earned through kindness.</p>
-
-      <h3>👑 The Return</h3>
-      <p>When Veer returned to the kingdom, he was different: Confident but humble. Knowledgeable but respectful. Powerful but kind.</p>
-      <p>People loved and trusted him.</p>
-      <p>The royal sage smiled. "Now you are ready. Not because you learned to rule others… but because you learned to rule yourself."</p>
-    `
-  },
-  
-  // --- GENIUS MINDSET ---
-  {
-    id: 3, category: "Genius Mindset", catIcon: "🧠", color: "#4ade80",
-    title: "The Child Who Built Tomorrow", icon: "🚀",
-    themes: ["Engineering", "Problem Solving", "Mindset"],
-    moral: "When something breaks, don't say 'It's over.' Say 'How can I improve it?'",
-    content: `
-      <p>In a quiet room filled with scattered toys and tiny tools lived a child named Vihaan.</p>
-      <p>While other children played games, Vihaan loved taking things apart. Old clocks. Broken cars. Remote controls.</p>
-      <p>Not to break them… But to understand them.</p>
-      <p>One night, while fixing a small toy robot, the robot blinked and came alive.</p>
-      <p>"Hello, Builder," it said. "My name is Circuit. I appear when someone loves solving problems."</p>
-      <p>Vihaan's eyes widened. "Are you real?"</p>
-      <p>"As real as your ideas," Circuit replied.</p>
-
-      <h3>🔧 The Broken Bridge</h3>
-      <p>Circuit gently projected a glowing image in the air.</p>
-      <p>A city appeared with a broken bridge. Cars waited. People stood stuck.</p>
-      <p>"What do you see?" Circuit asked.</p>
-      <p>"A problem," Vihaan said.</p>
-      <p>"And what does a great engineer see?" Circuit asked.</p>
-      <p>Vihaan thought carefully. "A solution waiting to be built."</p>
-      <p>Circuit smiled. Engineers don't panic when things break. They ask: How can we fix this? How can we make it better than before?</p>
-      <p>Vihaan imagined a stronger bridge. With better supports. Smarter design. Stronger materials.</p>
-      <p>The bridge rebuilt itself in the air.</p>
-
-      <h3>🧠 Engineer Mindset</h3>
-      <p>Circuit spoke softly:</p>
-      <p>"Engineers change the world by improving it piece by piece. Every road, phone, rocket, and building exists because someone decided to solve a problem."</p>
-      <p>Vihaan looked at the small toy robot in his hand. Even fixing this tiny robot mattered.</p>
-      <p>Because building small things trains the mind to build big things.</p>
+      <h3>🌍 The Idea Map</h3>
+      <p>Vision showed Arjun a map filled with glowing dots. “Each dot is a problem waiting for a solution. And every solution can help people.”</p>
+      <p>Arjun saw a faster way to deliver food. A better way to learn in school. A smarter way to build homes.</p>
+      <p>“What if I fail?” Arjun asked.</p>
+      <p>“All leaders fail,” Vision replied calmly. “But they learn, adjust, and try again. True leaders help others grow. They create ideas that make life easier, better, and kinder.”</p>
     `
   },
   {
-    id: 4, category: "Genius Mindset", catIcon: "🧠", color: "#fb923c",
-    title: "The Question Collector", icon: "🧪",
-    themes: ["Science", "Curiosity", "Observation"],
-    moral: "Questions are the beginning of every discovery.",
+    id: 6, category: "Genius Mindset", catIcon: "🧠", color: "#3b82f6",
+    title: "The Unstoppable Mind", icon: "🛡️",
+    themes: ["Confidence", "Self-Belief", "Positive Thinking"],
+    moral: "You don’t have to be perfect. You only have to keep learning, thinking, and trying.",
     content: `
-      <p>A child named Anaya had a special jar beside her bed.</p>
-      <p>It wasn't filled with candy. It was filled with questions.</p>
-      <p>Why do leaves fall? Why do stars shine? Why do we dream?</p>
-      <p>One night, the jar began to glow. Out floated a tiny being made of light named Quark.</p>
-      <p>"I am made of curiosity," Quark said. "And I visit minds that love to ask why."</p>
-
-      <h3>🔬 The Experiment Room</h3>
-      <p>With a blink, Anaya and Quark stood in a giant invisible laboratory.</p>
-      <p>"Scientists don't just ask questions," Quark said. "They test ideas."</p>
-      <p>A seed appeared.</p>
-      <p>"What will happen if we give it sunlight and water?" Quark asked.</p>
-      <p>"It will grow," Anaya said.</p>
-      <p>The seed sprouted into a plant.</p>
-      <p>Another seed appeared in darkness. It grew slowly and weak.</p>
-      <p>Anaya watched carefully.</p>
-      <p>"Scientists observe," Quark said. "They notice small details others ignore."</p>
-
-      <h3>🧠 Scientist Mindset</h3>
-      <p>"Is it bad to be wrong?" Anaya asked.</p>
-      <p>Quark shook its glowing head. "Every mistake is data. Every failed test teaches something new. Discovery is simply learning step by step."</p>
-      <p>Anaya smiled. "So mistakes help us learn faster?"</p>
-      <p>"Yes," Quark said. "That's how new medicines, machines, and discoveries are made."</p>
-    `
-  },
-
-  // --- HABITS & BEHAVIOUR ---
-  {
-    id: 5, category: "Habits & Behaviour", catIcon: "👑", color: "#f43f5e",
-    title: "The Girl Who Carried Herself Like Royalty", icon: "✨",
-    themes: ["Respect", "Confidence", "Leadership"],
-    moral: "Calm, respectful behaviour creates natural leadership and confidence.",
-    content: `
-      <p>In a large school filled with talented students was a quiet girl named Ishita.</p>
-      <p>She was not the loudest. Not the most talkative. But wherever she went, people respected her.</p>
-      <p>A new student once asked, "Why does everyone listen to you?"</p>
-      <p>Ishita smiled gently. "I just follow a few rules my mother taught me."</p>
-      <p>One day the new student followed her around and observed.</p>
-      <p>Ishita greeted teachers respectfully. Listened fully when others spoke. Spoke calmly, never shouting. Helped without showing off. Finished her work on time.</p>
-      <p>She didn't try to impress. She simply behaved well.</p>
+      <p>A child named Maya sometimes felt small. “What if I’m not the best?” she thought. “What if I can’t do it?”</p>
+      <p>One night, a calm voice whispered from within. “I am your Inner Mind. And I am stronger than you know.”</p>
       
-      <h3>👑 Natural Leadership</h3>
-      <p>During a group project, the class became noisy and disorganised.</p>
-      <p>The teacher looked around and said, "Ishita, please lead the group."</p>
-      <p>Even older students listened to her.</p>
-      <p>After class the new student asked, "How did you become a leader without trying?"</p>
-      <p>Ishita replied softly, "When your behaviour shows respect and discipline, people naturally trust you."</p>
-      <p>Years later, Ishita became head girl of the school. Then a university leader. Then a respected professional.</p>
-      <p>Not because she demanded respect. But because she carried herself with dignity from childhood.</p>
+      <h3>🌌 The Mind Gym</h3>
+      <p>Maya saw thoughts floating like clouds. Some said: “I can’t.” “I’m not ready.”</p>
+      <p>Others said: “I’ll try.” “I’ll learn.”</p>
+      <p>“Your thoughts shape your future,” the Inner Mind said. “Strong thoughts build strong actions.”</p>
+      <p>Every time Maya replaced “I can’t” with “I’ll learn”… a star lit up. Every time Maya believed in herself… her mind grew stronger.</p>
+      <p>Confidence wasn’t magic. It was practice.</p>
+    `
+  },
+
+  // ════════ HABITS & BEHAVIOUR ════════
+  {
+    id: 7, category: "Habits & Behaviour", catIcon: "🌱", color: "#ef4444",
+    title: "The Boy Who Learned the Power of Effort", icon: "🌱",
+    themes: ["Hard Work", "Discipline", "Consistency"],
+    moral: "Growth doesn’t come from big effort once. It comes from small effort daily.",
+    content: `
+      <p>In a busy school lived a boy named Advik. He was intelligent and curious — but he had one habit that held him back. He delayed everything.</p>
+      <p>“I’ll study tomorrow.” “I still have time.”</p>
+      <p>One evening, Advik visited his grandfather. “Dada,” Advik asked, “How do people become excellent at anything?”</p>
+
+      <h3>🌱 The Two Seeds</h3>
+      <p>Grandfather smiled and handed him a small seed. “Plant this and water it daily. Then come back in one week.”</p>
+      <p>Advik planted it. The first day he watered it. The second day he forgot. Some days he watered it, some days he didn’t. After a week, it had barely sprouted.</p>
+      <p>Grandfather then showed him a tall, green, strong plant. “This one was watered daily. Growth doesn’t come from big effort once. It comes from small effort daily.”</p>
+      
+      <h3>📈 The Daily Rule</h3>
+      <p>Advik created a simple rule: Study a little every day. Finish homework the same day. Practise even when not in the mood.</p>
+      <p>Months later, exams arrived. While others felt nervous, Advik felt calm. Not because he was lucky — but because he had prepared steadily. Hard work is not a punishment. It is training for a strong and confident life.</p>
     `
   },
   {
-    id: 6, category: "Habits & Behaviour", catIcon: "👑", color: "#8b5cf6",
-    title: "The 1-Hour Rule", icon: "⏳",
-    themes: ["Focus", "Time Management", "Consistency"],
-    moral: "Daily focused study beats long stressful study.",
+    id: 8, category: "Habits & Behaviour", catIcon: "🌱", color: "#d946ef",
+    title: "The Magic Words That Opened Every Door", icon: "🚪",
+    themes: ["Manners", "Politeness", "Kindness"],
+    moral: "Politeness and kindness open more doors than force ever can.",
     content: `
-      <p>A boy named Dev wanted to be excellent at studies but loved playing too.</p>
-      <p>So he made one rule: <strong>1 hour of deep study daily. No excuses.</strong></p>
-      <p>Some days he didn't feel like it. He still did it.</p>
-      <p>Months passed.</p>
-      <p>Topics became easy.</p>
-      <p>Confidence grew.</p>
-      <p>By exams, he wasn't stressed. He was prepared.</p>
-      <p>Others studied 6 hours in panic.</p>
-      <p>He studied 1 hour in discipline.</p>
-      <p>He topped.</p>
+      <p>In a cheerful town lived a boy named Neel. Neel was clever and quick, but he often forgot simple words like “please,” “thank you,” and “sorry.”</p>
+      <p>One day, Neel met an old watchmaker fixing a clock. “Can I see?” Neel asked quickly.</p>
+      <p>The watchmaker looked up gently. “What is the magic word?”</p>
+      <p>Neel tried again. “Please, can I see?”</p>
+
+      <h3>✨ The Golden Light</h3>
+      <p>The watchmaker smiled. Inside the shop, Neel noticed something amazing — every time he said “please” or “thank you,” a tiny golden light appeared.</p>
+      <p>“Polite words create warm energy,” the watchmaker said. “People feel respected and happy around you. That opens doors you cannot see.”</p>
+      <p>Neel decided to try it all day. He said “thank you” to his teacher. He said “sorry” to a friend. He said “please” at home. Everything felt calmer.</p>
+      <p>Life seemed to welcome him everywhere he went.</p>
+    `
+  },
+
+  // ════════ SPACE EXPLORATION ════════
+  {
+    id: 9, category: "Space Exploration", catIcon: "🚀", color: "#0ea5e9",
+    title: "The Solar System's Coolest Secrets", icon: "🪐",
+    themes: ["Science", "Planets", "Galaxies", "Astronauts"],
+    moral: "We all share one tiny, beautiful home floating in the stars.",
+    content: `
+      <h3>🌞 The Sun’s Giant Sneeze</h3>
+      <p>Once upon a time, the Sun had a giant sneeze… ACHOO! This was a solar flare, a huge burst of energy. Luckily, Earth has a strong magnetic shield that protects us like a superhero force field.</p>
+      <p><em>Fun fact: The Sun is so big that 1 million Earths could fit inside it!</em></p>
+
+      <h3>🌍 Earth: The Perfect Space Home</h3>
+      <p>Earth sits in the “Goldilocks Zone” — not too hot, not too cold… just right for water and living things. Every 24 hours, Earth spins once, giving us day and night.</p>
+      <p><em>Fun fact: If you drove a car straight up at 100 km/h, it would take about 1 hour to reach space!</em></p>
+
+      <h3>🪐 Saturn and Its Magical Rings</h3>
+      <p>Saturn wears beautiful rings made of ice, rock, and dust. If you could place Saturn in a giant bathtub, it would actually float on water because it’s mostly gas.</p>
+      <p><em>Fun fact: Saturn’s rings stretch for hundreds of thousands of kilometres, but many are thinner than a school bus!</em></p>
+
+      <h3>🌌 The Galaxy Full of Stars</h3>
+      <p>Our Sun is just one star in the Milky Way galaxy, which has over 100 billion stars. If you counted one star every second, it would take thousands of years to count them all!</p>
+      <p><em>Fun fact: The light from some stars you see at night started travelling before dinosaurs even lived!</em></p>
+
+      <h3>👩‍🚀 The Little Astronaut’s Dream</h3>
+      <p>Astronauts train for years to travel into space. They float, eat floating food, and see Earth as a glowing blue ball. Some astronauts say that seeing Earth from space makes them realise: “We all share one tiny, beautiful home.”</p>
+    `
+  },
+
+  // ════════ BEDTIME STORIES ════════
+  {
+    id: 10, category: "Bedtime Stories", catIcon: "🌙", color: "#6366f1",
+    title: "The Sleepy Star", icon: "⭐",
+    themes: ["Peace", "Rest", "Cosy Sleep"],
+    moral: "Sometimes the softest light is the most comforting.",
+    content: `
+      <p>High above the night sky lived a tiny star named Luma.</p>
+      <p>Every night, Luma shone brightly so children on Earth could see their way in the dark. But one night, Luma felt sleepy.</p>
+      <p>“I shine all night… when do I rest?” she whispered.</p>
+      
+      <h3>🌙 The Moon's Advice</h3>
+      <p>The Moon heard her and smiled. “Little star,” said the Moon softly, “you don’t have to shine so bright all the time. Even stars can glow gently.”</p>
+      <p>So Luma dimmed her light just a little. She glowed softly like a night lamp — calm and peaceful.</p>
+      <p>Below on Earth, children looked up and felt cosy and safe.</p>
+      <p>She kept glowing gently… and slowly drifted into a peaceful starry sleep.</p>
+      <p>Goodnight, little star. Goodnight, you.</p>
+    `
+  },
+  {
+    id: 11, category: "Bedtime Stories", catIcon: "🌙", color: "#14b8a6",
+    title: "The Floating Astronaut", icon: "👨‍🚀",
+    themes: ["Imagination", "Calmness", "Dreams"],
+    moral: "Imagine floating softly, peaceful and safe among the stars.",
+    content: `
+      <p>Once there was a young astronaut named Rio who loved bedtime adventures.</p>
+      <p>Every night, Rio closed his eyes and imagined floating in space. Up… up… and away he went, past the clouds and into the stars.</p>
+      
+      <h3>🌌 The Quiet Journey</h3>
+      <p>In space, everything was quiet. No noise. No rush. Just gentle floating. Rio floated past the Moon.</p>
+      <p>“Hello,” said the Moon softly.</p>
+      <p>“Hello,” Rio whispered back.</p>
+      <p>He floated past sleepy planets spinning slowly. Even the Sun was resting on the other side of the world.</p>
+      <p>Wrapped in his cosy space suit, Rio curled up on a fluffy cloud of stardust. The universe hummed a quiet lullaby.</p>
+      <p>Slowly… gently… Rio drifted into the deepest, calmest sleep.</p>
     `
   }
 ];
