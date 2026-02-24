@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chess Kingdom - Learn Chess the Fun Way!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #FFD700;
+    --deep-blue: #1a237e;
+    --royal-blue: #283593;
+    --light-blue: #e8eaf6;
+    --green: #43a047;
+    --red: #e53935;
+    --orange: #fb8c00;
+    --purple: #7b1fa2;
+    --light-sq: #f0d9b5;
+    --dark-sq: #b58863;
+    --white-piece: #fff8e1;
+    --black-piece: #37474f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #1a237e 0%, #283593 40%, #1565c0 100%);
+    min-height: 100vh;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  /* Stars background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px);
+    background-size: 60px 60px, 30px 30px;
+    background-position: 0 0, 15px 15px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 30px 0 20px;
+  }
+
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--gold);
+    text-shadow: 0 4px 15px rgba(255,215,0,0.4), 3px 3px 0 rgba(0,0,0,0.3);
+    letter-spacing: 2px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  header p {
+    font-size: 1.2rem;
+    color: #c5cae9;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Crown decoration */
+  .crown { font-size: 3rem; display: block; animation: spin-slow 8s linear infinite; }
+  @keyframes spin-slow { 0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);} }
+
+  /* Navigation Tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 25px 0;
+  }
+
+  .tab-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50px;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+  }
+
+  .tab-btn:hover, .tab-btn.active {
+    background: var(--gold);
+    color: var(--deep-blue);
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255,215,0,0.4);
+  }
+
+  /* Sections */
+  .section { display: none; animation: fadeIn 0.4s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  /* Cards */
+  .card {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+
+  .card h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: var(--gold);
+    margin-bottom: 15px;
+  }
+
+  .card p { color: #c5cae9; line-height: 1.7; font-size: 1.05rem; }
+
+  /* Piece Grid */
+  .pieces-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .piece-card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+  }
+
+  .piece-card:hover, .piece-card.selected {
+    border-color: var(--gold);
+    background: rgba(255,215,0,0.15);
+    transform: scale(1.05);
+  }
+
+  .piece-emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+  .piece-name { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--gold); }
+  .piece-desc { font-size: 0.85rem; color: #c5cae9; margin-top: 5px; }
+
+  /* Piece Info Box */
+  #piece-info {
+    background: rgba(255,215,0,0.1);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    display: none;
+  }
+
+  #piece-info.show { display: block; animation: fadeIn 0.3s ease; }
+  #piece-info h3 { font-family: 'Fredoka One', cursive; color: var(--gold); font-size: 1.4rem; margin-bottom: 10px; }
+  #piece-info p { color: #e8eaf6; line-height: 1.7; }
+  #piece-info .moves-diagram { font-size: 1.5rem; letter-spacing: 3px; margin: 10px 0; }
+
+  /* Chess Board */
+  .board-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .chess-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    border: 4px solid var(--gold);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+
+  .sq {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .sq.light { background: var(--light-sq); }
+  .sq.dark { background: var(--dark-sq); }
+  .sq.highlight { background: rgba(255,215,0,0.7) !important; }
+  .sq.valid-move::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(0,200,0,0.5);
+    border: 2px solid rgba(0,200,0,0.8);
+  }
+  .sq:hover { filter: brightness(1.15); }
+
+  .board-info {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+  }
+
+  .board-info h3 { font-family: 'Fredoka One', cursive; color: var(--gold); font-size: 1.4rem; margin-bottom: 10px; }
+  .board-info p { color: #c5cae9; font-size: 0.95rem; line-height: 1.6; margin-bottom: 10px; }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin: 5px 5px 5px 0;
+  }
+
+  .btn-gold { background: var(--gold); color: var(--deep-blue); }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-red { background: var(--red); color: #fff; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+  /* Strategies */
+  .strategies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+
+  .strategy-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 22px;
+    border-left: 5px solid var(--gold);
+    transition: all 0.3s;
+  }
+
+  .strategy-card:hover { transform: translateX(5px); background: rgba(255,255,255,0.13); }
+  .strategy-card h3 { font-family: 'Fredoka One', cursive; color: var(--gold); font-size: 1.2rem; margin-bottom: 8px; }
+  .strategy-card .tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .tag-beginner { background: var(--green); }
+  .tag-intermediate { background: var(--orange); }
+  .tag-advanced { background: var(--purple); }
+  .strategy-card p { color: #c5cae9; font-size: 0.92rem; line-height: 1.6; }
+
+  /* Quiz */
+  .quiz-box {
+    background: rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .quiz-box h3 { font-family: 'Fredoka One', cursive; color: var(--gold); font-size: 1.8rem; margin-bottom: 20px; }
+  .quiz-box .question { font-size: 1.15rem; color: #e8eaf6; margin-bottom: 25px; line-height: 1.6; }
+
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .quiz-opt {
+    padding: 14px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Nunito', sans-serif;
+  }
+  .quiz-opt:hover { border-color: var(--gold); background: rgba(255,215,0,0.15); }
+  .quiz-opt.correct { background: var(--green); border-color: var(--green); }
+  .quiz-opt.wrong { background: var(--red); border-color: var(--red); }
+
+  .quiz-feedback {
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; animation: fadeIn 0.3s; }
+  .quiz-feedback.correct { background: rgba(67,160,71,0.3); border: 2px solid var(--green); }
+  .quiz-feedback.wrong { background: rgba(229,57,53,0.3); border: 2px solid var(--red); }
+
+  .score-display {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  /* Openings */
+  .opening-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    transition: all 0.3s;
+  }
+
+  .opening-card:hover { background: rgba(255,255,255,0.13); transform: translateX(5px); }
+  .opening-icon { font-size: 3rem; flex-shrink: 0; }
+  .opening-content h3 { font-family: 'Fredoka One', cursive; color: var(--gold); font-size: 1.2rem; margin-bottom: 5px; }
+  .opening-content .moves { font-family: monospace; font-size: 0.9rem; color: #90caf9; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 8px; display: inline-block; margin: 5px 0; }
+  .opening-content p { color: #c5cae9; font-size: 0.9rem; line-height: 1.6; }
+
+  /* Progress bar */
+  .progress-bar {
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    border-radius: 20px;
+    transition: width 0.5s ease;
+  }
+
+  /* Tips ticker */
+  .tips-ticker {
+    background: rgba(255,215,0,0.15);
+    border: 2px solid rgba(255,215,0,0.3);
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .sq { width: 40px; height: 40px; font-size: 1.3rem; }
+    .quiz-options { grid-template-columns: 1fr; }
+    .tabs { gap: 5px; }
+    .tab-btn { font-size: 0.85rem; padding: 8px 14px; }
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 1.8rem;
+    margin: 5px;
+    cursor: default;
+    transition: transform 0.3s;
+  }
+  .badge:hover { transform: scale(1.3) rotate(10deg); }
+
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <span class="crown">♛</span>
+    <h1>Chess Kingdom</h1>
+    <p>Learn Chess the Fun Way! 🏰</p>
+  </header>
+
+  <div class="tips-ticker" id="tipsTicker">
+    💡 Tip: Control the center with your pawns on e4 and d4!
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('pieces')">♟ Pieces</button>
+    <button class="tab-btn" onclick="showSection('board')">🎮 Practice Board</button>
+    <button class="tab-btn" onclick="showSection('openings')">📖 Openings</button>
+    <button class="tab-btn" onclick="showSection('strategies')">🧠 Strategies</button>
+    <button class="tab-btn" onclick="showSection('tricks')">⚡ Tricks</button>
+    <button class="tab-btn" onclick="showSection('quiz')">🏆 Quiz</button>
+  </div>
+
+  <!-- PIECES SECTION -->
+  <div class="section active" id="section-pieces">
+    <h2 class="section-title">Meet the Chess Pieces! ♟</h2>
+    <div class="pieces-grid">
+      <div class="piece-card" onclick="showPieceInfo('king')">
+        <span class="piece-emoji">♚</span>
+        <div class="piece-name">King</div>
+        <div class="piece-desc">Most important!</div>
+      </div>
+      <div class="piece-card" onclick="showPieceInfo('queen')">
+        <span class="piece-emoji">♛</span>
+        <div class="piece-name">Queen</div>
+        <div class="piece-desc">Most powerful!</div>
+      </div>
+      <div class="piece-card" onclick="showPieceInfo('rook')">
+        <span class="piece-emoji">♜</span>
+        <div class="piece-name">Rook</div>
+        <div class="piece-desc">Castle warrior!</div>
+      </div>
+      <div class="piece-card" onclick="showPieceInfo('bishop')">
+        <span class="piece-emoji">♝</span>
+        <div class="piece-name">Bishop</div>
+        <div class="piece-desc">Diagonal master!</div>
+      </div>
+      <div class="piece-card" onclick="showPieceInfo('knight')">
+        <span class="piece-emoji">♞</span>
+        <div class="piece-name">Knight</div>
+        <div class="piece-desc">Jumper! 🐴</div>
+      </div>
+      <div class="piece-card" onclick="showPieceInfo('pawn')">
+        <span class="piece-emoji">♟</span>
+        <div class="piece-name">Pawn</div>
+        <div class="piece-desc">Little hero!</div>
+      </div>
+    </div>
+
+    <div id="piece-info">
+      <h3 id="pi-name"></h3>
+      <p id="pi-desc"></p>
+      <div class="moves-diagram" id="pi-moves"></div>
+      <p id="pi-tip"></p>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <h2>⚖️ Piece Values</h2>
+      <p>Each piece has a value — use this to trade wisely!</p>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:15px;">
+        <div style="text-align:center; background:rgba(255,255,255,0.1); padding:12px 18px; border-radius:12px;">
+          <div style="font-size:2rem;">♟</div>
+          <div style="font-family:'Fredoka One'; color:var(--gold);">Pawn</div>
+          <div style="font-size:1.3rem; color:#fff;">1 ⭐</div>
+        </div>
+        <div style="text-align:center; background:rgba(255,255,255,0.1); padding:12px 18px; border-radius:12px;">
+          <div style="font-size:2rem;">♞</div>
+          <div style="font-family:'Fredoka One'; color:var(--gold);">Knight</div>
+          <div style="font-size:1.3rem; color:#fff;">3 ⭐</div>
+        </div>
+        <div style="text-align:center; background:rgba(255,255,255,0.1); padding:12px 18px; border-radius:12px;">
+          <div style="font-size:2rem;">♝</div>
+          <div style="font-family:'Fredoka One'; color:var(--gold);">Bishop</div>
+          <div style="font-size:1.3rem; color:#fff;">3 ⭐</div>
+        </div>
+        <div style="text-align:center; background:rgba(255,255,255,0.1); padding:12px 18px; border-radius:12px;">
+          <div style="font-size:2rem;">♜</div>
+          <div style="font-family:'Fredoka One'; color:var(--gold);">Rook</div>
+          <div style="font-size:1.3rem; color:#fff;">5 ⭐</div>
+        </div>
+        <div style="text-align:center; background:rgba(255,255,255,0.1); padding:12px 18px; border-radius:12px;">
+          <div style="font-size:2rem;">♛</div>
+          <div style="font-family:'Fredoka One'; color:var(--gold);">Queen</div>
+          <div style="font-size:1.3rem; color:#fff;">9 ⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD SECTION -->
+  <div class="section" id="section-board">
+    <h2 class="section-title">🎮 Practice Board</h2>
+    <div class="board-container">
+      <div>
+        <div class="chess-board" id="chessBoard"></div>
+        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+          <button class="btn btn-gold" onclick="resetBoard()">🔄 Reset</button>
+          <button class="btn btn-green" onclick="showSetup('scholars')">⚡ Scholar's Mate Setup</button>
+          <button class="btn btn-green" onclick="showSetup('castling')">🏰 Castling Setup</button>
+        </div>
+      </div>
+      <div class="board-info">
+        <h3>How to Play</h3>
+        <p>👆 Click a piece to select it, then click a highlighted square to move!</p>
+        <p>The board starts with all pieces in their starting positions.</p>
+        <div id="board-message" style="background:rgba(255,215,0,0.15); border:2px solid var(--gold); border-radius:12px; padding:12px; margin-top:10px; font-weight:700; color:var(--gold);">
+          🎮 Click any piece to get started!
+        </div>
+        <div style="margin-top:15px;">
+          <h3>Turn</h3>
+          <div id="turn-display" style="font-family:'Fredoka One'; font-size:1.2rem; color:#fff; margin-top:5px;">⬜ White's turn</div>
+        </div>
+        <div style="margin-top:15px;">
+          <h3>Captured Pieces</h3>
+          <div id="captured-white" style="min-height:30px; font-size:1.2rem;"></div>
+          <div id="captured-black" style="min-height:30px; font-size:1.2rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPENINGS SECTION -->
+  <div class="section" id="section-openings">
+    <h2 class="section-title">📖 Famous Openings</h2>
+
+    <div class="opening-card">
+      <div class="opening-icon">🏹</div>
+      <div class="opening-content">
+        <h3>Italian Game</h3>
+        <div class="moves">1.e4 e5 2.Nf3 Nc6 3.Bc4</div>
+        <p>One of the oldest openings! White attacks f7 — the weakest square near Black's king. Perfect for beginners! Control the center, develop your pieces fast.</p>
+        <span class="tag tag-beginner">Beginner</span>
+      </div>
+    </div>
+
+    <div class="opening-card">
+      <div class="opening-icon">🛡️</div>
+      <div class="opening-content">
+        <h3>Sicilian Defence</h3>
+        <div class="moves">1.e4 c5</div>
+        <p>The most popular opening! Black fights back against e4 without mirroring it. Creates an unbalanced, exciting game with lots of attacking chances for both sides.</p>
+        <span class="tag tag-intermediate">Intermediate</span>
+      </div>
+    </div>
+
+    <div class="opening-card">
+      <div class="opening-icon">🌲</div>
+      <div class="opening-content">
+        <h3>London System</h3>
+        <div class="moves">1.d4 d5 2.Bf4 Nf6 3.e3</div>
+        <p>A solid, reliable opening for White. Build a strong pawn structure, develop your bishop early, and keep things simple while still playing great chess!</p>
+        <span class="tag tag-beginner">Beginner</span>
+      </div>
+    </div>
+
+    <div class="opening-card">
+      <div class="opening-icon">🦅</div>
+      <div class="opening-content">
+        <h3>King's Indian Defence</h3>
+        <div class="moves">1.d4 Nf6 2.c4 g6 3.Nc3 Bg7</div>
+        <p>Black lets White take the center, then counterattacks! The bishop on g7 becomes a super-powerful "fianchetto" bishop. Loved by aggressive players!</p>
+        <span class="tag tag-intermediate">Intermediate</span>
+      </div>
+    </div>
+
+    <div class="opening-card">
+      <div class="opening-icon">🎭</div>
+      <div class="opening-content">
+        <h3>French Defence</h3>
+        <div class="moves">1.e4 e6 2.d4 d5</div>
+        <p>Black builds a solid wall of pawns! Not the most glamorous opening, but very strong and hard to break down. Great for players who like defending.</p>
+        <span class="tag tag-beginner">Beginner</span>
+      </div>
+    </div>
+
+    <div class="opening-card">
+      <div class="opening-icon">🔥</div>
+      <div class="opening-content">
+        <h3>King's Gambit</h3>
+        <div class="moves">1.e4 e5 2.f4</div>
+        <p>White gives away a pawn to get super-fast development and attack! Very exciting and aggressive. Many brilliant games have been played with this opening!</p>
+        <span class="tag tag-intermediate">Intermediate</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🌟 Golden Opening Rules</h2>
+      <p style="margin-bottom:8px;">1. <strong>Control the center</strong> — the squares e4, d4, e5, d5 are most important!</p>
+      <p style="margin-bottom:8px;">2. <strong>Develop your pieces</strong> — get your knights and bishops out early!</p>
+      <p style="margin-bottom:8px;">3. <strong>Castle your king to safety</strong> — don't leave your king in the center!</p>
+      <p style="margin-bottom:8px;">4. <strong>Don't move the same piece twice</strong> — unless there's a great reason!</p>
+      <p>5. <strong>Connect your rooks</strong> — clear the back rank so rooks can work together!</p>
+    </div>
+  </div>
+
+  <!-- STRATEGIES SECTION -->
+  <div class="section" id="section-strategies">
+    <h2 class="section-title">🧠 Chess Strategies</h2>
+    <div class="strategies-grid">
+      <div class="strategy-card">
+        <h3>🎯 Control the Center</h3>
+        <span class="tag tag-beginner">Beginner</span>
+        <p>The four center squares (e4, d4, e5, d5) are the most powerful spots. Pieces in the center control more squares and are harder to attack!</p>
+      </div>
+      <div class="strategy-card">
+        <h3>🏰 Castle Early!</h3>
+        <span class="tag tag-beginner">Beginner</span>
+        <p>Castling moves your king to safety AND connects your rooks. Always try to castle in the first 10 moves. Your king in the center is very dangerous!</p>
+      </div>
+      <div class="strategy-card">
+        <h3>🦁 Piece Activity</h3>
+        <span class="tag tag-beginner">Beginner</span>
+        <p>An active piece that controls many squares is worth more than a stuck piece. Always ask: "What can my pieces do right now?"</p>
+      </div>
+      <div class="strategy-card">
+        <h3>📌 Outposts</h3>
+        <span class="tag tag-intermediate">Intermediate</span>
+        <p>An outpost is a square deep in enemy territory that your piece can sit on safely. A knight on an outpost can dominate the whole game!</p>
+      </div>
+      <div class="strategy-card">
+        <h3>🔓 Open Files for Rooks</h3>
+        <span class="tag tag-intermediate">Intermediate</span>
+        <p>Rooks love open files (columns with no pawns). Put your rooks on open files to attack the enemy position. Two rooks on the 7th rank can win games!</p>
+      </div>
+      <div class="strategy-card">
+        <h3>👑 King Safety</h3>
+        <span class="tag tag-beginner">Beginner</span>
+        <p>Never ignore your king's safety! A pawn shield in front of your castled king is very important. Avoid moving those pawns unless necessary!</p>
+      </div>
+      <div class="strategy-card">
+        <h3>🔗 Pawn Structure</h3>
+        <span class="tag tag-intermediate">Intermediate</span>
+        <p>Pawns can't move backwards! Avoid doubled pawns (two pawns on the same file), isolated pawns (no friendly pawns next to them), and backward pawns.</p>
+      </div>
+      <div class="strategy-card">
+        <h3>⏰ Don't Waste Moves</h3>
+        <span class="tag tag-beginner">Beginner</span>
+        <p>In chess, every move counts! Don't move the same piece twice in the opening. Each move should improve your position or threaten something.</p>
+      </div>
+      <div class="strategy-card">
+        <h3>🎪 Endgame: King Activation</h3>
+        <span class="tag tag-intermediate">Intermediate</span>
+        <p>In the endgame, the king becomes a powerful piece! Bring your king to the center to help attack and escort your passed pawns to promotion.</p>
+      </div>
+      <div class="strategy-card">
+        <h3>🌟 Passed Pawns</h3>
+        <span class="tag tag-intermediate">Intermediate</span>
+        <p>A passed pawn has no enemy pawns blocking its path to the other end. Passed pawns are very strong! Push them forward and they can become a queen!</p>
+      </div>
+      <div class="strategy-card">
+        <h3>🔄 Zugzwang</h3>
+        <span class="tag tag-advanced">Advanced</span>
+        <p>A position where ANY move makes your position worse! You're forced to move but wish you could pass. This often decides endgames. Very tricky!</p>
+      </div>
+      <div class="strategy-card">
+        <h3>⚡ Tempo</h3>
+        <span class="tag tag-advanced">Advanced</span>
+        <p>A "tempo" is like a free move. Making threats forces your opponent to react, letting you control the pace. Gaining tempos gives you a big advantage!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRICKS SECTION -->
+  <div class="section" id="section-tricks">
+    <h2 class="section-title">⚡ Tactics & Tricks</h2>
+
+    <div class="card">
+      <h2>⚡ Fork — Attack Two at Once!</h2>
+      <p>A <strong>fork</strong> is when one piece attacks two enemy pieces at the same time. The most famous is the <strong>knight fork</strong>! Your opponent can only save one piece — you capture the other for free!</p>
+      <p style="margin-top:10px; font-size:1.5rem;">♞ → attacks ♜ and ♛ at same time! 😱</p>
+    </div>
+
+    <div class="card">
+      <h2>📌 Pin — Can't Move Without Losing!</h2>
+      <p>A <strong>pin</strong> is when a piece can't move because moving it would expose a more valuable piece behind it. A bishop or rook pinning a knight to a king means the knight is stuck!</p>
+      <p style="margin-top:10px;">♜ — ♞ — ♔ (Knight is pinned! Moving it exposes the King)</p>
+    </div>
+
+    <div class="card">
+      <h2>💥 Skewer — Big Piece Must Move, Smaller Piece Lost!</h2>
+      <p>A <strong>skewer</strong> is the opposite of a pin. You attack a valuable piece, it moves, and then you capture the piece behind it. Like putting a piece on a stick!</p>
+    </div>
+
+    <div class="card">
+      <h2>🎯 Discovered Attack — Surprise Reveal!</h2>
+      <p>A <strong>discovered attack</strong> happens when you move one piece and it reveals an attack by another piece behind it. Double discovered attacks (where BOTH pieces attack!) are devastating!</p>
+    </div>
+
+    <div class="card">
+      <h2>😈 Scholar's Mate — 4-Move Checkmate!</h2>
+      <p>The fastest checkmate! <strong>1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6?? 4.Qxf7#</strong></p>
+      <p style="margin-top:10px;">White's queen and bishop team up to attack f7. Beginners fall for this often! <strong>How to defend?</strong> Move your knight to f6 on move 3 to block the queen!</p>
+    </div>
+
+    <div class="card">
+      <h2>🔄 Zwischenzug — The In-Between Move!</h2>
+      <p>Instead of the expected recapture, play a different powerful move first! Your opponent will be shocked. It's like saying "wait, actually I have something better right now!"</p>
+    </div>
+
+    <div class="card">
+      <h2>💫 Sacrifice! Give Something to Get More!</h2>
+      <p>Sometimes giving up a piece is the key to a brilliant attack! Sacrifices can expose the enemy king, gain powerful positions, or lead to checkmate. The greatest chess games often feature amazing sacrifices! ♟🔥</p>
+    </div>
+
+    <div class="card">
+      <h2>🏰 Castling — King Safety Trick</h2>
+      <p>Castling is a special move where the king moves 2 squares and the rook jumps over it. <strong>Kingside castling</strong> (short): King goes to g1. <strong>Queenside castling</strong> (long): King goes to c1. Always castle to keep your king safe!</p>
+    </div>
+  </div>
+
+  <!-- QUIZ SECTION -->
+  <div class="section" id="section-quiz">
+    <h2 class="section-title">🏆 Chess Quiz Challenge!</h2>
+    <div class="score-display">
+      ⭐ Score: <span id="score">0</span> / <span id="total-q">0</span>
+      <div class="progress-bar" style="max-width:300px; margin:10px auto 0;">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-box">
+      <div id="quiz-emoji" style="font-size:3rem; margin-bottom:10px;">🤔</div>
+      <h3 id="quiz-question-num">Question 1 of 12</h3>
+      <div class="question" id="quiz-question"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <button class="btn btn-gold" id="next-btn" onclick="nextQuestion()" style="display:none;">Next Question ➡️</button>
+      <button class="btn btn-green" id="restart-btn" onclick="restartQuiz()" style="display:none;">Play Again! 🔄</button>
+    </div>
+
+    <div style="text-align:center; margin-top:20px;">
+      <div id="badges-display" style="font-size:1rem; color:#c5cae9; margin-bottom:10px;">Earn badges by answering correctly!</div>
+      <div id="earned-badges"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== TIPS =====
+const tips = [
+  "💡 Control the center with pawns on e4 and d4!",
+  "💡 Knights are best in the center, not on the edge!",
+  "🏰 Castle early to keep your king safe!",
+  "⭐ The queen is worth 9 points — protect her!",
+  "🎯 Always look for forks, pins, and skewers!",
+  "♟ Passed pawns become queens — push them!",
+  "👁️ Always check: what can your opponent do next?",
+  "🔗 Connect your rooks by castling and clearing the back rank!",
+  "🧠 Have a plan every move — don't just react!",
+  "⚡ Discovered attacks are very powerful surprises!",
+];
+let tipIdx = 0;
+setInterval(() => {
+  tipIdx = (tipIdx + 1) % tips.length;
+  document.getElementById('tipsTicker').textContent = tips[tipIdx];
+}, 5000);
+
+// ===== TABS =====
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'board' && !boardInitialized) { initBoard(); boardInitialized = true; }
+  if (id === 'quiz' && !quizStarted) { startQuiz(); quizStarted = true; }
+}
+
+// ===== PIECE INFO =====
+const pieceData = {
+  king: {
+    name: "👑 King — The Royal Leader",
+    desc: "The king is the most important piece! If your king is trapped (checkmate), you lose the game. The king can move one square in any direction.",
+    moves: "↑ ↗ → ↘ ↓ ↙ ← ↖",
+    tip: "💡 Keep your king safe! Castle early, and in the endgame, march your king forward to help attack."
+  },
+  queen: {
+    name: "♛ Queen — The Mighty Warrior",
+    desc: "The queen is the most powerful piece on the board! She can move any number of squares in any direction — like a rook and bishop combined! Worth 9 pawns.",
+    moves: "↑↑ ↗↗ →→ ↘↘ ↓↓ ↙↙ ←← ↖↖",
+    tip: "💡 Don't bring your queen out too early — she can be attacked by smaller pieces and you'll lose time!"
+  },
+  rook: {
+    name: "♜ Rook — The Castle Tower",
+    desc: "The rook moves any number of squares horizontally or vertically. Rooks are most powerful on open files (columns with no pawns). Two rooks working together are incredibly strong!",
+    moves: "↑↑↑ ↓↓↓ ←←← →→→",
+    tip: "💡 Place your rooks on open files and connect them by castling. Two rooks on the 7th rank often win the game!"
+  },
+  bishop: {
+    name: "♝ Bishop — The Diagonal Master",
+    desc: "The bishop moves diagonally any number of squares. Each bishop stays on one color forever! Bishops love open positions with long diagonals. Worth 3 pawns.",
+    moves: "↗↗ ↘↘ ↙↙ ↖↖",
+    tip: "💡 Bishops are great in open positions. A 'bad bishop' is blocked by its own pawns — avoid putting your pawns on the same color as your bishop!"
+  },
+  knight: {
+    name: "♞ Knight — The L-Shaped Jumper",
+    desc: "The knight moves in an L-shape: 2 squares in one direction, then 1 square perpendicular. It's the ONLY piece that can jump over other pieces! Very tricky to use!",
+    moves: "Moves like an 'L' shape ♞",
+    tip: "💡 Knights are best in closed positions and the center. A knight on the rim is dim! Always try to keep knights near the action."
+  },
+  pawn: {
+    name: "♟ Pawn — The Little Hero",
+    desc: "Pawns move forward one square (or two on their first move!) and capture diagonally. Pawns can never move backwards. If a pawn reaches the other end of the board, it becomes a queen! This is called PROMOTION! 🎉",
+    moves: "↑ (forward only) ↗↖ (capture)",
+    tip: "💡 If your pawn reaches the other side, promote it to a queen! Also, en passant is a special pawn capture — ask your teacher about it!"
+  }
+};
+
+function showPieceInfo(piece) {
+  const d = pieceData[piece];
+  document.getElementById('pi-name').textContent = d.name;
+  document.getElementById('pi-desc').textContent = d.desc;
+  document.getElementById('pi-moves').textContent = d.moves;
+  document.getElementById('pi-tip').textContent = d.tip;
+  const box = document.getElementById('piece-info');
+  box.classList.add('show');
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ===== CHESS BOARD =====
+let boardInitialized = false;
+let selectedSq = null;
+let currentTurn = 'white';
+let boardState = [];
+let capturedWhite = [];
+let capturedBlack = [];
+
+const initialBoard = [
+  ['♜','♞','♝','♛','♚','♝','♞','♜'],
+  ['♟','♟','♟','♟','♟','♟','♟','♟'],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['','','','','','','',''],
+  ['♙','♙','♙','♙','♙','♙','♙','♙'],
+  ['♖','♘','♗','♕','♔','♗','♘','♖'],
+];
+
+const whitePieces = ['♔','♕','♖','♗','♘','♙'];
+const blackPieces = ['♚','♛','♜','♝','♞','♟'];
+
+function isWhite(p) { return whitePieces.includes(p); }
+function isBlack(p) { return blackPieces.includes(p); }
+
+function initBoard() {
+  boardState = initialBoard.map(r => [...r]);
+  renderBoard();
+}
+
+function renderBoard() {
+  const board = document.getElementById('chessBoard');
+  board.innerHTML = '';
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const sq = document.createElement('div');
+      sq.className = 'sq ' + ((r + c) % 2 === 0 ? 'light' : 'dark');
+      sq.textContent = boardState[r][c];
+      sq.dataset.r = r; sq.dataset.c = c;
+      sq.addEventListener('click', () => handleSquareClick(r, c));
+      board.appendChild(sq);
+    }
+  }
+  document.getElementById('turn-display').textContent = currentTurn === 'white' ? '⬜ White\'s turn' : '⬛ Black\'s turn';
+  document.getElementById('captured-white').textContent = 'White captured: ' + capturedWhite.join('');
+  document.getElementById('captured-black').textContent = 'Black captured: ' + capturedBlack.join('');
+}
+
+function handleSquareClick(r, c) {
+  const piece = boardState[r][c];
+  const isCurrentTeam = currentTurn === 'white' ? isWhite(piece) : isBlack(piece);
+
+  if (selectedSq) {
+    const [sr, sc] = selectedSq;
+    const validMoves = getValidMoves(sr, sc);
+    const isValid = validMoves.some(([vr, vc]) => vr === r && vc === c);
+
+    if (isValid) {
+      const captured = boardState[r][c];
+      if (captured) {
+        if (isWhite(captured)) capturedBlack.push(captured);
+        else capturedWhite.push(captured);
+      }
+      boardState[r][c] = boardState[sr][sc];
+      boardState[sr][sc] = '';
+      selectedSq = null;
+      currentTurn = currentTurn === 'white' ? 'black' : 'white';
+      document.getElementById('board-message').textContent = currentTurn === 'white' ? '⬜ White to move!' : '⬛ Black to move!';
+      renderBoard();
+    } else if (isCurrentTeam) {
+      selectedSq = [r, c];
+      highlightMoves(r, c);
+    } else {
+      selectedSq = null;
+      renderBoard();
+    }
+  } else if (isCurrentTeam) {
+    selectedSq = [r, c];
+    highlightMoves(r, c);
+    document.getElementById('board-message').textContent = getPieceName(piece) + ' selected! Click a green dot to move.';
+  }
+}
+
+function getPieceName(p) {
+  const names = {'♔':'King','♕':'Queen','♖':'Rook','♗':'Bishop','♘':'Knight','♙':'Pawn',
+                  '♚':'King','♛':'Queen','♜':'Rook','♝':'Bishop','♞':'Knight','♟':'Pawn'};
+  return names[p] || 'Piece';
+}
+
+function getValidMoves(r, c) {
+  const piece = boardState[r][c];
+  const moves = [];
+  const friendly = isWhite(piece) ? isWhite : isBlack;
+  const enemy = isWhite(piece) ? isBlack : isWhite;
+
+  const addIfValid = (nr, nc) => {
+    if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+      if (!friendly(boardState[nr][nc])) moves.push([nr, nc]);
+      return !boardState[nr][nc];
+    }
+    return false;
+  };
+
+  const slide = (dr, dc) => {
+    let nr = r + dr, nc = c + dc;
+    while (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+      if (friendly(boardState[nr][nc])) break;
+      moves.push([nr, nc]);
+      if (boardState[nr][nc]) break;
+      nr += dr; nc += dc;
+    }
+  };
+
+  switch(piece) {
+    case '♙': // White pawn
+      if (r > 0 && !boardState[r-1][c]) {
+        moves.push([r-1, c]);
+        if (r === 6 && !boardState[r-2][c]) moves.push([r-2, c]);
+      }
+      if (r > 0 && c > 0 && isBlack(boardState[r-1][c-1])) moves.push([r-1, c-1]);
+      if (r > 0 && c < 7 && isBlack(boardState[r-1][c+1])) moves.push([r-1, c+1]);
+      break;
+    case '♟': // Black pawn
+      if (r < 7 && !boardState[r+1][c]) {
+        moves.push([r+1, c]);
+        if (r === 1 && !boardState[r+2][c]) moves.push([r+2, c]);
+      }
+      if (r < 7 && c > 0 && isWhite(boardState[r+1][c-1])) moves.push([r+1, c-1]);
+      if (r < 7 && c < 7 && isWhite(boardState[r+1][c+1])) moves.push([r+1, c+1]);
+      break;
+    case '♘': case '♞':
+      [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc]) => addIfValid(r+dr, c+dc));
+      break;
+    case '♗': case '♝':
+      [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([dr,dc]) => slide(dr,dc));
+      break;
+    case '♖': case '♜':
+      [[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr,dc]) => slide(dr,dc));
+      break;
+    case '♕': case '♛':
+      [[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr,dc]) => slide(dr,dc));
+      break;
+    case '♔': case '♚':
+      [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr,dc]) => addIfValid(r+dr,c+dc));
+      break;
+  }
+  return moves;
+}
+
+function highlightMoves(r, c) {
+  renderBoard();
+  const squares = document.querySelectorAll('.sq');
+  const idx = r * 8 + c;
+  squares[idx].classList.add('highlight');
+  const moves = getValidMoves(r, c);
+  moves.forEach(([mr, mc]) => {
+    squares[mr * 8 + mc].classList.add('valid-move');
+  });
+}
+
+function resetBoard() {
+  boardState = initialBoard.map(row => [...row]);
+  selectedSq = null;
+  currentTurn = 'white';
+  capturedWhite = [];
+  capturedBlack = [];
+  document.getElementById('board-message').textContent = '🎮 Click any piece to get started!';
+  renderBoard();
+}
+
+function showSetup(type) {
+  resetBoard();
+  if (type === 'scholars') {
+    // After 1.e4 e5 2.Bc4
+    boardState[4][4] = '♙'; boardState[6][4] = '';
+    boardState[3][4] = '♟'; boardState[1][4] = '';
+    boardState[4][2] = '♗'; boardState[7][5] = '';
+    document.getElementById('board-message').textContent = "🎯 Scholar's Mate setup! White threatens Qh5 followed by Qxf7. Can Black defend?";
+  } else if (type === 'castling') {
+    boardState[7][5] = ''; boardState[7][6] = '';
+    document.getElementById('board-message').textContent = "🏰 Castling! Move the King from e1 to g1 (two squares right) and the Rook jumps over!";
+  }
+  renderBoard();
+}
+
+// ===== QUIZ =====
+let quizStarted = false;
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let earnedBadges = [];
+
+const questions = [
+  { q: "Which piece can jump over other pieces?", opts: ["Bishop","Rook","Knight","Queen"], answer: 2, emoji: "🐴", explanation: "The Knight is the only piece that can jump over other pieces! It moves in an L-shape." },
+  { q: "What is it called when the King cannot escape from attack?", opts: ["Check","Stalemate","Checkmate","Fork"], answer: 2, emoji: "😱", explanation: "Checkmate! When the king is in check and has no escape, the game is over!" },
+  { q: "How many points is the Queen worth?", opts: ["5","7","9","3"], answer: 2, emoji: "♛", explanation: "The Queen is worth 9 points — the most powerful piece!" },
+  { q: "What does it mean to 'castle'?", opts: ["Move queen across board","Move king 2 squares with rook","Capture a piece","Promote a pawn"], answer: 1, emoji: "🏰", explanation: "Castling moves the king 2 squares and the rook jumps over it to safety!" },
+  { q: "What is a 'fork' in chess?", opts: ["Moving a piece backwards","Blocking a check","Attacking two pieces at once","A pawn promotion"], answer: 2, emoji: "⚡", explanation: "A fork attacks two enemy pieces at the same time — your opponent can only save one!" },
+  { q: "Where is the best square for a Knight at the start?", opts: ["Corner","Edge of board","Center of board","Behind other pieces"], answer: 2, emoji: "🎯", explanation: "Knights in the center control up to 8 squares. A knight on the rim is dim!" },
+  { q: "What is 'pawn promotion'?", opts: ["Pawns can capture backwards","Pawn reaching the last rank becomes powerful piece","Two pawns merge","Pawn jumps over pieces"], answer: 1, emoji: "🌟", explanation: "When a pawn reaches the opposite end, it promotes — usually to a Queen!" },
+  { q: "What is a 'pin' in chess?", opts: ["A drawing move","A piece that can't move without exposing a valuable piece","Moving two pieces at once","Blocking the opponent's queen"], answer: 1, emoji: "📌", explanation: "A pinned piece can't move without exposing a more valuable piece behind it!" },
+  { q: "What does the Bishop always stay on?", opts: ["Open files","Same color squares","Center squares","The back rank"], answer: 1, emoji: "♝", explanation: "Each Bishop stays on one color (light or dark) for the entire game!" },
+  { q: "In the starting position, which piece is in the corner?", opts: ["Knight","Bishop","Rook","Queen"], answer: 2, emoji: "♜", explanation: "Rooks start in the corners! They need open files to show their strength." },
+  { q: "What is 'Stalemate'?", opts: ["A pawn promotion","King in check","No legal moves but not in check — it's a draw!","Both kings face each other"], answer: 2, emoji: "🤝", explanation: "Stalemate is when a player has no legal moves but their king is NOT in check. It's a draw!" },
+  { q: "Which opening move is most popular for White?", opts: ["a4","e4","h4","f4"], answer: 1, emoji: "📖", explanation: "1.e4 is the most popular first move! It controls the center and opens lines for pieces." },
+];
+
+const badges = ['🌟','🏆','⚡','🎯','♛','🧠','🔥','💎','👑','🎖️','🦁','🌈'];
+
+function startQuiz() {
+  currentQ = 0; score = 0; answered = false;
+  document.getElementById('score').textContent = '0';
+  document.getElementById('total-q').textContent = '0';
+  document.getElementById('earned-badges').innerHTML = '';
+  earnedBadges = [];
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  document.getElementById('quiz-emoji').textContent = q.emoji;
+  document.getElementById('quiz-question-num').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+  document.getElementById('quiz-question').textContent = q.q;
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('restart-btn').style.display = 'none';
+  document.getElementById('total-q').textContent = currentQ;
+  const pct = (currentQ / questions.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const optsEl = document.getElementById('quiz-options');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => answer(i);
+    optsEl.appendChild(btn);
+  });
+}
+
+function answer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts[q.answer].classList.add('correct');
+  
+  const fb = document.getElementById('quiz-feedback');
+  if (idx === q.answer) {
+    score++;
+    opts[idx].classList.add('correct');
+    fb.textContent = '🎉 Correct! ' + q.explanation;
+    fb.className = 'quiz-feedback correct show';
+    // Award badge
+    if (currentQ < badges.length) {
+      earnedBadges.push(badges[currentQ]);
+      const bd = document.getElementById('earned-badges');
+      const b = document.createElement('span');
+      b.className = 'badge';
+      b.textContent = badges[currentQ];
+      b.title = 'Question ' + (currentQ+1) + ' badge!';
+      bd.appendChild(b);
+    }
+  } else {
+    opts[idx].classList.add('wrong');
+    fb.textContent = '❌ Not quite! ' + q.explanation;
+    fb.className = 'quiz-feedback wrong show';
+  }
+  
+  document.getElementById('score').textContent = score;
+  document.getElementById('total-q').textContent = currentQ + 1;
+
+  if (currentQ < questions.length - 1) {
+    document.getElementById('next-btn').style.display = 'inline-block';
+  } else {
+    // End
+    document.getElementById('progress-fill').style.width = '100%';
+    const pct = Math.round((score / questions.length) * 100);
+    let msg = '';
+    if (pct === 100) msg = '🏆 PERFECT SCORE! You\'re a Chess Grandmaster! ';
+    else if (pct >= 80) msg = '🌟 Excellent! You\'re a Chess Expert! ';
+    else if (pct >= 60) msg = '⭐ Good job! Keep practicing! ';
+    else msg = '📚 Keep studying — you\'ll get there! ';
+    fb.textContent = msg + `Final score: ${score}/${questions.length} (${pct}%)`;
+    document.getElementById('restart-btn').style.display = 'inline-block';
+    document.getElementById('badges-display').textContent = 'Your badges:';
+  }
+}
+
+function nextQuestion() {
+  currentQ++;
+  showQuestion();
+}
+
+function restartQuiz() {
+  startQuiz();
+}
+</script>
+</body>
+</html>
