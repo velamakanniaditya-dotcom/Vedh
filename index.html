@@ -210,8 +210,7 @@ body {
   cursor: pointer;
   text-decoration: none;
   display: block;
-  transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275),
-              box-shadow 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.3s ease;
   animation: card-arrive 0.6s var(--card-delay, 0s) cubic-bezier(0.175,0.885,0.32,1.275) both;
   opacity: 0;
   animation-fill-mode: forwards;
@@ -242,31 +241,26 @@ body {
   padding: 28px 24px 24px;
 }
 
-/* Card: CHESS */
-.card-chess .card-bg {
-  background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #1565c0 100%);
-}
-.card-chess { --card-accent: #FFD700; }
+/* Card Backgrounds */
+.card-chess .card-bg   { background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #1565c0 100%); }
+.card-math .card-bg    { background: linear-gradient(135deg, #1b3a1b 0%, #2e7d32 60%, #1b5e20 100%); }
+.card-words .card-bg   { background: linear-gradient(135deg, #4a1942 0%, #880e4f 60%, #c2185b 100%); }
+.card-memory .card-bg  { background: linear-gradient(135deg, #1a1a00 0%, #f57f17 40%, #e65100 100%); }
+.card-geo .card-bg     { background: linear-gradient(135deg, #0288d1 0%, #004d40 100%); }
+
+/* Card Accents */
+.card-chess  { --card-accent: #FFD700; }
+.card-math   { --card-accent: #69f0ae; }
+.card-words  { --card-accent: #f48fb1; }
+.card-memory { --card-accent: #ffcc02; }
+.card-geo    { --card-accent: #4caf50; }
+
 .card-chess::before {
   content: '♟♜♝♛♚♝♜♟';
   position: absolute; bottom: -8px; right: -8px;
   font-size: 3.5rem; opacity: 0.07; letter-spacing: -4px;
   z-index: 0; line-height: 1;
 }
-
-/* Placeholder "coming soon" cards */
-.card-coming .card-bg {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-}
-.card-coming { --card-accent: rgba(255,255,255,0.2); opacity: 0.7; cursor: default; }
-.card-coming:hover { transform: none; box-shadow: none; }
-
-.card-math .card-bg    { background: linear-gradient(135deg, #1b3a1b 0%, #2e7d32 60%, #1b5e20 100%); }
-.card-math { --card-accent: #69f0ae; }
-.card-words .card-bg   { background: linear-gradient(135deg, #4a1942 0%, #880e4f 60%, #c2185b 100%); }
-.card-words { --card-accent: #f48fb1; }
-.card-memory .card-bg  { background: linear-gradient(135deg, #1a1a00 0%, #f57f17 40%, #e65100 100%); }
-.card-memory { --card-accent: #ffcc02; }
 
 /* Card inner elements */
 .card-icon {
@@ -333,12 +327,6 @@ body {
 .cta-play:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 22px rgba(255,165,0,0.6);
-}
-.cta-soon {
-  background: rgba(255,255,255,0.07);
-  color: rgba(255,255,255,0.3);
-  cursor: default;
-  border: 1px solid rgba(255,255,255,0.1);
 }
 
 /* Card shine effect on hover */
@@ -421,10 +409,8 @@ footer strong { color: rgba(255,215,0,0.5); }
 </head>
 <body>
 
-<!-- Stars -->
 <div class="stars-layer" id="starsLayer"></div>
 
-<!-- Floating background emojis -->
 <div class="floaty" style="--fs:4rem;--fd:14s;--fdelay:0s;left:5%;top:15%;">♛</div>
 <div class="floaty" style="--fs:3rem;--fd:11s;--fdelay:2s;left:88%;top:8%;">🎮</div>
 <div class="floaty" style="--fs:3.5rem;--fd:16s;--fdelay:4s;left:10%;top:70%;">🏆</div>
@@ -435,7 +421,6 @@ footer strong { color: rgba(255,215,0,0.5); }
 
 <div class="wrap">
 
-  <!-- ══ HERO ══ -->
   <header class="hero">
     <span class="crown-big">👑</span>
     <h1 class="hero-name">Vedh's Game Kingdom</h1>
@@ -443,21 +428,17 @@ footer strong { color: rgba(255,215,0,0.5); }
     <div class="wave-divider">⭐ ✨ ⭐ ✨ ⭐</div>
   </header>
 
-  <!-- ══ STATS ══ -->
   <div class="stats-bar">
-    <div class="stat-pill">🎮 <span>5 Game Live</span></div>
+    <div class="stat-pill">🎮 <span>5 Games Live!</span></div>
     <div class="stat-pill">🏆 <span>20 Challenges</span></div>
     <div class="stat-pill">📚 <span>7 Learning Sections</span></div>
     <div class="stat-pill">🌟 <span>More Coming Soon!</span></div>
   </div>
 
-  <!-- ══ SECTION LABEL ══ -->
   <div class="section-label">— Choose Your Game —</div>
 
-  <!-- ══ GAMES GRID ══ -->
   <div class="games-grid">
 
-    <!-- ── CHESS KINGDOM (LIVE) ── -->
     <a href="chess.html" class="game-card card-chess" style="--card-delay:0.7s;">
       <div class="card-bg"></div>
       <div class="card-content">
@@ -477,8 +458,7 @@ footer strong { color: rgba(255,215,0,0.5); }
       </div>
     </a>
 
-    <!-- ── MATHS BLAST (COMING SOON) ── -->
-   <a href="maths-blast.html" class="game-card card-math" style="--card-delay:0.85s;">
+    <a href="maths-blast.html" class="game-card card-math" style="--card-delay:0.85s;">
       <div class="card-bg"></div>
       <div class="card-content">
         <span class="card-icon">🔢</span>
@@ -495,8 +475,7 @@ footer strong { color: rgba(255,215,0,0.5); }
       </div>
     </a>
 
-    <!-- ── WORD WIZARD (COMING SOON) ── -->
-     <a href="word-wizard.html" class="game-card card-words" style="--card-delay:1.0s;">
+    <a href="word-wizard.html" class="game-card card-words" style="--card-delay:1.0s;">
       <div class="card-bg"></div>
       <div class="card-content">
         <span class="card-icon">📝</span>
@@ -512,9 +491,7 @@ footer strong { color: rgba(255,215,0,0.5); }
         <span class="card-cta cta-play">▶ Play Now!</span>
       </div>
     </a>
-    </div>
 
-    <!-- ── MEMORY MASTER (COMING SOON) ── -->
     <a href="memory-master.html" class="game-card card-memory" style="--card-delay:1.15s;">
       <div class="card-bg"></div>
       <div class="card-content">
@@ -531,11 +508,9 @@ footer strong { color: rgba(255,215,0,0.5); }
         <span class="card-cta cta-play">▶ Play Now!</span>
       </div>
     </a>
-    </div>
 
-    <!-- ── WORLD EXPLORER ── -->
-   <a href="world-explorer.html" class="game-card card-geo" style="--card-delay:1.3s;">
-      <div class="card-bg" style="background: linear-gradient(135deg, #0288d1 0%, #004d40 100%);"></div>
+    <a href="world-explorer.html" class="game-card card-geo" style="--card-delay:1.3s;">
+      <div class="card-bg"></div>
       <div class="card-content">
         <span class="card-icon">🌍</span>
         <div><span class="card-tag tag-live">✅ Live Now!</span></div>
@@ -550,23 +525,17 @@ footer strong { color: rgba(255,215,0,0.5); }
       </div>
     </a>
 
-  </div>
-
-  <!-- ══ SUGGEST BOX ══ -->
-  <div class="suggest-box">
+  </div> <div class="suggest-box">
     <div class="sb-icon">💡</div>
     <h3>Want a new game?</h3>
     <p>More amazing games are being built just for you, Vedh! Keep checking back for new adventures! 🚀</p>
   </div>
 
-  <!-- ══ FOOTER ══ -->
   <footer>
     <p>Made with ❤️ for <strong>Vedh</strong> 👑 &nbsp;|&nbsp; Keep learning, keep playing, keep winning! 🏆</p>
   </footer>
 
-</div><!-- /wrap -->
-
-<script>
+</div><script>
 /* ══════════════════════════════
    GENERATE STARS
 ══════════════════════════════ */
@@ -615,13 +584,6 @@ document.addEventListener('click', e => {
   el.style.top  = (e.clientY - 12) + 'px';
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 700);
-});
-
-/* ══════════════════════════════
-   PREVENT coming-soon card navigation
-══════════════════════════════ */
-document.querySelectorAll('.card-coming').forEach(card => {
-  card.onclick = e => e.preventDefault();
 });
 </script>
 </body>
