@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Master 🧠</title>
+    <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mem-dark: #1a0a00;
+            --orange: #f57f17;
+            --yellow: #ffcc02;
+            --red: #e65100;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background: radial-gradient(circle at center, #8a3800 0%, var(--mem-dark) 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-box {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 3px solid var(--orange);
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(245, 127, 23, 0.4);
+            position: relative;
+        }
+
+        h1 { font-family: 'Boogaloo', cursive; font-size: 3.2rem; color: var(--yellow); margin: 0 0 10px 0; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        p { margin-bottom: 20px; color: rgba(255,255,255,0.8); font-size: 1.1rem; }
+
+        .stat-row { display: flex; justify-content: space-around; margin: 15px 0; font-size: 1.2rem; }
+
+        #timer-container {
+            width: 100%;
+            height: 15px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        #timer-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow));
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        /* Card Grid Layout */
+        #grid {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        /* 3D Card Flip CSS */
+        .card {
+            width: 70px;
+            height: 70px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.4s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .card-back {
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed var(--yellow);
+            font-size: 2rem;
+        }
+
+        .card-back::after {
+            content: '?';
+            color: rgba(255, 204, 2, 0.5);
+            font-family: 'Boogaloo', cursive;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, var(--yellow), var(--orange));
+            transform: rotateY(180deg);
+            font-size: 2.5rem;
+            border: 2px solid white;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--orange), var(--red));
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Boogaloo', cursive;
+            margin-top: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(230, 81, 0, 0.5);
+            box-sizing: border-box;
+        }
+        
+        .btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(230, 81, 0, 0.7); }
+        .hidden { display: none !important; }
+
+        /* Floating Home Button */
+        .home-btn {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 2px solid var(--yellow);
+            color: var(--yellow);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Boogaloo', cursive;
+            font-size: 1.2rem;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s; z-index: 100;
+        }
+        .home-btn:hover { background: var(--yellow); color: var(--mem-dark); transform: scale(1.05); }
+        .btn-home { background: #00d2ff; color: #0a0a2e; box-shadow: 0 4px 15px rgba(0, 210, 255, 0.5); }
+        
+        .shake { animation: shake 0.4s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<div id="game-box">
+    <div id="start-screen">
+        <h1>🧠 MEMORY MASTER</h1>
+        <p>Flip the cards to find the matching pairs before time runs out!</p>
+        <button class="btn" onclick="startGame()">TRAIN BRAIN!</button>
+    </div>
+
+    <div id="play-screen" class="hidden">
+        <div class="stat-row">
+            <span>🏆 Score: <b id="score">0</b></span>
+            <span>⭐ Level: <b id="level">1</b></span>
+        </div>
+        <div id="timer-container"><div id="timer-bar"></div></div>
+        
+        <div id="grid"></div>
+    </div>
+
+    <div id="end-screen" class="hidden">
+        <h1 id="status-title">⏳ TIME'S UP!</h1>
+        <p>Your brain is getting stronger!</p>
+        <h2 style="font-size: 2.5rem; color: var(--yellow); margin: 10px 0;">Final Score: <span id="final-score">0</span></h2>
+        <button class="btn" onclick="showStartScreen()">🧠 TRY AGAIN</button>
+        <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 CHOOSE NEW GAME</button>
+    </div>
+</div>
+
+<script>
+    let score = 0, level = 1, timeLeft = 100, timer;
+    let hasFlippedCard = false, lockBoard = false;
+    let firstCard, secondCard;
+    let matchedPairs = 0, totalPairs = 0;
+    
+    const gridEl = document.getElementById('grid');
+    const allEmojis = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🦉'];
+
+    // Audio Synthesizer
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSound(type) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        if (type === 'flip') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+        } else if (type === 'match') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        }
+    }
+
+    function showStartScreen() {
+        document.getElementById('start-screen').className = '';
+        document.getElementById('end-screen').className = 'hidden';
+        document.getElementById('play-screen').className = 'hidden';
+    }
+
+    function startGame() {
+        initAudio();
+        score = 0; level = 1; timeLeft = 100;
+        document.getElementById('start-screen').className = 'hidden';
+        document.getElementById('end-screen').className = 'hidden';
+        document.getElementById('play-screen').className = '';
+        updateStats();
+        loadLevel();
+        startTimer();
+    }
+
+    function loadLevel() {
+        gridEl.innerHTML = '';
+        matchedPairs = 0;
+        
+        // Setup Grid Size based on level
+        let cols = 2, rows = 2; // Level 1: 4 cards
+        if (level === 2) { cols = 3; rows = 4; } // 12 cards
+        if (level === 3) { cols = 4; rows = 4; } // 16 cards
+        if (level >= 4) { cols = 5; rows = 4; } // 20 cards
+
+        totalPairs = (cols * rows) / 2;
+        
+        // CSS Grid dynamic columns & sizing
+        gridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        let cardSize = cols >= 5 ? '55px' : cols >= 4 ? '60px' : '70px';
+        
+        // Select random emojis and double them to make pairs
+        let levelEmojis = allEmojis.sort(() => 0.5 - Math.random()).slice(0, totalPairs);
+        let gameCards = [...levelEmojis, ...levelEmojis];
+        
+        // Shuffle cards
+        gameCards.sort(() => 0.5 - Math.random());
+
+        // Create HTML elements
+        gameCards.forEach(emoji => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.style.width = cardSize;
+            card.style.height = cardSize;
+            card.dataset.emoji = emoji;
+
+            card.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-face card-back"></div>
+                    <div class="card-face card-front">${emoji}</div>
+                </div>
+            `;
+            
+            card.addEventListener('click', flipCard);
+            gridEl.appendChild(card);
+        });
+    }
+
+    function flipCard() {
+        if (lockBoard) return;
+        if (this === firstCard) return;
+
+        playSound('flip');
+        this.classList.add('flipped');
+
+        if (!hasFlippedCard) {
+            hasFlippedCard = true;
+            firstCard = this;
+            return;
+        }
+
+        secondCard = this;
+        checkForMatch();
+    }
+
+    function checkForMatch() {
+        let isMatch = firstCard.dataset.emoji === secondCard.dataset.emoji;
+
+        if (isMatch) {
+            playSound('match');
+            disableCards();
+            matchedPairs++;
+            score += 10;
+            timeLeft = Math.min(100, timeLeft + 5); // Time bonus
+            updateStats();
+
+            // Next Level Check
+            if (matchedPairs === totalPairs) {
+                setTimeout(() => {
+                    level++;
+                    timeLeft = Math.min(100, timeLeft + 30); // Big time bonus for beating level
+                    updateStats();
+                    loadLevel();
+                }, 1000);
+            }
+        } else {
+            unflipCards();
+        }
+    }
+
+    function disableCards() {
+        firstCard.removeEventListener('click', flipCard);
+        secondCard.removeEventListener('click', flipCard);
+        
+        // Make matched cards pulse slightly
+        firstCard.style.transform = 'scale(0.95)';
+        secondCard.style.transform = 'scale(0.95)';
+        
+        resetBoard();
+    }
+
+    function unflipCards() {
+        lockBoard = true;
+        playSound('wrong');
+
+        setTimeout(() => {
+            firstCard.classList.remove('flipped');
+            secondCard.classList.remove('flipped');
+            resetBoard();
+        }, 800);
+    }
+
+    function resetBoard() {
+        [hasFlippedCard, lockBoard] = [false, false];
+        [firstCard, secondCard] = [null, null];
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft -= 0.5; // Drain speed
+            
+            document.getElementById('timer-bar').style.width = Math.max(0, timeLeft) + '%';
+            
+            if(timeLeft < 25) {
+                document.getElementById('timer-bar').style.background = '#ff0000';
+            } else {
+                document.getElementById('timer-bar').style.background = 'linear-gradient(90deg, var(--red), var(--orange), var(--yellow))';
+            }
+
+            if (timeLeft <= 0) gameOver();
+        }, 100);
+    }
+
+    function gameOver() {
+        clearInterval(timer);
+        document.getElementById('play-screen').className = 'hidden';
+        document.getElementById('end-screen').className = '';
+        document.getElementById('final-score').innerText = score;
+    }
+
+    function updateStats() {
+        document.getElementById('score').innerText = score;
+        document.getElementById('level').innerText = level;
+    }
+</script>
+</body>
+</html>
