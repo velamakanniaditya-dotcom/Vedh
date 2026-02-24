@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Explorer 🌍</title>
+    <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ocean-dark: #001f3f;
+            --ocean-blue: #0288d1;
+            --earth-green: #4caf50;
+            --gold: #FFD700;
+            --cloud: #e0f7fa;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background: radial-gradient(circle at center, #0277bd 0%, var(--ocean-dark) 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-box {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 3px solid var(--earth-green);
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(76, 175, 80, 0.4);
+            position: relative;
+        }
+
+        h1 { font-family: 'Boogaloo', cursive; font-size: 3rem; color: var(--gold); margin: 0 0 10px 0; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        p { margin-bottom: 20px; color: var(--cloud); font-size: 1.1rem; }
+
+        .stat-row { display: flex; justify-content: space-around; margin: 15px 0; font-size: 1.2rem; }
+
+        #timer-container {
+            width: 100%;
+            height: 15px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        #timer-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff5252, var(--gold), var(--earth-green));
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        #question-text {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-top: 15px;
+            color: var(--gold);
+        }
+
+        #big-visual {
+            font-size: 5rem;
+            margin: 10px 0;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Multiple Choice Grid */
+        #options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background: var(--ocean-blue);
+            color: white;
+            padding: 15px 10px;
+            font-size: 1.1rem;
+            border-radius: 15px;
+            border: 2px solid var(--cloud);
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .option-btn:hover {
+            transform: scale(1.05);
+            background: var(--earth-green);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--earth-green), #2e7d32);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Boogaloo', cursive;
+            margin-top: 15px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.5);
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover { transform: scale(1.05); }
+
+        .hidden { display: none !important; }
+        .flash-correct { background: #1b5e20 !important; transition: background 0.1s; }
+        .flash-wrong { background: #b71c1c !important; transition: background 0.1s; }
+
+        /* Floating Home Button */
+        .home-btn {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Boogaloo', cursive;
+            font-size: 1.2rem;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s; z-index: 100;
+        }
+        .home-btn:hover { background: var(--gold); color: var(--ocean-dark); transform: scale(1.05); }
+        .btn-home { background: var(--ocean-blue); border: 2px solid white; box-shadow: 0 4px 15px rgba(2, 136, 209, 0.5); }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<div id="game-box">
+    <div id="start-screen">
+        <h1>🌍 WORLD EXPLORER</h1>
+        <p>Travel the globe! Match flags, capitals, and landmarks before your plane runs out of fuel.</p>
+        <button class="btn" onclick="startGame()">✈️ TAKE OFF!</button>
+    </div>
+
+    <div id="play-screen" class="hidden">
+        <div class="stat-row">
+            <span>✈️ Miles: <b id="score">0</b></span>
+            <span>🌟 Level: <b id="level">1</b></span>
+        </div>
+        <div id="timer-container"><div id="timer-bar"></div></div>
+        
+        <div id="question-text">Where are we going?</div>
+        <div id="big-visual">🌍</div>
+        
+        <div id="options-grid">
+            <button class="option-btn" onclick="checkAnswer(0)" id="btn-0">Option 1</button>
+            <button class="option-btn" onclick="checkAnswer(1)" id="btn-1">Option 2</button>
+            <button class="option-btn" onclick="checkAnswer(2)" id="btn-2">Option 3</button>
+            <button class="option-btn" onclick="checkAnswer(3)" id="btn-3">Option 4</button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="hidden">
+        <h1 id="status-title">🛬 LANDED!</h1>
+        <p>Out of fuel! You traveled a long way!</p>
+        <h2 style="font-size: 2.5rem; color: var(--gold); margin: 10px 0;">Total Miles: <span id="final-score">0</span></h2>
+        <button class="btn" onclick="showStartScreen()">✈️ FLY AGAIN</button>
+        <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 CHOOSE NEW GAME</button>
+    </div>
+</div>
+
+<script>
+    // The World Database!
+    const worldData = [
+        { country: "USA", capital: "Washington D.C.", flag: "🇺🇸", item: "🗽", itemType: "the Statue of Liberty" },
+        { country: "UK", capital: "London", flag: "🇬🇧", item: "💂", itemType: "the Royal Guards" },
+        { country: "France", capital: "Paris", flag: "🇫🇷", item: "🗼", itemType: "the Eiffel Tower" },
+        { country: "Japan", capital: "Tokyo", flag: "🇯🇵", item: "🍣", itemType: "Sushi" },
+        { country: "Australia", capital: "Canberra", flag: "🇦🇺", item: "🦘", itemType: "Kangaroos" },
+        { country: "Brazil", capital: "Brasilia", flag: "🇧🇷", item: "🦜", itemType: "the Amazon Rainforest" },
+        { country: "Canada", capital: "Ottawa", flag: "🇨🇦", item: "🍁", itemType: "Maple Syrup" },
+        { country: "India", capital: "New Delhi", flag: "🇮🇳", item: "🛕", itemType: "the Taj Mahal" },
+        { country: "Egypt", capital: "Cairo", flag: "🇪🇬", item: "🐪", itemType: "the Pyramids" },
+        { country: "Mexico", capital: "Mexico City", flag: "🇲🇽", item: "🌮", itemType: "Tacos" },
+        { country: "China", capital: "Beijing", flag: "🇨🇳", item: "🐼", itemType: "Giant Pandas" },
+        { country: "Italy", capital: "Rome", flag: "🇮🇹", item: "🍕", itemType: "the Colosseum" },
+        { country: "Kenya", capital: "Nairobi", flag: "🇰🇪", item: "🦒", itemType: "Wild Giraffes" },
+        { country: "Argentina", capital: "Buenos Aires", flag: "🇦🇷", item: "🥩", itemType: "Gauchos" },
+        { country: "Peru", capital: "Lima", flag: "🇵🇪", item: "🦙", itemType: "Machu Picchu" }
+    ];
+
+    let score = 0, level = 1, fuel = 100, timer, correctIndex = 0;
+    
+    // Audio Synthesizer
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSound(type) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        if (type === 'ding') {
+            osc.type = 'sine'; // Airplane seatbelt ding
+            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime + 0.3); // C5
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.6);
+        } else if (type === 'buzz') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+    }
+
+    function showStartScreen() {
+        document.getElementById('start-screen').className = '';
+        document.getElementById('end-screen').className = 'hidden';
+        document.getElementById('play-screen').className = 'hidden';
+    }
+
+    function startGame() {
+        initAudio();
+        score = 0; level = 1; fuel = 100;
+        document.getElementById('start-screen').className = 'hidden';
+        document.getElementById('end-screen').className = 'hidden';
+        document.getElementById('play-screen').className = '';
+        updateStats();
+        generateMission();
+        startTimer();
+    }
+
+    function generateMission() {
+        // 0 = Flag Mode, 1 = Capital Mode, 2 = Landmark Mode
+        let missionType = Math.floor(Math.random() * 3);
+        
+        // Pick the correct answer
+        let correctData = worldData[Math.floor(Math.random() * worldData.length)];
+        
+        // Pick 3 wrong answers
+        let options = [correctData];
+        while(options.length < 4) {
+            let randomWrong = worldData[Math.floor(Math.random() * worldData.length)];
+            if(!options.includes(randomWrong)) {
+                options.push(randomWrong);
+            }
+        }
+        
+        // Shuffle options
+        options.sort(() => Math.random() - 0.5);
+        correctIndex = options.indexOf(correctData);
+
+        // Update UI based on mission type
+        const questionEl = document.getElementById('question-text');
+        const visualEl = document.getElementById('big-visual');
+
+        for(let i=0; i<4; i++) {
+            let btn = document.getElementById('btn-' + i);
+            if (missionType === 0) {
+                // Flag Mode
+                questionEl.innerText = "Which country's flag is this?";
+                visualEl.innerText = correctData.flag;
+                btn.innerText = options[i].country;
+            } else if (missionType === 1) {
+                // Capital Mode
+                questionEl.innerText = `What is the capital of ${correctData.country} ${correctData.flag}?`;
+                visualEl.innerText = "🏙️";
+                btn.innerText = options[i].capital;
+            } else {
+                // Landmark Mode
+                questionEl.innerText = `Where can you find ${correctData.itemType}?`;
+                visualEl.innerText = correctData.item;
+                btn.innerText = options[i].country;
+            }
+        }
+    }
+
+    function checkAnswer(selectedIndex) {
+        if (selectedIndex === correctIndex) {
+            playSound('ding');
+            score += 100; // 100 miles per correct answer
+            fuel = Math.min(100, fuel + 20); // Add airplane fuel
+            if (score % 500 === 0) level++; // Level up every 5 correct
+            
+            flash('flash-correct');
+            updateStats();
+            generateMission();
+        } else {
+            playSound('buzz');
+            fuel -= 15; // Lose fuel for wrong answer
+            flash('flash-wrong');
+        }
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+            let speed = 0.5 + (level * 0.05); // Burns fuel faster at higher levels
+            fuel -= speed; 
+            
+            document.getElementById('timer-bar').style.width = Math.max(0, fuel) + '%';
+            
+            if(fuel < 25) {
+                document.getElementById('timer-bar').style.background = '#ff5252';
+            } else {
+                document.getElementById('timer-bar').style.background = 'linear-gradient(90deg, #ff5252, var(--gold), var(--earth-green))';
+            }
+
+            if (fuel <= 0) gameOver();
+        }, 100);
+    }
+
+    function gameOver() {
+        clearInterval(timer);
+        document.getElementById('play-screen').className = 'hidden';
+        document.getElementById('end-screen').className = '';
+        document.getElementById('final-score').innerText = score;
+    }
+
+    function updateStats() {
+        document.getElementById('score').innerText = score;
+        document.getElementById('level').innerText = level;
+    }
+
+    function flash(cls) {
+        document.body.classList.add(cls);
+        setTimeout(() => document.body.classList.remove(cls), 150);
+    }
+</script>
+</body>
+</html>
