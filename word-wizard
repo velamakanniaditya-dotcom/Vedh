@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Wizard 🧙‍♂️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wizard-dark: #1a0b2e;
+            --neon-pink: #ff007f;
+            --neon-purple: #b100ff;
+            --gold: #FFD700;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background: radial-gradient(circle at center, #3a0ca3 0%, var(--wizard-dark) 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-box {
+            width: 90%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 3px solid var(--neon-purple);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(177, 0, 255, 0.4);
+            position: relative;
+        }
+
+        h1 { font-family: 'Boogaloo', cursive; font-size: 3.2rem; color: var(--gold); margin: 0 0 10px 0; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        p { margin-bottom: 20px; color: rgba(255,255,255,0.8); font-size: 1.1rem; }
+
+        .stat-row { display: flex; justify-content: space-around; margin: 20px 0; font-size: 1.2rem; }
+
+        #mana-container {
+            width: 100%;
+            height: 15px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        #mana-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff, var(--neon-purple), var(--neon-pink));
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        #emoji-hint {
+            font-size: 4rem;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+        }
+
+        #scrambled-word {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--neon-purple);
+            text-transform: uppercase;
+        }
+
+        #answer {
+            width: 80%;
+            font-size: 2.5rem;
+            padding: 10px;
+            border-radius: 15px;
+            border: 4px solid var(--neon-pink);
+            text-align: center;
+            outline: none;
+            background: #fff;
+            color: var(--wizard-dark);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Boogaloo', cursive;
+            margin-top: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.5);
+        }
+        
+        .btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 0, 127, 0.7); }
+
+        .hidden { display: none !important; }
+        .flash-magic { background: #4a148c !important; transition: background 0.1s; }
+        .flash-wrong { background: #b71c1c !important; transition: background 0.1s; }
+        
+        .back-link {
+            position: absolute; top: 20px; left: 20px;
+            color: var(--gold); text-decoration: none; font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        /* Sparkle animation for correct answers */
+        .magic-sparkle {
+            position: absolute; pointer-events: none; font-size: 2rem;
+            animation: floatUp 1s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(0.5) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.5) rotate(180deg); }
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">🏰 Back to Kingdom</a>
+
+<div id="game-box">
+    <div id="start-screen">
+        <h1>🧙‍♂️ WORD WIZARD</h1>
+        <p>Unscramble the magic words before your spell energy runs out!</p>
+        <button class="btn" onclick="startGame()">CAST SPELL!</button>
+    </div>
+
+    <div id="play-screen" class="hidden">
+        <div class="stat-row">
+            <span>✨ Spells: <b id="score">0</b></span>
+            <span>🔮 Level: <b id="level">1</b></span>
+        </div>
+        <div id="mana-container"><div id="mana-bar"></div></div>
+        
+        <div id="emoji-hint">❓</div>
+        <div id="scrambled-word">W R O D</div>
+        
+        <input type="text" id="answer" autocomplete="off" spellcheck="false" placeholder="Type here">
+    </div>
+
+    <div id="end-screen" class="hidden">
+        <h1 id="status-title">💨 FIZZLE!</h1>
+        <p>You ran out of magic energy!</p>
+        <h2 style="font-size: 2.5rem; color: var(--gold); margin: 10px 0;">Spells Cast: <span id="final-score">0</span></h2>
+        <button class="btn" onclick="showStartScreen()">TRY AGAIN</button>
+    </div>
+</div>
+
+<script>
+    let score = 0, level = 1, currentWord = "", timeRemaining = 100, timer;
+    const emojiEl = document.getElementById('emoji-hint');
+    const scrambledEl = document.getElementById('scrambled-word');
+    const ansInp = document.getElementById('answer');
+    
+    // Dictionary of words grouped by difficulty
+    const dictionary = {
+        1: [
+            {w: "CAT", e: "🐱"}, {w: "DOG", e: "🐶"}, {w: "SUN", e: "☀️"}, 
+            {w: "CAR", e: "🚗"}, {w: "BUG", e: "🐛"}, {w: "BAT", e: "🦇"}
+        ],
+        2: [
+            {w: "STAR", e: "⭐"}, {w: "BIRD", e: "🐦"}, {w: "FISH", e: "🐟"}, 
+            {w: "MOON", e: "🌙"}, {w: "FROG", e: "🐸"}, {w: "TREE", e: "🌳"}
+        ],
+        3: [
+            {w: "APPLE", e: "🍎"}, {w: "HOUSE", e: "🏠"}, {w: "GHOST", e: "👻"}, 
+            {w: "TIGER", e: "🐯"}, {w: "SNAKE", e: "🐍"}, {w: "PIZZA", e: "🍕"}
+        ],
+        4: [
+            {w: "ROCKET", e: "🚀"}, {w: "DRAGON", e: "🐉"}, {w: "MONKEY", e: "🐒"}, 
+            {w: "PLANET", e: "🪐"}, {w: "WIZARD", e: "🧙‍♂️"}, {w: "ROBOT", e: "🤖"}
+        ]
+    };
+
+    // Audio Synthesizer
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new AudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSound(type) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        if (type === 'magic') {
+            // Magical upward chime
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'fizzle') {
+            // Sad fizzle sound
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.8);
+            gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.8);
+        }
+    }
+
+    function showStartScreen() {
+        document.getElementById('start-screen').className = '';
+        document.getElementById('end-screen').className = 'hidden';
+        document.getElementById('play-screen').className = 'hidden';
+    }
+
+    function startGame() {
+        initAudio();
+        score = 0; level = 1; timeRemaining = 100;
+        document.getElementById('start-screen').className = 'hidden';
+        document.getElementById('end-screen').className = 'hidden';
+        document.getElementById('play-screen').className = '';
+        updateStats();
+        nextWord();
+        startTimer();
+        ansInp.focus();
+    }
+
+    function shuffle(string) {
+        let arr = string.split('');
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr.join(' ');
+    }
+
+    function nextWord() {
+        // Determine difficulty (cap at level 4 dictionary)
+        let dictLevel = Math.min(level, 4);
+        let wordList = dictionary[dictLevel];
+        
+        // Pick a random word from the list
+        let randomItem = wordList[Math.floor(Math.random() * wordList.length)];
+        currentWord = randomItem.w;
+        
+        emojiEl.innerText = randomItem.e;
+        
+        // Ensure the scrambled word doesn't accidentally equal the real word
+        let scrambled = shuffle(currentWord);
+        while(scrambled.replace(/ /g, '') === currentWord && currentWord.length > 1) {
+            scrambled = shuffle(currentWord);
+        }
+        
+        scrambledEl.innerText = scrambled;
+        ansInp.value = '';
+    }
+
+    ansInp.addEventListener('input', () => {
+        let typed = ansInp.value.toUpperCase().trim();
+        
+        if (typed === currentWord) {
+            playSound('magic');
+            createSparkles();
+            score++;
+            timeRemaining = Math.min(100, timeRemaining + 25); // Gain magic energy back
+            
+            // Level up every 3 words
+            if (score % 3 === 0) level++; 
+            
+            flash('flash-magic');
+            updateStats();
+            nextWord();
+        }
+    });
+
+    function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+            let speed = 0.5 + (level * 0.1); // Drains faster at higher levels
+            timeRemaining -= speed; 
+            
+            document.getElementById('mana-bar').style.width = Math.max(0, timeRemaining) + '%';
+            
+            // Turn red if low on magic
+            if(timeRemaining < 25) {
+                document.getElementById('mana-bar').style.background = '#ff0000';
+            } else {
+                document.getElementById('mana-bar').style.background = 'linear-gradient(90deg, #00d2ff, #b100ff, #ff007f)';
+            }
+
+            if (timeRemaining <= 0) gameOver();
+        }, 100);
+    }
+
+    function gameOver() {
+        clearInterval(timer);
+        playSound('fizzle');
+        document.getElementById('play-screen').className = 'hidden';
+        document.getElementById('end-screen').className = '';
+        document.getElementById('final-score').innerText = score;
+    }
+
+    function updateStats() {
+        document.getElementById('score').innerText = score;
+        document.getElementById('level').innerText = level;
+    }
+
+    function flash(cls) {
+        document.body.classList.add(cls);
+        setTimeout(() => document.body.classList.remove(cls), 150);
+    }
+
+    function createSparkles() {
+        const box = document.getElementById('game-box');
+        for(let i = 0; i < 5; i++) {
+            let sparkle = document.createElement('div');
+            sparkle.innerText = '✨';
+            sparkle.className = 'magic-sparkle';
+            sparkle.style.left = (Math.random() * 80 + 10) + '%';
+            sparkle.style.top = (Math.random() * 80 + 10) + '%';
+            box.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+    }
+
+    // Keep focus on input
+    document.addEventListener('click', () => {
+        if(!document.getElementById('play-screen').classList.contains('hidden')) {
+            ansInp.focus();
+        }
+    });
+</script>
+</body>
+</html>
