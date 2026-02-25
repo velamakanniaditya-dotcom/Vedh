@@ -378,6 +378,8 @@ function checkAnswer(selected, btn) {
 function endGame() {
   clearInterval(timerInterval);
   document.getElementById('finalScore').innerText = score;
+   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + score);
   let msg = "Keep Practising! 👍";
   if (score > 10) msg = "Great Explorer! 🌍";
   if (score > 20) msg = "Geography Genius! 🏆";
