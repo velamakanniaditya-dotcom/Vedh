@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logic Labyrinth 🤖 - Coding for Kids</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   CODING THEME
+══════════════════════════════════════════ */
+:root {
+  --primary: #06b6d4; /* Tech Cyan */
+  --secondary: #8b5cf6; /* Tech Purple */
+  --danger: #ef4444; 
+  --success: #22c55e;
+  --dark: #0f172a; 
+  --paper: #1e293b;
+  --grid: #334155;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--dark);
+  background-image: 
+    linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  color: white;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: rgba(30, 41, 59, 0.8); border: 2px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; z-index: 100; transition: all 0.2s;
+}
+.home-btn:hover { background: var(--primary); color: var(--dark); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: var(--primary); text-shadow: 0 0 10px rgba(6, 182, 212, 0.5); line-height: 1; }
+.subtitle { font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; color: #94a3b8; margin-top: 5px; }
+
+.worksheet-card { background: var(--paper); border: 2px solid var(--grid); border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; width: 100%; max-width: 500px; }
+
+/* ══════════════════════════════════════════
+   MAZE GRID
+══════════════════════════════════════════ */
+.level-display { font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; color: var(--primary); margin-bottom: 15px; }
+
+.maze-container {
+  display: grid;
+  gap: 4px;
+  background: var(--grid);
+  padding: 8px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  margin-left: auto; margin-right: auto;
+}
+.maze-cell {
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 8px;
+  display: flex; justify-content: center; align-items: center;
+  font-size: 2rem;
+  transition: all 0.2s;
+}
+.cell-wall { background: #475569; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+.cell-goal { background: rgba(34, 197, 94, 0.2); box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+
+.robot { animation: pulseRobot 1s infinite alternate; filter: drop-shadow(0 0 5px var(--primary)); }
+@keyframes pulseRobot { 0% { transform: scale(0.95); } 100% { transform: scale(1.05); } }
+
+/* ══════════════════════════════════════════
+   CODE BLOCK UI
+══════════════════════════════════════════ */
+.code-sequence {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  min-height: 50px; background: rgba(0,0,0,0.3); border: 2px dashed var(--grid);
+  border-radius: 12px; padding: 10px; margin-bottom: 20px;
+}
+.cmd-block {
+  background: var(--secondary); color: white; font-size: 1.2rem;
+  padding: 8px 12px; border-radius: 8px; font-weight: bold;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.3); animation: popIn 0.2s ease-out;
+}
+.cmd-block.active { background: var(--success); transform: scale(1.1); box-shadow: 0 0 10px var(--success); }
+
+/* ══════════════════════════════════════════
+   CONTROLS
+══════════════════════════════════════════ */
+.controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 250px; margin: 0 auto 20px; }
+.ctrl-btn {
+  background: var(--primary); color: var(--dark); font-size: 1.8rem;
+  border: none; border-radius: 12px; padding: 15px; cursor: pointer;
+  box-shadow: 0 6px 0 #0891b2; transition: all 0.1s;
+}
+.ctrl-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #0891b2; }
+.ctrl-up { grid-column: 2; }
+.ctrl-left { grid-column: 1; }
+.ctrl-down { grid-column: 2; }
+.ctrl-right { grid-column: 3; }
+
+.action-row { display: flex; gap: 10px; justify-content: center; }
+.btn-run { flex: 2; background: var(--success); color: white; border: none; font-family: 'Fredoka One', cursive; font-size: 1.2rem; padding: 15px; border-radius: 12px; box-shadow: 0 6px 0 #16a34a; cursor: pointer; }
+.btn-run:active { transform: translateY(6px); box-shadow: 0 0 0 #16a34a; }
+.btn-clear { flex: 1; background: var(--danger); color: white; border: none; font-family: 'Fredoka One', cursive; font-size: 1.2rem; padding: 15px; border-radius: 12px; box-shadow: 0 6px 0 #b91c1c; cursor: pointer; }
+.btn-clear:active { transform: translateY(6px); box-shadow: 0 0 0 #b91c1c; }
+
+/* Status message */
+.status-msg { font-family: 'Share Tech Mono', monospace; font-size: 1.1rem; min-height: 24px; color: var(--primary); margin-top: 15px; }
+
+@keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Logic Labyrinth</h1>
+  <div class="subtitle">> INIT_ROBOT_SEQUENCE...</div>
+</header>
+
+<div class="worksheet-card">
+  <div class="level-display" id="levelDisplay">LEVEL 1</div>
+  
+  <div class="maze-container" id="mazeGrid"></div>
+  
+  <div class="code-sequence" id="codeSequence">
+    </div>
+
+  <div class="controls">
+    <button class="ctrl-btn ctrl-up" onclick="addCommand('UP', '⬆️')">⬆️</button>
+    <button class="ctrl-btn ctrl-left" onclick="addCommand('LEFT', '⬅️')">⬅️</button>
+    <button class="ctrl-btn ctrl-down" onclick="addCommand('DOWN', '⬇️')">⬇️</button>
+    <button class="ctrl-btn ctrl-right" onclick="addCommand('RIGHT', '➡️')">➡️</button>
+  </div>
+
+  <div class="action-row">
+    <button class="btn-clear" onclick="clearCommands()">🗑️ Clear</button>
+    <button class="btn-run" onclick="runProgram()">▶️ RUN CODE</button>
+  </div>
+
+  <div class="status-msg" id="statusMsg">Waiting for commands...</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// GAME LOGIC & LEVELS
+// ══════════════════════════════════════════════
+
+// Levels: define grid size, start position, goal, and an array of walls {x, y}
+const LEVELS = [
+  { size: 4, start: {x:0, y:0}, goal: {x:3, y:0}, walls: [] }, // Simple right
+  { size: 4, start: {x:0, y:0}, goal: {x:3, y:3}, walls: [{x:1, y:0}, {x:1, y:1}, {x:2, y:3}] }, // L-shape
+  { size: 5, start: {x:0, y:4}, goal: {x:4, y:0}, walls: [{x:1, y:4}, {x:1, y:3}, {x:3, y:0}, {x:3, y:1}, {x:3, y:2}] }, // Zig zag
+  { size: 5, start: {x:2, y:2}, goal: {x:0, y:0}, walls: [{x:1, y:2}, {x:2, y:1}, {x:1, y:1}] }, // Out of the box
+  { size: 6, start: {x:0, y:0}, goal: {x:5, y:5}, walls: [{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:3,y:5},{x:3,y:4},{x:3,y:3},{x:4,y:1}] } // Complex
+];
+
+let currentLevelIdx = 0;
+let commands = [];
+let isRunning = false;
+let robotPos = {x: 0, y: 0};
+
+// DOM Elements
+const els = {
+  maze: document.getElementById('mazeGrid'),
+  code: document.getElementById('codeSequence'),
+  level: document.getElementById('levelDisplay'),
+  status: document.getElementById('statusMsg')
+};
+
+// 1. Initialize Level
+function loadLevel() {
+  const lvl = LEVELS[currentLevelIdx];
+  els.level.innerText = `LEVEL ${currentLevelIdx + 1} / ${LEVELS.length}`;
+  robotPos = { x: lvl.start.x, y: lvl.start.y };
+  commands = [];
+  renderSequence();
+  renderMaze();
+  setStatus("Waiting for commands...");
+}
+
+// 2. Render Grid
+function renderMaze() {
+  const lvl = LEVELS[currentLevelIdx];
+  els.maze.style.gridTemplateColumns = `repeat(${lvl.size}, 1fr)`;
+  
+  // Calculate cell size so it fits nicely
+  const cellSize = Math.floor(280 / lvl.size);
+  els.maze.innerHTML = '';
+
+  for (let y = 0; y < lvl.size; y++) {
+    for (let x = 0; x < lvl.size; x++) {
+      const cell = document.createElement('div');
+      cell.className = 'maze-cell';
+      cell.style.width = `${cellSize}px`;
+      cell.style.height = `${cellSize}px`;
+      cell.style.fontSize = `${cellSize * 0.5}px`;
+
+      // Check for walls
+      const isWall = lvl.walls.some(w => w.x === x && w.y === y);
+      if (isWall) {
+        cell.classList.add('cell-wall');
+        cell.innerText = '🧱';
+      } 
+      // Check for goal
+      else if (x === lvl.goal.x && y === lvl.goal.y) {
+        cell.classList.add('cell-goal');
+        cell.innerText = '🔋';
+      }
+
+      // Check for robot
+      if (x === robotPos.x && y === robotPos.y) {
+        cell.innerHTML = '<span class="robot">🤖</span>';
+      }
+
+      els.maze.appendChild(cell);
+    }
+  }
+}
+
+// 3. UI Actions
+function addCommand(action, icon) {
+  if (isRunning) return;
+  if (commands.length >= 15) {
+    setStatus("Memory full! Clear some code.");
+    return;
+  }
+  commands.push({ action, icon });
+  renderSequence();
+}
+
+function clearCommands() {
+  if (isRunning) return;
+  commands = [];
+  renderSequence();
+  setStatus("Code cleared.");
+  // Reset robot back to start
+  robotPos = { x: LEVELS[currentLevelIdx].start.x, y: LEVELS[currentLevelIdx].start.y };
+  renderMaze();
+}
+
+function renderSequence() {
+  els.code.innerHTML = '';
+  commands.forEach((cmd, idx) => {
+    const block = document.createElement('div');
+    block.className = 'cmd-block';
+    block.innerText = cmd.icon;
+    block.id = `cmd-${idx}`;
+    els.code.appendChild(block);
+  });
+}
+
+function setStatus(msg, color = "var(--primary)") {
+  els.status.innerText = msg;
+  els.status.style.color = color;
+}
+
+// 4. Execution Logic
+async function runProgram() {
+  if (isRunning || commands.length === 0) return;
+  isRunning = true;
+  setStatus("Executing code...", "var(--success)");
+  
+  // Reset robot position before running
+  const lvl = LEVELS[currentLevelIdx];
+  robotPos = { x: lvl.start.x, y: lvl.start.y };
+  renderMaze();
+
+  // Wait a moment before starting
+  await new Promise(r => setTimeout(r, 400));
+
+  for (let i = 0; i < commands.length; i++) {
+    // Highlight active command block
+    document.querySelectorAll('.cmd-block').forEach(b => b.classList.remove('active'));
+    document.getElementById(`cmd-${i}`).classList.add('active');
+
+    const cmd = commands[i].action;
+    let newX = robotPos.x;
+    let newY = robotPos.y;
+
+    if (cmd === 'UP') newY--;
+    if (cmd === 'DOWN') newY++;
+    if (cmd === 'LEFT') newX--;
+    if (cmd === 'RIGHT') newX++;
+
+    // Check bounds
+    if (newX < 0 || newX >= lvl.size || newY < 0 || newY >= lvl.size) {
+      setStatus("ERROR: Out of bounds! Crash! 💥", "var(--danger)");
+      handleFailure();
+      return;
+    }
+
+    // Check walls
+    if (lvl.walls.some(w => w.x === newX && w.y === newY)) {
+      setStatus("ERROR: Hit a wall! 🧱💥", "var(--danger)");
+      handleFailure();
+      return;
+    }
+
+    // Move robot
+    robotPos.x = newX;
+    robotPos.y = newY;
+    renderMaze();
+
+    // Small delay between steps
+    await new Promise(r => setTimeout(r, 600));
+  }
+
+  // Check if reached goal after sequence finishes
+  if (robotPos.x === lvl.goal.x && robotPos.y === lvl.goal.y) {
+    handleSuccess();
+  } else {
+    setStatus("Program finished. Goal not reached! ⚠️", "var(--warning)");
+    handleFailure();
+  }
+}
+
+function handleFailure() {
+  setTimeout(() => {
+    isRunning = false;
+    clearCommands();
+  }, 2000);
+}
+
+function handleSuccess() {
+  setStatus("SYSTEM OVERRIDE SUCCESS! 🔋✨", "var(--success)");
+  
+  // Add XP to Global Dashboard
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + 20); // 20 XP per level
+
+  setTimeout(() => {
+    currentLevelIdx++;
+    if (currentLevelIdx >= LEVELS.length) {
+      setStatus("ALL LEVELS COMPLETE! YOU ARE A MASTER CODER!", "var(--gold)");
+      currentLevelIdx = 0; // Loop back
+    } else {
+      loadLevel();
+    }
+    isRunning = false;
+  }, 2000);
+}
+
+// Start Game
+loadLevel();
+
+</script>
+</body>
+</html>
