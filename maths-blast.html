@@ -181,6 +181,8 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
   </div>
 </div>
 
+<script src="sounds.js"></script>
+
 <script>
 // Game State
 let currentCategory = '';
@@ -200,7 +202,7 @@ const SHAPES = [
   { e: '🔺', n: 'Triangle' }, { e: '🟦', n: 'Square' },
   { e: '⏺️', n: 'Circle' }, { e: '⭐', n: 'Star' },
   { e: '❤️', n: 'Heart' }, { e: '♦️', n: 'Diamond' },
-  { e: '🟩', n: 'Rectangle' } // using green square as stand-in for rectangle if needed, but let's stick to basics
+  { e: '🟩', n: 'Rectangle' } 
 ];
 
 const screens = {
@@ -382,10 +384,8 @@ function renderOptions(options) {
 function checkAnswer(selected, btn) {
   document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
 
-  // Note: For shapes & compare, values are strings, for math they are numbers.
-  // Using loose equality or converting correctly:
   if (selected == correctAnswer) {
-     playSound('correct');
+     if(typeof playSound === 'function') playSound('correct');
     btn.classList.add('correct');
     score++;
     els.score.innerText = score;
@@ -405,7 +405,7 @@ function checkAnswer(selected, btn) {
     }
     setTimeout(generateQuestion, 600);
   } else {
-     playSound('wrong');
+     if(typeof playSound === 'function') playSound('wrong');
     btn.classList.add('wrong');
     document.querySelectorAll('.opt-btn').forEach(b => {
       if (b.innerText == correctAnswer) b.classList.add('correct');
@@ -415,10 +415,10 @@ function checkAnswer(selected, btn) {
 }
 
 function endGame() {
-   playSound('win');
+  if(typeof playSound === 'function') playSound('win');
   clearInterval(timerInterval);
   document.getElementById('finalScore').innerText = score;
-   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
   localStorage.setItem('vedhTotalXP', currentXP + score);
   let msg = "Keep Practising! 👍";
   if (score > 10) msg = "Great Job! 🌟";
@@ -426,7 +426,6 @@ function endGame() {
   document.getElementById('endMessage').innerText = msg;
   switchScreen('endScreen');
 }
-   <script src="sounds.js"></script>
 </script>
 </body>
 </html>
