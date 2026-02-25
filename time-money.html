@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time & Money Master ⏰ - Life Skills</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   WORKSHEET THEME - LIFE SKILLS
+══════════════════════════════════════════ */
+:root {
+  --primary: #10b981; /* Emerald Green */
+  --secondary: #f59e0b; /* Amber Gold */
+  --danger: #ef4444; 
+  --blue: #0ea5e9;
+  --dark: #1e293b; 
+  --paper: #ffffff;
+  --grid: #d1fae5; /* Light green grid */
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #ecfdf5;
+  background-image: radial-gradient(var(--grid) 3px, transparent 3px);
+  background-size: 30px 30px; 
+  color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(30, 41, 59, 0.1); text-align: center; position: relative; }
+
+/* Category Grid */
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+.cat-btn {
+  background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 20px 10px;
+  cursor: pointer; font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--dark);
+  box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.cat-icon { font-size: 3.5rem; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
+
+/* Modes */
+.mode-btn { width: 100%; display: flex; align-items: center; gap: 15px; background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); }
+.mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+
+/* Game Area */
+.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+.timer-container { width: 100%; height: 20px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 25px; position: relative; }
+.timer-fill { height: 100%; background: var(--secondary); width: 100%; transition: width 0.3s linear, background-color 0.3s; }
+.time-plus { position: absolute; right: 10px; top: -5px; color: var(--secondary); font-weight: 900; font-size: 1.2rem; opacity: 0; }
+.time-plus.show { animation: floatUpFade 1s ease-out forwards; }
+@keyframes floatUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+
+/* Flashcard Layouts */
+.flashcard { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; min-height: 180px; }
+.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--blue); margin-bottom: 15px; text-transform: uppercase; }
+
+/* Clock Style */
+.clock-emoji { font-size: 8rem; line-height: 1; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); animation: popScale 0.5s ease; }
+@keyframes popScale { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
+
+/* Shopkeeper / Money Style */
+.shop-scene { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; }
+.toy-box { display: flex; align-items: center; gap: 15px; font-size: 3.5rem; background: #f8fafc; padding: 15px 30px; border-radius: 16px; border: 3px dashed #cbd5e1; }
+.toy-label { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--dark); }
+.coins-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
+
+/* CSS Coins */
+.coin {
+  width: 60px; height: 60px; border-radius: 50%;
+  display: flex; justify-content: center; align-items: center;
+  font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #fff;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2), inset 0 3px 5px rgba(255,255,255,0.4);
+  border: 2px solid rgba(0,0,0,0.2);
+  animation: dropIn 0.4s ease backwards;
+}
+.coin:nth-child(2) { animation-delay: 0.1s; }
+.coin:nth-child(3) { animation-delay: 0.2s; }
+.coin:nth-child(4) { animation-delay: 0.3s; }
+.coin:nth-child(5) { animation-delay: 0.4s; }
+@keyframes dropIn { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+.coin-10 { background: linear-gradient(135deg, #fbbf24, #d97706); } /* Gold */
+.coin-5 { background: linear-gradient(135deg, #94a3b8, #64748b); }  /* Silver */
+.coin-1 { background: linear-gradient(135deg, #d97706, #92400e); }  /* Bronze */
+
+/* Options Grid */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 2rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 10px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.opt-btn.correct { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 6px 0 #059669; }
+.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #b91c1c; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--blue); color: white; border: 4px solid #0284c7; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #0284c7; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #0284c7; }
+
+.feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
+.feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+@media(max-width: 500px) {
+  .cat-grid { grid-template-columns: 1fr; }
+  .opt-btn { font-size: 1.5rem; }
+  .coin { width: 50px; height: 50px; font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Time & Money</h1>
+  <div class="subtitle">Life Skills Worksheet 📋</div>
+</header>
+
+<div id="categoryScreen" class="screen active">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">What are we learning today?</h2>
+    <div class="cat-grid">
+      <button class="cat-btn" style="border-color: var(--blue); color: var(--blue);" onclick="selectCategory('clock')">
+        <span class="cat-icon">⌚</span> Read the Clock
+      </button>
+      <button class="cat-btn" style="border-color: var(--secondary); color: var(--secondary);" onclick="selectCategory('money')">
+        <span class="cat-icon">🛒</span> Shopkeeper
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modeScreen" class="screen">
+  <div class="worksheet-card">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('categoryScreen')">🔙 Back to Skills</button>
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; margin-bottom: 20px; color: var(--dark);">Choose Your Mode</h2>
+    
+    <button class="mode-btn" style="border-color: var(--primary); box-shadow: 0 6px 0 var(--primary);" onclick="startGame('relaxed')">
+      <div class="mode-icon">🌟</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Relaxed Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">Timer resets every question!</p>
+      </div>
+    </button>
+
+    <button class="mode-btn" style="border-color: var(--secondary); box-shadow: 0 6px 0 var(--secondary);" onclick="startGame('blast')">
+      <div class="mode-icon">🚀</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Blast Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">Survival! Get +5s for correct answers.</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="worksheet-card" style="position:relative;">
+    <div class="feedback-star" id="fStar">⭐</div>
+    
+    <div class="top-bar">
+      <div>Score: <span id="scoreDisplay">0</span></div>
+      <div id="modeDisplay" style="color: var(--primary);">🌟 Relaxed</div>
+    </div>
+
+    <div class="timer-container">
+      <div class="timer-fill" id="timerFill"></div>
+      <div class="time-plus" id="timePlus">+5s</div>
+    </div>
+
+    <div id="problemArea" class="flashcard"></div>
+
+    <div class="options-grid" id="optionsContainer">
+      </div>
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Time's Up!</h2>
+    <div style="font-size: 5rem; margin: 10px 0; color: var(--secondary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
+    <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great effort!</div>
+    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Choose Another Skill 📚</button>
+  </div>
+</div>
+
+<script>
+// --- DATABASES ---
+// Unicode clock faces (O'clock and Half past)
+const CLOCKS = [
+  { e: "🕛", a: "12:00" }, { e: "🕧", a: "12:30" }, { e: "🕐", a: "1:00" }, { e: "🕜", a: "1:30" },
+  { e: "🕑", a: "2:00" }, { e: "🕝", a: "2:30" }, { e: "🕒", a: "3:00" }, { e: "🕞", a: "3:30" },
+  { e: "🕓", a: "4:00" }, { e: "🕟", a: "4:30" }, { e: "🕔", a: "5:00" }, { e: "🕠", a: "5:30" },
+  { e: "🕕", a: "6:00" }, { e: "🕡", a: "6:30" }, { e: "🕖", a: "7:00" }, { e: "🕢", a: "7:30" },
+  { e: "🕗", a: "8:00" }, { e: "🕣", a: "8:30" }, { e: "🕘", a: "9:00" }, { e: "🕤", a: "9:30" },
+  { e: "🕙", a: "10:00" }, { e: "🕥", a: "10:30" }, { e: "🕚", a: "11:00" }, { e: "🕦", a: "11:30" }
+];
+
+const TOYS = ["🧸", "🚗", "🤖", "⚽", "🎨", "📚", "🖍️", "🧩", "🦖"];
+
+// --- GAME STATE ---
+let currentCategory = '';
+let currentMode = '';
+let score = 0;
+let timeLeft = 0;
+let timeTotal = 0;
+let timerInterval;
+let correctAnswer = null;
+
+const SECONDS_RELAXED = 20; 
+const SECONDS_BLAST_START = 20; 
+const BONUS_TIME = 5; 
+
+const screens = {
+  categoryScreen: document.getElementById('categoryScreen'),
+  modeScreen: document.getElementById('modeScreen'),
+  gameScreen: document.getElementById('gameScreen'),
+  endScreen: document.getElementById('endScreen')
+};
+
+const els = {
+  problem: document.getElementById('problemArea'),
+  opts: document.getElementById('optionsContainer'),
+  score: document.getElementById('scoreDisplay'),
+  timer: document.getElementById('timerFill'),
+  plus: document.getElementById('timePlus'),
+  mode: document.getElementById('modeDisplay'),
+  star: document.getElementById('fStar')
+};
+
+function switchScreen(screenName) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[screenName].classList.add('active');
+  clearInterval(timerInterval);
+}
+
+function selectCategory(cat) {
+  currentCategory = cat;
+  switchScreen('modeScreen');
+}
+
+function startGame(mode) {
+  currentMode = mode;
+  score = 0;
+  els.score.innerText = score;
+  
+  if (mode === 'relaxed') {
+    els.mode.innerHTML = '🌟 Relaxed';
+    els.mode.style.color = 'var(--primary)';
+    timeTotal = SECONDS_RELAXED;
+    timeLeft = SECONDS_RELAXED;
+  } else {
+    els.mode.innerHTML = '🚀 Blast';
+    els.mode.style.color = 'var(--secondary)';
+    timeTotal = SECONDS_BLAST_START;
+    timeLeft = SECONDS_BLAST_START;
+  }
+
+  updateTimerUI();
+  generateQuestion();
+  switchScreen('gameScreen');
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(countdown, 1000);
+}
+
+function countdown() {
+  timeLeft--;
+  updateTimerUI();
+  if (timeLeft <= 0) endGame();
+}
+
+function updateTimerUI() {
+  let percentage = (timeLeft / timeTotal) * 100;
+  if (percentage > 100) percentage = 100; if (percentage < 0) percentage = 0;
+  els.timer.style.width = percentage + '%';
+  if (timeLeft <= 5) els.timer.classList.add('low'); else els.timer.classList.remove('low');
+}
+
+function getWrongClocks(correct) {
+  let opts = [correct];
+  while(opts.length < 4) {
+    let rnd = CLOCKS[Math.floor(Math.random() * CLOCKS.length)].a;
+    if(!opts.includes(rnd)) opts.push(rnd);
+  }
+  return opts;
+}
+
+function getWrongMoney(correct) {
+  let opts = [correct];
+  while(opts.length < 4) {
+    let offset = Math.floor(Math.random() * 4) + 1; // 1 to 4
+    let multiplier = Math.random() > 0.5 ? 5 : 1; // offset by 5s or 1s
+    let wrong = Math.random() > 0.5 ? correct + (offset * multiplier) : correct - (offset * multiplier);
+    
+    // Format as string with 'c'
+    let wrongStr = wrong + "c";
+    let correctStr = correct + "c";
+    
+    if(wrong > 0 && !opts.includes(wrongStr) && wrongStr !== correctStr) {
+      opts.push(wrongStr);
+    }
+  }
+  return opts;
+}
+
+function generateQuestion() {
+  if (currentMode === 'relaxed') { timeLeft = SECONDS_RELAXED; timeTotal = SECONDS_RELAXED; updateTimerUI(); }
+  els.problem.innerHTML = '';
+  let options = [];
+
+  if (currentCategory === 'clock') {
+    // Generate Time Question
+    let clk = CLOCKS[Math.floor(Math.random() * CLOCKS.length)];
+    correctAnswer = clk.a;
+    
+    els.problem.innerHTML = `
+      <div class="hint-text">What time is it?</div>
+      <div class="clock-emoji">${clk.e}</div>
+    `;
+    options = getWrongClocks(correctAnswer);
+
+  } else if (currentCategory === 'money') {
+    // Generate Money Question
+    // For young kids: Tens, Fives, and Ones.
+    let numTens = Math.floor(Math.random() * 4); // 0 to 3
+    let numFives = Math.floor(Math.random() * 2); // 0 or 1
+    let numOnes = Math.floor(Math.random() * 5); // 0 to 4
+    
+    // Ensure we have at least SOME money
+    if (numTens === 0 && numFives === 0 && numOnes === 0) numTens = 1;
+
+    let totalVal = (numTens * 10) + (numFives * 5) + (numOnes * 1);
+    correctAnswer = totalVal + "c";
+
+    let toy = TOYS[Math.floor(Math.random() * TOYS.length)];
+
+    let coinsHtml = '';
+    for(let i=0; i<numTens; i++) coinsHtml += `<div class="coin coin-10">10</div>`;
+    for(let i=0; i<numFives; i++) coinsHtml += `<div class="coin coin-5">5</div>`;
+    for(let i=0; i<numOnes; i++) coinsHtml += `<div class="coin coin-1">1</div>`;
+
+    els.problem.innerHTML = `
+      <div class="shop-scene">
+        <div class="hint-text" style="margin:0;">Count the coins to buy the toy!</div>
+        <div class="toy-box">
+          ${toy} <span class="toy-label">Price: ?</span>
+        </div>
+        <div class="coins-container">
+          ${coinsHtml}
+        </div>
+      </div>
+    `;
+    options = getWrongMoney(totalVal);
+  }
+
+  renderOptions(options);
+}
+
+function renderOptions(options) {
+  options.sort(() => Math.random() - 0.5);
+  els.opts.innerHTML = '';
+  
+  options.forEach(opt => {
+    let btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt, btn);
+    els.opts.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+  if (selected === correctAnswer) {
+    btn.classList.add('correct');
+    score++; els.score.innerText = score;
+    
+    // Star pop
+    els.star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 30 + 'px';
+    els.star.style.top = btn.offsetTop - 30 + 'px';
+    els.star.classList.remove('pop'); void els.star.offsetWidth; els.star.classList.add('pop');
+
+    if (currentMode === 'blast') {
+      timeLeft += BONUS_TIME; if(timeLeft > timeTotal) timeTotal = timeLeft; 
+      els.plus.classList.remove('show'); void els.plus.offsetWidth; els.plus.classList.add('show');
+      updateTimerUI();
+    }
+    setTimeout(generateQuestion, 600);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText === correctAnswer) b.classList.add('correct'); });
+    setTimeout(generateQuestion, 1500); 
+  }
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  document.getElementById('finalScore').innerText = score;
+  
+  // --- XP SYSTEM INTEGRATION ---
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + score);
+  
+  let msg = "Keep Practising! 👍";
+  if (score > 10) msg = "Great Job! 🌟";
+  if (score > 20) msg = "Life Skills Master! 🛒";
+  document.getElementById('endMessage').innerText = msg;
+  switchScreen('endScreen');
+}
+</script>
+</body>
+</html>
