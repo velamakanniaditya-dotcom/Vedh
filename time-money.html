@@ -300,7 +300,7 @@ function getWrongClocks(correct) {
 }
 
 function getWrongMoney(correct) {
-  let opts = [correct];
+  let opts = [correct + "c"]; // <-- FIX: Added the "c" so it matches perfectly!
   while(opts.length < 4) {
     let offset = Math.floor(Math.random() * 4) + 1; // 1 to 4
     let multiplier = Math.random() > 0.5 ? 5 : 1; // offset by 5s or 1s
