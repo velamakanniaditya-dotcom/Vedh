@@ -272,6 +272,10 @@ function updateProfile() {
       currentLevelObj = LEVELS[i];
       // Check if there is a next level
       nextLevelObj = LEVELS[i + 1] ? LEVELS[i + 1] : LEVELS[i];
+       if (totalXP >= currentLevelObj.xpReq && totalXP > 0) {
+      // If you want a sound when he opens the app and sees he leveled up
+      // playSound('win'); 
+  }
     }
   }
 
@@ -324,7 +328,7 @@ function updateProfile() {
 
 // Run the update when the page loads
 document.addEventListener('DOMContentLoaded', updateProfile);
-
+<script src="sounds.js"></script>
 </script>
 </body>
 </html>
