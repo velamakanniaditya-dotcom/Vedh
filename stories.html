@@ -244,538 +244,1041 @@ header p { color: var(--text-muted); font-size: 1.2rem; font-weight: 600; margin
 // ══════════════════════════════════════════════
 const STORIES = [
   // ════════ VEDH'S ADVENTURES ════════
-  {
-    id: 1, category: "Vedh's Adventures", catIcon: "👑", color: "#f59e0b",
-    title: "Vedh and the Secret of Becoming Extraordinary", icon: "🏔️",
-    themes: ["Discipline", "Focus", "Future Success"],
-    moral: "You don't just grow older. You grow extraordinary by building the right habits today.",
-    content: `
-      <p>In a quiet town lived a thoughtful young boy named Vedh. Vedh loved asking questions.</p>
-      <p>“Why do some people become very successful? Why do some leaders seem confident everywhere?”</p>
-      <p>One evening, while looking at the night sky, Vedh whispered, “I want to become someone great one day.”</p>
-      <p>The room became very still. Then a soft golden light appeared. From the light stepped a calm, wise guide dressed simply.</p>
-      <p>“Vedh,” the guide said gently, “I visit children who are ready to become extraordinary. I am your Future Self.”</p>
+  // ════════════════════════════════════════
+// VEDH CORE STORIES
+// ════════════════════════════════════════
 
-      <h3>🌅 The Morning Advantage</h3>
-      <p>Suddenly Vedh saw two versions of himself. In one version, he woke late, rushed, and started the day lazily. In the other, he woke calmly, prepared for school, and used mornings wisely.</p>
-      <p>“Extraordinary people,” the guide said softly, “win the morning before the world wakes up.”</p>
+{
+  id: 1,
+  category: "Vedh's Adventures",
+  catIcon: "👑",
+  color: "#f59e0b",
+  title: "The Secret of Becoming Extraordinary",
+  icon: "🏔️",
+  themes: ["Discipline", "Focus", "Future Success"],
+  moral: "Greatness is built by small daily habits.",
+  content: `
+  <p>In a quiet town lived a thoughtful young boy named Vedh.</p>
+  <p>Vedh loved asking big questions. “Why do some people become truly successful? Why are some leaders calm and confident everywhere?”</p>
+  <p>One evening he looked at the night sky and whispered, “I want to become someone great one day.”</p>
 
-      <h3>📚 The Study Superpower</h3>
-      <p>The scene changed to a classroom. Another version of Vedh studied a little every day. He revised. Asked questions. Stayed curious.</p>
-      <p>When exams came, he was calm. “Why is he relaxed?” Vedh asked.</p>
-      <p>“Because daily study builds quiet confidence,” the guide said. “Studying isn’t just for marks. It trains your brain to think clearly.”</p>
+  <p>A soft golden light filled the room. A calm guide appeared.</p>
+  <p>“Vedh,” the guide said gently, “I am your Future Self. I appear when a child is ready to become extraordinary.”</p>
 
-      <h3>🧠 Behaviour Creates Respect</h3>
-      <p>Next, Vedh saw a playground. One version of himself interrupted others and rushed. Another version listened, spoke kindly, and waited his turn.</p>
-      <p>Teachers trusted the second Vedh more. Friends respected him more.</p>
-      <p>“People respect children who behave with calm confidence,” the guide replied. “Good behaviour is like a silent crown.”</p>
-    `
-  },
-  {
-    id: 2, category: "Vedh's Adventures", catIcon: "👑", color: "#8b5cf6",
-    title: "Vedh Discovers His Brain is a Superpower", icon: "🧠",
-    themes: ["Intelligence", "Learning", "Brain Training"],
-    moral: "You don’t become smart suddenly. You become smart daily.",
-    content: `
-      <p>One afternoon after school, Vedh dropped his bag and said: “Why do some children understand everything so fast? Are they just born smarter?”</p>
-      <p>That night, as Vedh slept, his room filled with tiny glowing sparks that formed a floating figure made of light.</p>
-      <p>“Vedh,” it said gently, “I am Neuron, a guide from inside your brain. Tonight you’ll discover your real superpower.”</p>
+  <h3>🌅 The Morning Advantage</h3>
+  <p>Vedh saw two versions of himself.</p>
+  <p>One woke late, rushed, and felt stressed. Another woke calmly, prepared early, and used mornings wisely.</p>
+  <p>“Extraordinary people win the morning,” said the guide.</p>
 
-      <h3>🏋️‍♂️ The Brain Gym</h3>
-      <p>Suddenly Vedh found himself inside a giant glowing space. It looked like a gym — but instead of weights, there were books, puzzles, ideas, and questions floating everywhere.</p>
-      <p>“Welcome to your Brain Gym,” Neuron said. “Every time you think, study, or focus… your brain grows stronger here.”</p>
-      <p>Golden pathways lit up whenever he solved something. They dimmed when he got distracted.</p>
+  <h3>📚 The Study Superpower</h3>
+  <p>Vedh saw himself studying a little daily. Revising. Asking questions.</p>
+  <p>When exams came, that version felt calm and confident.</p>
+  <p>“Daily study builds quiet confidence,” the guide said.</p>
 
-      <h3>⏳ The 20-Minute Secret</h3>
-      <p>Neuron showed two versions of Vedh. One studied only before exams and felt stressed. Another Vedh studied just 20–30 minutes daily.</p>
-      <p>After weeks, the second Vedh’s brain gym glowed brightly with strong pathways.</p>
-      <p>“Children who study a little every day never panic later,” said Neuron.</p>
-    `
-  },
-  {
-    id: 3, category: "Vedh's Adventures", catIcon: "👑", color: "#10b981",
-    title: "Vedh and the Power of Good Behaviour", icon: "🌟",
-    themes: ["Politeness", "Respect", "Character"],
-    moral: "Politeness and respect make people trust and support you everywhere.",
-    content: `
-      <p>At a family gathering, many children were running, shouting, and interrupting. Vedh’s grandfather quietly watched.</p>
-      <p>Vedh greeted the elders politely. He waited his turn to speak. He said “please” and “thank you.”</p>
-      <p>Later, his grandfather called him over.</p>
-      <p>“Do you know why people like being around you?” he asked.</p>
-      <p>Vedh shook his head.</p>
+  <h3>🌟 Behaviour Creates Respect</h3>
+  <p>Vedh saw that when he spoke politely, listened well, and stayed calm — teachers trusted him more and friends respected him.</p>
+  <p>“Good behaviour is a silent crown,” said the guide.</p>
 
-      <h3>🛡️ The Quiet Superpower</h3>
-      <p>“Because good behaviour makes others feel respected and comfortable,” his grandfather explained. “People always support children who behave well.”</p>
-      <p>Vedh noticed something that day: Adults trusted him more. People listened when he spoke. He felt calm and confident.</p>
-      <p>That night he understood: Good behaviour is like a quiet superpower.</p>
-    `
-  },
+  <hr>
+  <p>Vedh woke up with a quiet decision: small daily habits will build a big future.</p>
+  `
+},
 
-  // ════════ GENIUS MINDSET ════════
-  {
-    id: 4, category: "Genius Mindset", catIcon: "🧠", color: "#ec4899",
-    title: "The Child Who Asked 'Why?'", icon: "💡",
-    themes: ["Curiosity", "Science", "Discovery"],
-    moral: "Your brain grows stronger every time you wonder how things work.",
-    content: `
-      <p>In a quiet town lived a child named Ari. Ari was not the loudest in class, nor the fastest runner. But Ari had something powerful. Ari asked… “Why?”</p>
-      <p>One night, floating beside the bed was a tiny glowing robot named Nova.</p>
-      <p>“I’m your curiosity guide,” Nova said. “I appear when someone asks real questions. That’s how all great scientists begin.”</p>
+{
+  id: 2,
+  category: "Vedh's Adventures",
+  catIcon: "👑",
+  color: "#8b5cf6",
+  title: "Brain is a Superpower",
+  icon: "🧠",
+  themes: ["Brain Power", "Learning", "Growth"],
+  moral: "You become smarter every day you train your brain.",
+  content: `
+  <p>One day Vedh wondered, “Are some children just born smarter?”</p>
+  <p>That night a glowing guide named Neuron appeared.</p>
+  <p>“Vedh,” Neuron said, “your brain is like a muscle. It grows when you use it.”</p>
 
-      <h3>🚀 Journey Beyond the Roof</h3>
-      <p>With a gentle hum, Nova and Ari floated upward into space. Earth glowed below like a blue marble.</p>
-      <p>“Why don’t we fall off Earth?” Ari asked.</p>
-      <p>“Because of gravity. Everything with mass pulls on everything else,” Nova said. “It’s like an invisible hug that holds the universe together.”</p>
-      
-      <h3>🌌 The Big Realisation</h3>
-      <p>Soon they floated far enough to see the Milky Way galaxy. “There are so many stars,” Ari whispered. “Does one small person even matter?”</p>
-      <p>Nova’s voice became serious. “Every discovery ever made began with one person asking a question. Why does an apple fall? Why do stars shine? Can humans fly?”</p>
-      <p>“Those questions built rockets, computers, medicines, and telescopes. Curiosity builds inventors. Thinkers build solutions.”</p>
-    `
-  },
-  {
-    id: 5, category: "Genius Mindset", catIcon: "🧠", color: "#f97316",
-    title: "The Child Who Saw Opportunities", icon: "🔭",
-    themes: ["Leadership", "Problem Solving", "Future Thinker"],
-    moral: "Look for ways to help and improve. Opportunities are everywhere for those who notice.",
-    content: `
-      <p>A child named Arjun loved observing the world. At school, he noticed problems others ignored: A messy classroom. Kids forgetting lunch. Broken football nets.</p>
-      <p>“Someone should fix that,” others said. Arjun thought differently: “Maybe I can.”</p>
-      <p>One night, a golden compass appeared beside his bed. “I am Vision,” it said. “I guide those who see opportunities where others see problems.”</p>
+  <h3>🏋️ The Brain Gym</h3>
+  <p>Vedh saw a giant brain gym filled with puzzles, books, and ideas.</p>
+  <p>Every time he focused, glowing pathways grew stronger.</p>
+  <p>Every time he got distracted, they weakened.</p>
 
-      <h3>🌍 The Idea Map</h3>
-      <p>Vision showed Arjun a map filled with glowing dots. “Each dot is a problem waiting for a solution. And every solution can help people.”</p>
-      <p>Arjun saw a faster way to deliver food. A better way to learn in school. A smarter way to build homes.</p>
-      <p>“What if I fail?” Arjun asked.</p>
-      <p>“All leaders fail,” Vision replied calmly. “But they learn, adjust, and try again. True leaders help others grow. They create ideas that make life easier, better, and kinder.”</p>
-    `
-  },
-  {
-    id: 6, category: "Genius Mindset", catIcon: "🧠", color: "#3b82f6",
-    title: "The Unstoppable Mind", icon: "🛡️",
-    themes: ["Confidence", "Self-Belief", "Positive Thinking"],
-    moral: "You don’t have to be perfect. You only have to keep learning, thinking, and trying.",
-    content: `
-      <p>A child named Maya sometimes felt small. “What if I’m not the best?” she thought. “What if I can’t do it?”</p>
-      <p>One night, a calm voice whispered from within. “I am your Inner Mind. And I am stronger than you know.”</p>
-      
-      <h3>🌌 The Mind Gym</h3>
-      <p>Maya saw thoughts floating like clouds. Some said: “I can’t.” “I’m not ready.”</p>
-      <p>Others said: “I’ll try.” “I’ll learn.”</p>
-      <p>“Your thoughts shape your future,” the Inner Mind said. “Strong thoughts build strong actions.”</p>
-      <p>Every time Maya replaced “I can’t” with “I’ll learn”… a star lit up. Every time Maya believed in herself… her mind grew stronger.</p>
-      <p>Confidence wasn’t magic. It was practice.</p>
-    `
-  },
+  <h3>⏱️ The Daily 25-Minute Rule</h3>
+  <p>Neuron showed two Vedhs.</p>
+  <p>One studied only before exams and felt stressed.</p>
+  <p>The other studied 25 minutes daily and felt confident.</p>
 
-  // ════════ HABITS & BEHAVIOUR ════════
-  {
-    id: 7, category: "Habits & Behaviour", catIcon: "🌱", color: "#ef4444",
-    title: "The Boy Who Learned the Power of Effort", icon: "🌱",
-    themes: ["Hard Work", "Discipline", "Consistency"],
-    moral: "Growth doesn’t come from big effort once. It comes from small effort daily.",
-    content: `
-      <p>In a busy school lived a boy named Advik. He was intelligent and curious — but he had one habit that held him back. He delayed everything.</p>
-      <p>“I’ll study tomorrow.” “I still have time.”</p>
-      <p>One evening, Advik visited his grandfather. “Dada,” Advik asked, “How do people become excellent at anything?”</p>
+  <p>“Consistency builds intelligence,” Neuron explained.</p>
 
-      <h3>🌱 The Two Seeds</h3>
-      <p>Grandfather smiled and handed him a small seed. “Plant this and water it daily. Then come back in one week.”</p>
-      <p>Advik planted it. The first day he watered it. The second day he forgot. Some days he watered it, some days he didn’t. After a week, it had barely sprouted.</p>
-      <p>Grandfather then showed him a tall, green, strong plant. “This one was watered daily. Growth doesn’t come from big effort once. It comes from small effort daily.”</p>
-      
-      <h3>📈 The Daily Rule</h3>
-      <p>Advik created a simple rule: Study a little every day. Finish homework the same day. Practise even when not in the mood.</p>
-      <p>Months later, exams arrived. While others felt nervous, Advik felt calm. Not because he was lucky — but because he had prepared steadily. Hard work is not a punishment. It is training for a strong and confident life.</p>
-    `
-  },
-  {
-    id: 8, category: "Habits & Behaviour", catIcon: "🌱", color: "#d946ef",
-    title: "The Magic Words That Opened Every Door", icon: "🚪",
-    themes: ["Manners", "Politeness", "Kindness"],
-    moral: "Politeness and kindness open more doors than force ever can.",
-    content: `
-      <p>In a cheerful town lived a boy named Neel. Neel was clever and quick, but he often forgot simple words like “please,” “thank you,” and “sorry.”</p>
-      <p>One day, Neel met an old watchmaker fixing a clock. “Can I see?” Neel asked quickly.</p>
-      <p>The watchmaker looked up gently. “What is the magic word?”</p>
-      <p>Neel tried again. “Please, can I see?”</p>
+  <hr>
+  <p>Vedh realised: smart children are trained daily, not born instantly.</p>
+  `
+},
 
-      <h3>✨ The Golden Light</h3>
-      <p>The watchmaker smiled. Inside the shop, Neel noticed something amazing — every time he said “please” or “thank you,” a tiny golden light appeared.</p>
-      <p>“Polite words create warm energy,” the watchmaker said. “People feel respected and happy around you. That opens doors you cannot see.”</p>
-      <p>Neel decided to try it all day. He said “thank you” to his teacher. He said “sorry” to a friend. He said “please” at home. Everything felt calmer.</p>
-      <p>Life seemed to welcome him everywhere he went.</p>
-    `
-  },
+{
+  id: 3,
+  category: "Vedh's Adventures",
+  catIcon: "👑",
+  color: "#10b981",
+  title: "The Power of Good Behaviour",
+  icon: "🌟",
+  themes: ["Respect", "Politeness", "Character"],
+  moral: "Good behaviour makes people trust and support you.",
+  content: `
+  <p>At a family gathering, many children ran around loudly.</p>
+  <p>Vedh greeted elders politely and waited his turn to speak.</p>
 
-  // ════════ SPACE EXPLORATION ════════
-  {
-    id: 9, category: "Space Exploration", catIcon: "🚀", color: "#0ea5e9",
-    title: "The Solar System's Coolest Secrets", icon: "🪐",
-    themes: ["Science", "Planets", "Galaxies", "Astronauts"],
-    moral: "We all share one tiny, beautiful home floating in the stars.",
-    content: `
-      <h3>🌞 The Sun’s Giant Sneeze</h3>
-      <p>Once upon a time, the Sun had a giant sneeze… ACHOO! This was a solar flare, a huge burst of energy. Luckily, Earth has a strong magnetic shield that protects us like a superhero force field.</p>
-      <p><em>Fun fact: The Sun is so big that 1 million Earths could fit inside it!</em></p>
+  <p>His grandfather later said, “Do you know why people like being around you?”</p>
+  <p>Vedh shook his head.</p>
 
-      <h3>🌍 Earth: The Perfect Space Home</h3>
-      <p>Earth sits in the “Goldilocks Zone” — not too hot, not too cold… just right for water and living things. Every 24 hours, Earth spins once, giving us day and night.</p>
-      <p><em>Fun fact: If you drove a car straight up at 100 km/h, it would take about 1 hour to reach space!</em></p>
+  <h3>🛡️ The Quiet Superpower</h3>
+  <p>“Good behaviour makes others feel respected,” his grandfather said. “And people always support those who respect others.”</p>
 
-      <h3>🪐 Saturn and Its Magical Rings</h3>
-      <p>Saturn wears beautiful rings made of ice, rock, and dust. If you could place Saturn in a giant bathtub, it would actually float on water because it’s mostly gas.</p>
-      <p><em>Fun fact: Saturn’s rings stretch for hundreds of thousands of kilometres, but many are thinner than a school bus!</em></p>
+  <p>Vedh noticed teachers trusted him more. People listened when he spoke.</p>
+  <p>He realised politeness is not small — it is powerful.</p>
+  `
+},
 
-      <h3>🌌 The Galaxy Full of Stars</h3>
-      <p>Our Sun is just one star in the Milky Way galaxy, which has over 100 billion stars. If you counted one star every second, it would take thousands of years to count them all!</p>
-      <p><em>Fun fact: The light from some stars you see at night started travelling before dinosaurs even lived!</em></p>
+// ════════════════════════════════════════
+// GENIUS & SUCCESS MINDSET
+// ════════════════════════════════════════
 
-      <h3>👩‍🚀 The Little Astronaut’s Dream</h3>
-      <p>Astronauts train for years to travel into space. They float, eat floating food, and see Earth as a glowing blue ball. Some astronauts say that seeing Earth from space makes them realise: “We all share one tiny, beautiful home.”</p>
-    `
-  },
+{
+  id: 4,
+  category: "Genius Mindset",
+  catIcon: "🧠",
+  color: "#ec4899",
+  title: "The Child Who Asked Why",
+  icon: "💡",
+  themes: ["Curiosity", "Science", "Thinking"],
+  moral: "Curiosity builds intelligent minds.",
+  content: `
+  <p>A child named Ari asked many questions.</p>
+  <p>“Why is the sky blue? Why do stars shine?”</p>
 
-  // ════════ BEDTIME STORIES ════════
-  {
-    id: 10, category: "Bedtime Stories", catIcon: "🌙", color: "#6366f1",
-    title: "The Sleepy Star", icon: "⭐",
-    themes: ["Peace", "Rest", "Cosy Sleep"],
-    moral: "Sometimes the softest light is the most comforting.",
-    content: `
-      <p>High above the night sky lived a tiny star named Luma.</p>
-      <p>Every night, Luma shone brightly so children on Earth could see their way in the dark. But one night, Luma felt sleepy.</p>
-      <p>“I shine all night… when do I rest?” she whispered.</p>
-      
-      <h3>🌙 The Moon's Advice</h3>
-      <p>The Moon heard her and smiled. “Little star,” said the Moon softly, “you don’t have to shine so bright all the time. Even stars can glow gently.”</p>
-      <p>So Luma dimmed her light just a little. She glowed softly like a night lamp — calm and peaceful.</p>
-      <p>Below on Earth, children looked up and felt cosy and safe.</p>
-      <p>She kept glowing gently… and slowly drifted into a peaceful starry sleep.</p>
-      <p>Goodnight, little star. Goodnight, you.</p>
-    `
-  },
-  {
-    id: 11, category: "Bedtime Stories", catIcon: "🌙", color: "#14b8a6",
-    title: "The Floating Astronaut", icon: "👨‍🚀",
-    themes: ["Imagination", "Calmness", "Dreams"],
-    moral: "Imagine floating softly, peaceful and safe among the stars.",
-    content: `
-      <p>Once there was a young astronaut named Rio who loved bedtime adventures.</p>
-      <p>Every night, Rio closed his eyes and imagined floating in space. Up… up… and away he went, past the clouds and into the stars.</p>
-      
-      <h3>🌌 The Quiet Journey</h3>
-      <p>In space, everything was quiet. No noise. No rush. Just gentle floating. Rio floated past the Moon.</p>
-      <p>“Hello,” said the Moon softly.</p>
-      <p>“Hello,” Rio whispered back.</p>
-      <p>He floated past sleepy planets spinning slowly. Even the Sun was resting on the other side of the world.</p>
-      <p>Wrapped in his cosy space suit, Rio curled up on a fluffy cloud of stardust. The universe hummed a quiet lullaby.</p>
-      <p>Slowly… gently… Rio drifted into the deepest, calmest sleep.</p>
-    `
-  },
-   , // <-- Make sure there is a comma before pasting the new ones!
+  <p>One night a glowing robot named Nova appeared.</p>
+  <p>“Great scientists start with curiosity,” Nova said.</p>
 
-  // --- MATHS MYSTERIES ---
-  {
-    id: 7, category: "Maths Mysteries", catIcon: "🔢", color: "#f59e0b",
-    title: "The Boy Who Spoke in Numbers", icon: "📐",
-    themes: ["Mathematics", "Logic", "Problem Solving"],
-    moral: "Math is not just about numbers; it is the secret language of the universe.",
-    content: `
-      <p>A boy named Leo used to look at his maths homework and sigh.</p>
-      <p>"It's just boring rules and numbers," he complained to his grandfather.</p>
-      <p>His grandfather, an architect who built bridges, smiled. "Maths isn't just numbers, Leo. It's a superpower. It's a secret code that explains how the whole world works."</p>
+  <h3>🚀 Journey to Space</h3>
+  <p>They travelled into space and saw Earth from above.</p>
+  <p>“Every invention began with one question,” Nova said.</p>
 
-      <h3>🎼 The Hidden Patterns</h3>
-      <p>The next day, his grandfather took him for a walk.</p>
-      <p>He pointed to a beautiful sunflower. "Look at the petals," he said. "They grow in a perfect mathematical spiral called the Fibonacci sequence. Nature uses math to grow."</p>
-      <p>Then, they listened to a musician playing the guitar. "Music is just math in time," his grandfather explained. "Fractions and rhythms creating harmony."</p>
+  <hr>
+  <p>Ari realised: asking questions builds powerful thinking.</p>
+  `
+},
 
-      <h3>🌉 Building the Future</h3>
-      <p>Finally, they stood before a massive suspension bridge.</p>
-      <p>"Without geometry, this bridge would collapse into the river," his grandfather said. "Maths keeps us safe. It sends rockets to space. It makes your video games work."</p>
-      <p>Leo looked at his math book differently that night.</p>
-      <p>He wasn't just solving equations anymore. He was learning the code to build the future.</p>
-    `
-  },
+{
+  id: 5,
+  category: "Genius Mindset",
+  catIcon: "🧠",
+  color: "#f97316",
+  title: "The Child Who Saw Opportunities",
+  icon: "🔭",
+  themes: ["Leadership", "Problem Solving"],
+  moral: "Leaders look for solutions, not problems.",
+  content: `
+  <p>Arjun noticed problems everywhere: messy classrooms, broken games, confusion.</p>
+  <p>Others ignored them. Arjun thought, “Maybe I can improve this.”</p>
 
-  // --- SCIENCE ADVENTURES ---
-  {
-    id: 8, category: "Science Adventures", catIcon: "🔬", color: "#10b981",
-    title: "The Girl Who Asked 'Why?'", icon: "🌌",
-    themes: ["Science", "Curiosity", "Discovery"],
-    moral: "Curiosity is the engine of discovery. Never stop asking why.",
-    content: `
-      <p>Maya was a girl with a very busy brain.</p>
-      <p>From the moment she woke up, she asked questions: "Why is the sky blue? Why do apples fall down and not up? Why do fireflies glow?"</p>
-      <p>Sometimes, people told her she asked too many questions.</p>
-      <p>But her science teacher, Mr. Sen, gave her a magnifying glass.</p>
+  <p>A golden compass appeared.</p>
+  <p>“I guide future leaders,” it said. “Problems are opportunities.”</p>
 
-      <h3>🧪 The Scientific Method</h3>
-      <p>"A question is a key," Mr. Sen told her. "But a scientist doesn't just ask the question. A scientist looks for the answer."</p>
-      <p>He taught her how to test her ideas.</p>
-      <p>When Maya wanted to know why plants grow toward the window, she didn't just ask. She put one plant in the dark, and one in the light. She measured them every day.</p>
-      
-      <h3>💡 The Power of Observation</h3>
-      <p>She discovered that plants move to find food from the sun.</p>
-      <p>"You didn't just guess," Mr. Sen smiled. "You proved it."</p>
-      <p>Maya realised that the greatest inventors in history — the ones who invented electricity, airplanes, and medicine — were just grown-up kids who never stopped asking "Why?"</p>
-    `
-  },
+  <p>Arjun realised: people who improve things become leaders.</p>
+  `
+},
 
-  // --- WISDOM & KNOWLEDGE ---
-  {
-    id: 9, category: "Wisdom & Knowledge", catIcon: "🦉", color: "#3b82f6",
-    title: "The Magic of the Hidden Library", icon: "📚",
-    themes: ["Reading", "Wisdom", "Imagination"],
-    moral: "A book is a magical portal that lets you download a lifetime of wisdom in a few hours.",
-    content: `
-      <p>Sam thought reading took too long. He preferred watching quick videos.</p>
-      <p>One rainy afternoon, he found an old, dusty library in his town. The librarian, an old woman with twinkling eyes, handed him a thick book.</p>
-      <p>"I don't have time to read all this," Sam said.</p>
-      <p>The librarian laughed softly. "This book was written by a great explorer. It took him 40 years to learn everything in here. But he wrote it down so you can learn it in two days."</p>
+{
+  id: 6,
+  category: "Genius Mindset",
+  catIcon: "🧠",
+  color: "#3b82f6",
+  title: "The Unstoppable Mind",
+  icon: "🛡️",
+  themes: ["Confidence", "Self Belief"],
+  moral: "Strong thoughts create a strong life.",
+  content: `
+  <p>Maya sometimes doubted herself.</p>
+  <p>One night she entered the Mind Gym.</p>
 
-      <h3>⏳ Time Travel Exists</h3>
-      <p>Sam opened the book. Suddenly, his mind was transported. He was climbing snowy mountains, discovering ancient ruins, and learning survival secrets from a master.</p>
-      <p>When he closed the book, he felt different. He felt older, wiser.</p>
-      
-      <h3>🧠 The Ultimate Cheat Code</h3>
-      <p>He rushed back to the librarian. "It's like I lived his life!"</p>
-      <p>"Exactly," she said. "When you read, you borrow someone else's brain. You can learn from the greatest scientists, kings, and creators who ever lived. Reading is the ultimate cheat code for life."</p>
-      <p>From that day on, Sam never saw a book as a chore. He saw it as a treasure chest.</p>
-    `
-  },
+  <p>Negative thoughts weakened her.</p>
+  <p>Positive thoughts strengthened her.</p>
 
- // --- COSMIC WONDERS ---
-  {
-    id: 10, category: "Cosmic Wonders", catIcon: "🌌", color: "#8b5cf6",
-    title: "The Boy Who Mapped the Stars", icon: "🔭",
-    themes: ["Astronomy", "Perspective", "Exploration"],
-    moral: "The universe is vast, but the human mind is big enough to understand it.",
-    content: `
-      <p>Kian was standing in his garden looking up at the night sky. "There are so many," he whispered, feeling very, very small.</p>
-      <p>His aunt, an astronomer, walked out and handed him a telescope. "It looks like a mess of dots, doesn't it?" she asked.</p>
-      <p>Kian nodded. "It makes me feel like I don't matter."</p>
+  <p>Every time she said “I’ll try,” her mind grew stronger.</p>
 
-      <h3>🔭 The Hidden Pictures</h3>
-      <p>"That is exactly how the ancient people felt," his aunt said. "Until they started playing connect-the-dots."</p>
-      <p>She pointed up. "See those stars shaped like a giant spoon? That's the Big Dipper. For thousands of years, sailors used that exact spoon to find their way home across dark oceans. The stars aren't just dots; they are a map."</p>
+  <hr>
+  <p>Confidence, she realised, is trained daily.</p>
+  `
+},
 
-      <h3>✨ We Are Made of Stars</h3>
-      <p>Kian looked through the telescope and gasped. A fuzzy, glowing cloud filled the lens.</p>
-      <p>"That is a nebula," she explained. "It is a nursery where brand new stars are being born right now. And the craziest part? The iron in your blood and the calcium in your bones were made inside ancient stars that exploded long ago."</p>
-      <p>Kian looked at his hands, then back up at the sky.</p>
-      <p>He didn't feel small anymore. He felt connected to everything. The universe was huge, but his mind was big enough to explore it.</p>
-    `
-  },
-   // --- ELITE MINDSET & DISCIPLINE ---
-  {
-    id: 11, category: "Elite Mindset & Discipline", catIcon: "🏔️", color: "#2563eb",
-    title: "The Mountain of Discipline", icon: "⛰️",
-    themes: ["Consistency", "Discipline", "Overcoming Laziness"],
-    moral: "Discipline today creates an easy and successful tomorrow.",
-    content: `
-      <p>One Saturday morning, Vedh woke up and thought: "I'll study later… I'll clean my room later… I'll practise later."</p>
-      <p>Later… later… later.</p>
-      <p>By evening he felt strange. Nothing was finished. Homework remained. Room messy. Mind restless.</p>
-      <p>That night, as Vedh slept, he found himself standing before a gigantic mountain. A golden sign read: <strong>MOUNTAIN OF GREATNESS</strong>.</p>
-      <p>A calm guide stood beside him. "Vedh," the guide said, "everyone wants to reach the top. Few are willing to climb daily."</p>
+   // ════════════════════════════════════════
+// HABITS & BEHAVIOUR
+// ════════════════════════════════════════
 
-      <h3>🐢 Two Types of Climbers</h3>
-      <p>Vedh saw two groups of children.</p>
-      <p><strong>Group 1: The 'Tomorrow' Climbers</strong><br>
-      They said: "I'll start tomorrow." "I'm not in the mood." "Still time left." They stayed near the bottom.</p>
-      <p><strong>Group 2: The Daily Climbers</strong><br>
-      They took small steps every day: Finished homework same day. Practised even when lazy. Kept things organised. Used time wisely.</p>
-      <p>Slowly… steadily… they climbed higher.</p>
-      <p>"They're not faster," Vedh noticed. "They're just consistent."</p>
-      <p>"Exactly," said the guide. "Discipline is small effort done daily."</p>
+{
+  id: 7,
+  category: "Habits & Behaviour",
+  catIcon: "🌱",
+  color: "#ef4444",
+  title: "The Power of Daily Effort",
+  icon: "🌱",
+  themes: ["Hard Work", "Consistency", "Discipline"],
+  moral: "Small daily effort creates big success.",
+  content: `
+  <p>A boy named Advik delayed everything.</p>
+  <p>“I'll do it later,” he always said.</p>
 
-      <h3>🧠 The Secret of an Easy Life</h3>
-      <p>Halfway up the mountain, Vedh noticed something surprising.</p>
-      <p>The disciplined climbers looked relaxed. Happy. Confident.</p>
-      <p>The lazy climbers looked stressed. Rushing. Worried.</p>
-      <p>"Why?" Vedh asked.</p>
-      <p>The guide replied: "Because discipline makes life easy later. Laziness makes life hard later."</p>
-      <p>Vedh thought deeply. Every time he delayed homework, it became stress later. Every time he finished work early, he felt free.</p>
+  <p>One day his grandfather gave him a seed.</p>
+  <p>“Water it daily,” he said.</p>
 
-      <h3>🏆 The Top</h3>
-      <p>Vedh finally reached the top. From there he saw his future: A calm, confident Vedh. Organised. Respected. Successful.</p>
-      <p>Not because of luck. Because of daily discipline.</p>
-      <p>The guide spoke softly: "Vedh, remember: Do things on time. Finish what you start. Don't wait for mood. Small daily effort = big future. Discipline is your secret advantage."</p>
-      
-      <hr>
-      <p>Vedh woke up the next morning feeling different. He made a quiet decision: "I'll do things on time. Even small things."</p>
-      <p>He didn't become perfect. But he became consistent. And slowly… life became easier and calmer.</p>
-    `
-  },
-  {
-    id: 12, category: "Elite Mindset & Discipline", catIcon: "🏔️", color: "#4f46e5",
-    title: "The Unshakeable Confidence", icon: "🏛️",
-    themes: ["Confidence", "Preparation", "Self-Belief"],
-    moral: "Confidence grows when you prepare, practise, and believe in improvement.",
-    content: `
-      <p>Vedh sometimes wondered: "How do some children speak confidently everywhere?"</p>
-      <p>One night he dreamed he entered a grand hall called: <strong>Hall of Confidence</strong>.</p>
-      <p>Inside were two mirrors. A guide appeared. "Vedh, choose a mirror."</p>
+  <p>Advik watered it sometimes. It barely grew.</p>
+  <p>Grandfather showed another plant watered daily. It was tall and strong.</p>
 
-      <h3>🪞 The Two Mirrors</h3>
-      <p>He looked into the first mirror. He saw himself doubting: "What if I get it wrong?" "What if others are better?" The image looked smaller.</p>
-      <p>Then he looked into the second mirror. He saw himself: Prepared. Practised. Calm. Standing straight.</p>
-      <p>The image looked strong and confident.</p>
-      <p>"What's the difference?" Vedh asked.</p>
-      <p>The guide replied: "Confidence doesn't come first. Preparation comes first."</p>
+  <h3>🌱 The Lesson</h3>
+  <p>“Growth doesn't come from big effort once,” grandfather said.</p>
+  <p>“It comes from small effort daily.”</p>
 
-      <h3>💡 The Confidence Formula</h3>
-      <p>The guide showed him: When Vedh studied regularly, practised speaking, tried new things, and didn't fear mistakes... Confidence grew automatically.</p>
-      <p>"When you know you've prepared," the guide said, "your mind becomes calm and strong."</p>
+  <hr>
+  <p>Advik began studying and practising daily.</p>
+  <p>Months later, he felt confident and calm.</p>
+  `
+},
 
-      <h3>🌟 A Powerful Realisation</h3>
-      <p>Vedh saw his future again. Standing in class confidently. Speaking clearly. Leading calmly.</p>
-      <p>Not loud. Not arrogant. Just quietly confident.</p>
-      <p>He liked that version of himself.</p>
-    `
-  },
-  {
-    id: 13, category: "Elite Mindset & Discipline", catIcon: "🏔️", color: "#0ea5e9",
-    title: "The Day Studying Became a Superpower", icon: "📚",
-    themes: ["Focus", "Top 1% Habits", "Love for Learning"],
-    moral: "Daily focused study turns learning into a lifelong superpower.",
-    content: `
-      <p>One afternoon after school, Vedh dropped his bag and sighed. "Why do some children understand everything so fast?" he wondered. "Do they have a special brain?"</p>
-      <p>That night, a soft blue light appeared near his desk. From it stepped a friendly figure wearing round glasses and holding a glowing book.</p>
-      <p>"Vedh," the figure said, "I am Professor Vidya, guardian of growing minds. Tonight you'll learn a secret many children never discover."</p>
+{
+  id: 8,
+  category: "Habits & Behaviour",
+  catIcon: "🌱",
+  color: "#d946ef",
+  title: "The Magic Words",
+  icon: "✨",
+  themes: ["Manners", "Respect", "Kindness"],
+  moral: "Polite words open doors everywhere.",
+  content: `
+  <p>Neel often forgot to say “please” and “thank you.”</p>
+  <p>One day he met an old watchmaker.</p>
 
-      <h3>🧠 The Library Inside the Brain</h3>
-      <p>With a wave of her hand, Vedh found himself inside a gigantic glowing library. Shelves stretched endlessly.</p>
-      <p>"Where are we?" Vedh whispered.</p>
-      <p>"Inside your brain," Professor Vidya replied. "Every time you learn something, a new book appears here."</p>
-      <p>Vedh watched as a tiny book formed on a shelf. "Why is it fading?" he asked.</p>
-      <p>"Because revision makes knowledge strong," she explained. "When you revise, the book becomes bright and permanent."</p>
+  <p>“Can I see?” Neel asked.</p>
+  <p>“What is the magic word?” the watchmaker smiled.</p>
 
-      <h3>⏳ The 25-Minute Secret</h3>
-      <p>Professor Vidya showed him two versions of himself.</p>
-      <p><strong>Version 1: Last-Minute Vedh</strong><br>
-      Studied only before tests. Books piled up. Mind felt crowded. Confidence low.</p>
-      <p><strong>Version 2: Daily Vedh</strong><br>
-      Studied just 25–30 minutes daily. Reviewed lessons. Stayed curious. His brain library glowed brightly.</p>
-      <p>"He looks calm," Vedh said.</p>
-      <p>"Because daily study removes fear," she replied. "When learning becomes daily, exams become easy."</p>
+  <p>When Neel said “please,” tiny golden lights appeared.</p>
+  <p>“Polite words create warm energy,” the watchmaker said.</p>
 
-      <h3>🎮 Focus vs Distraction</h3>
-      <p>Whenever Vedh imagined getting distracted — switching screens, delaying homework — some books became blurry.</p>
-      <p>When he imagined focused study time, the books shone brighter.</p>
-      <p>"Focus strengthens memory," she said. "Even short focused study is powerful."</p>
-      <p>Vedh realised something important: Studying wasn't punishment. It was brain training.</p>
-    `
-  },
-  {
-    id: 14, category: "Elite Mindset & Discipline", catIcon: "🏔️", color: "#7c3aed",
-    title: "The Secret of the Top 1%", icon: "👑",
-    themes: ["Ambition", "Excellence", "Consistency"],
-    moral: "Extraordinary lives are built through ordinary daily discipline.",
-    content: `
-      <p>One evening Vedh asked a big question: "Why do only some people become truly great… leaders, inventors, toppers, builders?"</p>
-      <p>That night he dreamed he stood inside a massive stadium. On the field were two paths.</p>
-      <p>A calm mentor stood beside him. "Vedh, today you will see the difference between ordinary and extraordinary."</p>
+  <hr>
+  <p>Neel used magic words all day.</p>
+  <p>Everything felt smoother and kinder.</p>
+  `
+},
 
-      <h3>🛤 Path One: The Comfortable Crowd</h3>
-      <p>On the first path walked most children. They did what was required. Nothing more.</p>
-      <p>They studied only when told. Practised only before exams.</p>
-      <p>"Is this wrong?" Vedh asked.</p>
-      <p>"No," said the mentor kindly. "It is a good life. But not a great one."</p>
+// ════════════════════════════════════════
+// SPACE & SCIENCE
+// ════════════════════════════════════════
 
-      <h3>🏔 Path Two: The Top 1%</h3>
-      <p>On the second path walked fewer children. They did small extra things daily:</p>
-      <ul>
-        <li>Studied even when not required</li>
-        <li>Practised skills daily</li>
-        <li>Read more</li>
-        <li>Used time carefully</li>
-      </ul>
-      <p>They weren't stressed. They were focused.</p>
+{
+  id: 9,
+  category: "Space Exploration",
+  catIcon: "🚀",
+  color: "#0ea5e9",
+  title: "The Solar System Secrets",
+  icon: "🪐",
+  themes: ["Planets", "Space", "Science"],
+  moral: "We live on a tiny beautiful planet in a vast universe.",
+  content: `
+  <h3>🌞 The Sun</h3>
+  <p>The Sun is so big that over a million Earths could fit inside it.</p>
 
-      <h3>⏳ The Compound Effect</h3>
-      <p>The mentor waved his hand. Time began to move forward quickly.</p>
-      <p>After one year: Crowd looked similar. Top 1% slightly ahead.<br>
-      After five years: Big difference.<br>
-      After ten years: Massive difference.</p>
-      <p>The disciplined children had become leaders, innovators, experts. Not by magic. By daily habits.</p>
+  <h3>🌍 Earth</h3>
+  <p>Earth sits in the perfect zone for life. Not too hot. Not too cold.</p>
 
-      <h3>🧠 The Top 1% Formula</h3>
-      <p>"Vedh, the top 1% are not born different. They just do a few things differently every day."</p>
-      <p>He showed Vedh a glowing list: Finish work on time. Study daily. Read beyond school. Stay disciplined. Think big.</p>
-      <p>"These look small," Vedh said.</p>
-      <p>"They are small," the mentor replied. "But repeated daily… they create extraordinary lives."</p>
-    `
-  },
-  {
-    id: 15, category: "Elite Mindset & Discipline", catIcon: "🏔️", color: "#ea580c",
-    title: "The Warrior of the Mind", icon: "⚔️",
-    themes: ["Inner Strength", "Emotional Control", "Wisdom"],
-    moral: "The greatest victory is mastering your own mind.",
-    content: `
-      <p>One evening Vedh felt frustrated. Homework felt hard. A game didn't go his way. Someone said something unkind.</p>
-      <p>He felt anger rising inside him.</p>
-      <p>That night, he dreamed he stood on a vast battlefield. No weapons. No soldiers. Only thoughts.</p>
-      <p>A calm, powerful warrior appeared beside him. "Vedh, this is the Battlefield of the Mind. One day you will lead in life. And leaders must first conquer themselves."</p>
+  <h3>🪐 Saturn</h3>
+  <p>Saturn has beautiful rings made of ice and rock.</p>
 
-      <h3>⚔️ The Three Enemies</h3>
-      <p>The warrior pointed ahead to three giant figures: <strong>Laziness</strong>, <strong>Fear</strong>, and <strong>Anger</strong>.</p>
-      <p>"They defeat most people," the warrior said. "Not with strength. But by controlling their thoughts."</p>
+  <h3>🌌 The Galaxy</h3>
+  <p>Our galaxy has over 100 billion stars.</p>
 
-      <h3>🧘 The Weapon of Calm</h3>
-      <p>Fear rushed forward. "What if you fail?" it whispered. Vedh felt small.</p>
-      <p>"Breathe," the warrior said. Vedh took a deep breath. Fear weakened.</p>
-      <p>"Fear grows when you avoid challenges. It shrinks when you face them calmly."</p>
+  <p>We are tiny in the universe — but capable of great things.</p>
+  `
+},
 
-      <h3>🔥 The Discipline Strike</h3>
-      <p>Next came Laziness. "Do it tomorrow," it yawned. Vedh almost agreed. But he stood up straight. "I'll do it now." Laziness faded instantly.</p>
-      <p>"Action destroys laziness," the warrior nodded.</p>
+// ════════════════════════════════════════
+// BEDTIME & CALM STORIES
+// ════════════════════════════════════════
 
-      <h3>🌊 The Anger Test</h3>
-      <p>Finally, Anger approached, fiery and loud. "React! Shout!"</p>
-      <p>The warrior spoke softly: "Powerful people choose their response."</p>
-      <p>Vedh paused. Breathed. Spoke calmly. Anger dissolved.</p>
+{
+  id: 10,
+  category: "Bedtime Stories",
+  catIcon: "🌙",
+  color: "#6366f1",
+  title: "The Sleepy Star",
+  icon: "⭐",
+  themes: ["Sleep", "Calm", "Peace"],
+  moral: "Even stars rest to shine again.",
+  content: `
+  <p>High in the sky lived a tiny star named Luma.</p>
+  <p>She shone brightly every night.</p>
 
-      <h3>🏹 The Real Victory</h3>
-      <p>"Vedh, the real world will not test your strength. It will test your control. If you master your mind, no one can defeat you."</p>
-    `
-  },
-  {
-    id: 16, category: "Elite Mindset & Discipline", catIcon: "🏔️", color: "#059669",
-    title: "Tthe Builder's Mind", icon: "🏙️",
-    themes: ["Leadership", "Strategic Thinking", "Value Creation"],
-    moral: "Leaders don't chase success — they build value.",
-    content: `
-      <p>One afternoon Vedh noticed something. Some people complain about problems. Others fix them.</p>
-      <p>That night he dreamed he entered a city called: <strong>City of Builders</strong>.</p>
-      <p>Tall buildings. Fast systems. Smart inventions.</p>
-      <p>A visionary architect approached him. "Vedh, this city was built by thinkers. Children who grew up asking one question: 'How can I make this better?'"</p>
+  <p>One night she felt sleepy.</p>
+  <p>The Moon whispered, “Glow gently. You don't have to shine too bright always.”</p>
 
-      <h3>🔎 The Problem Radar</h3>
-      <p>She handed Vedh special glasses. Suddenly he could see glowing signs everywhere: Traffic problems. Learning problems. Health problems.</p>
-      <p>"These are opportunities," she explained. "Most people see inconvenience. Leaders see improvement chances."</p>
+  <p>Luma glowed softly and peacefully.</p>
+  <p>Children below felt calm and safe.</p>
 
-      <h3>🧠 The Builder Formula</h3>
-      <p>She showed him three pillars:</p>
-      <ol>
-        <li>Learn deeply</li>
-        <li>Think long-term</li>
-        <li>Solve real problems</li>
-      </ol>
-      <p>"Money follows value," she said calmly. "Respect follows contribution."</p>
+  <p>Slowly… she drifted into a peaceful sleep.</p>
+  `
+},
 
-      <h3>⏳ Long-Term Thinking</h3>
-      <p>"Builders think in decades. They sacrifice small comfort for big impact."</p>
-      <p>Vedh imagined: Reading daily. Learning new skills. Understanding how things work.</p>
-      <p>He realised greatness isn't about quick wins. It's about building foundations early.</p>
+{
+  id: 11,
+  category: "Bedtime Stories",
+  catIcon: "🌙",
+  color: "#14b8a6",
+  title: "The Floating Astronaut",
+  icon: "👨‍🚀",
+  themes: ["Imagination", "Calm", "Dream"],
+  moral: "A calm mind travels to beautiful dreams.",
+  content: `
+  <p>A young astronaut floated gently through space.</p>
+  <p>No noise. No rush. Only peaceful stars.</p>
 
-      <hr>
-      <p>Vedh woke up thoughtful. He no longer wanted to just do well in school.</p>
-      <p>He wanted to build things. Improve things. Lead things. And that was the beginning.</p>
-    `
-  }
+  <p>He floated past the Moon and planets.</p>
+  <p>Wrapped in a cosy suit, he rested on a cloud of stardust.</p>
+
+  <p>The universe hummed a soft lullaby.</p>
+  <p>Slowly… he drifted into deep peaceful sleep.</p>
+  `
+},
+   // ════════════════════════════════════════
+// ELITE MINDSET & DISCIPLINE
+// ════════════════════════════════════════
+
+{
+  id: 12,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#2563eb",
+  title: "The Mountain of Discipline",
+  icon: "⛰️",
+  themes: ["Discipline", "Consistency", "Future Success"],
+  moral: "Discipline today creates an easy tomorrow.",
+  content: `
+  <p>One morning Vedh thought, “I’ll do it later.”</p>
+  <p>Homework waited. Room messy. Mind restless.</p>
+
+  <p>That night he stood before a giant mountain labeled <strong>MOUNTAIN OF GREATNESS</strong>.</p>
+
+  <h3>🐢 Two Climbers</h3>
+  <p>Some children said, “Tomorrow.” They stayed near the bottom.</p>
+  <p>Others climbed daily with small steps.</p>
+
+  <p>“They’re not faster,” Vedh noticed.</p>
+  <p>“They’re consistent,” said a guide.</p>
+
+  <hr>
+  <p>Vedh woke up and decided: finish work on time. Small daily steps.</p>
+  `
+},
+
+{
+  id: 13,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#4f46e5",
+  title: "The Hall of Confidence",
+  icon: "🏛️",
+  themes: ["Confidence", "Preparation", "Self Belief"],
+  moral: "Preparation creates confidence.",
+  content: `
+  <p>Vedh wondered why some children speak confidently.</p>
+  <p>In a dream he entered the Hall of Confidence.</p>
+
+  <h3>🪞 Two Mirrors</h3>
+  <p>One mirror showed doubt.</p>
+  <p>The other showed preparation and practice.</p>
+
+  <p>“Confidence comes after preparation,” the guide said.</p>
+
+  <hr>
+  <p>Vedh began practising daily. Confidence followed naturally.</p>
+  `
+},
+
+{
+  id: 14,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#0ea5e9",
+  title: "The Study Superpower",
+  icon: "📚",
+  themes: ["Focus", "Top Habits", "Learning"],
+  moral: "Focused study is a lifelong superpower.",
+  content: `
+  <p>Vedh saw two versions of himself.</p>
+  <p>One studied only before exams. The other studied daily for 25 minutes.</p>
+
+  <p>After months, the daily version felt calm and ahead.</p>
+
+  <p>“Daily focus builds mental strength,” a guide said.</p>
+  `
+},
+
+{
+  id: 15,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#7c3aed",
+  title: "The Secret of the Top 1%",
+  icon: "👑",
+  themes: ["Ambition", "Excellence", "Consistency"],
+  moral: "Small extra effort daily creates extraordinary results.",
+  content: `
+  <p>Vedh saw two paths.</p>
+  <p>One did only what was required.</p>
+  <p>The other did a little extra daily.</p>
+
+  <p>Years passed quickly.</p>
+  <p>The second group stood far ahead.</p>
+
+  <p>“Extraordinary lives are built quietly,” the mentor said.</p>
+  `
+},
+
+{
+  id: 16,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#ea580c",
+  title: "The Warrior of the Mind",
+  icon: "⚔️",
+  themes: ["Emotional Control", "Inner Strength"],
+  moral: "Master your mind and nothing can defeat you.",
+  content: `
+  <p>Vedh entered the Battlefield of the Mind.</p>
+
+  <h3>⚔️ Three Enemies</h3>
+  <p>Laziness. Fear. Anger.</p>
+
+  <p>Breathing defeated fear.</p>
+  <p>Action defeated laziness.</p>
+  <p>Calm defeated anger.</p>
+
+  <hr>
+  <p>He realised the strongest leaders control themselves first.</p>
+  `
+},
+
+{
+  id: 17,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#059669",
+  title: "The Builder's Mind",
+  icon: "🏙️",
+  themes: ["Leadership", "Value Creation", "Strategy"],
+  moral: "Leaders build solutions, not complaints.",
+  content: `
+  <p>Vedh entered the City of Builders.</p>
+  <p>Every problem glowed like an opportunity.</p>
+
+  <p>“Learn deeply. Think long term. Solve real problems,” said a visionary guide.</p>
+
+  <hr>
+  <p>Vedh realised: success follows value.</p>
+  `
+},
+   // ════════════════════════════════════════
+// ADVANCED ELITE MINDSET
+// ════════════════════════════════════════
+
+{
+  id: 18,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#1d4ed8",
+  title: "The Deep Focus Tower",
+  icon: "🎯",
+  themes: ["Deep Work", "Focus", "Mental Strength"],
+  moral: "Deep focus separates leaders from the distracted crowd.",
+  content: `
+  <p>Vedh entered a noisy marketplace full of distractions.</p>
+  <p>In the center stood a silent glass tower.</p>
+
+  <h3>🔵 The 25-Minute Rule</h3>
+  <p>Inside the tower, children worked deeply for 25 minutes with no distractions.</p>
+  <p>Outside, others kept switching tasks.</p>
+
+  <p>Months passed.</p>
+  <p>The focused children moved far ahead.</p>
+
+  <hr>
+  <p>Vedh realised: focus is a competitive advantage.</p>
+  `
+},
+
+{
+  id: 19,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#15803d",
+  title: "The Long-Term Vision",
+  icon: "🌳",
+  themes: ["Patience", "Compound Growth", "Future Thinking"],
+  moral: "Think in years, not days.",
+  content: `
+  <p>Vedh saw two gardens.</p>
+  <p>One grew fast flowers that faded quickly.</p>
+  <p>The other grew slow trees that became massive.</p>
+
+  <p>“Plant trees,” said the gardener. “Not shortcuts.”</p>
+
+  <hr>
+  <p>Vedh decided to build skills that grow for decades.</p>
+  `
+},
+
+{
+  id: 20,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#9333ea",
+  title: "Time Mastery",
+  icon: "⏳",
+  themes: ["Time Management", "Priorities", "Self Control"],
+  moral: "Those who control time control their future.",
+  content: `
+  <p>Vedh received a golden clock in a dream.</p>
+  <p>“Everyone has 24 hours,” the guide said. “But not everyone uses them wisely.”</p>
+
+  <p>One version of Vedh wasted time scrolling and delaying.</p>
+  <p>Another used focused study, exercise, and rest.</p>
+
+  <hr>
+  <p>The difference after years was enormous.</p>
+  `
+},
+
+{
+  id: 21,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#dc2626",
+  title: "The Global Arena",
+  icon: "🌍",
+  themes: ["Competition", "Excellence", "Courage"],
+  moral: "Prepare to compete globally, not locally.",
+  content: `
+  <p>Vedh entered a giant arena filled with children from around the world.</p>
+  <p>Some were faster. Some smarter. Some stronger.</p>
+
+  <p>“Do not fear competition,” said a mentor.</p>
+  <p>“Let it sharpen you.”</p>
+
+  <hr>
+  <p>Vedh decided to train beyond average standards.</p>
+  `
+},
+
+{
+  id: 22,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#0f766e",
+  title: "The Skill Vault",
+  icon: "🔐",
+  themes: ["Skill Building", "Learning", "Preparation"],
+  moral: "Skills are the real currency of the future.",
+  content: `
+  <p>Vedh entered a vault filled with glowing skills.</p>
+  <p>Communication. Coding. Maths. Fitness. Leadership.</p>
+
+  <p>“Money follows skills,” said the guardian.</p>
+
+  <hr>
+  <p>Vedh began collecting skills like treasure.</p>
+  `
+},
+
+{
+  id: 23,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#c2410c",
+  title: "The Idea Laboratory",
+  icon: "🧪",
+  themes: ["Innovation", "Creativity", "Problem Solving"],
+  moral: "Big futures are built from brave ideas.",
+  content: `
+  <p>Vedh walked into a lab where ideas floated like light bulbs.</p>
+  <p>Some children laughed at new ideas.</p>
+  <p>Others tested and improved them.</p>
+
+  <p>“Every great invention began as a small idea,” the guide said.</p>
+
+  <hr>
+  <p>Vedh decided never to fear thinking differently.</p>
+  `
+},
+
+{
+  id: 24,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#1e40af",
+  title: "The Respect Effect",
+  icon: "🎩",
+  themes: ["Presence", "Reputation", "Character"],
+  moral: "Your reputation is built daily.",
+  content: `
+  <p>Vedh noticed some children were trusted more.</p>
+  <p>They stood straight, spoke calmly, listened carefully.</p>
+
+  <p>“Reputation grows silently,” the guide explained.</p>
+
+  <hr>
+  <p>Vedh upgraded his presence — one small behaviour at a time.</p>
+  `
+},
+
+{
+  id: 25,
+  category: "Elite Mindset & Discipline",
+  catIcon: "🏔️",
+  color: "#065f46",
+  title: "Rooted Strength",
+  icon: "🕉️",
+  themes: ["Values", "Balance", "Inner Power"],
+  moral: "Be ambitious like a leader, grounded like a sage.",
+  content: `
+  <p>Vedh stood beside a calm river.</p>
+  <p>“Ambition without wisdom becomes restless,” said a teacher.</p>
+  <p>“Wisdom without ambition becomes passive.”</p>
+
+  <p>“Balance both.”</p>
+
+  <hr>
+  <p>Vedh chose to grow powerful — but rooted in values.</p>
+  `
+},
+   // ════════════════════════════════════════
+// HINDU WISDOM + SCIENCE SERIES
+// ════════════════════════════════════════
+
+{
+  id: 26,
+  category: "Hindu Wisdom & Science",
+  catIcon: "🕉️",
+  color: "#f59e0b",
+  title: "Vedh and the Power of Stillness",
+  icon: "🧘",
+  themes: ["Meditation", "Focus", "Inner Calm"],
+  moral: "A calm mind is the most powerful mind.",
+  content: `
+  <p>Vedh once asked, “Why do great sages sit quietly with eyes closed?”</p>
+  <p>That night he found himself in a peaceful Himalayan cave.</p>
+
+  <p>A calm rishi said, “When the mind becomes still, it becomes sharp like a laser.”</p>
+
+  <h3>🧠 The Science</h3>
+  <p>“When you sit quietly and breathe slowly,” the rishi explained, “your brain becomes clearer, memory improves, and emotions become stable.”</p>
+
+  <p>Vedh sat silently for a few moments.</p>
+  <p>He felt calm. Focused. Strong inside.</p>
+
+  <hr>
+  <p>He realised: stillness is not weakness — it is mental power.</p>
+  `
+},
+
+{
+  id: 27,
+  category: "Hindu Wisdom & Science",
+  catIcon: "🕉️",
+  color: "#ea580c",
+  title: "The Law of Karma and Action",
+  icon: "⚖️",
+  themes: ["Karma", "Responsibility", "Choices"],
+  moral: "Every action creates your future.",
+  content: `
+  <p>Vedh saw a golden balance scale in a dream.</p>
+  <p>Each action he took placed weight on one side.</p>
+
+  <p>Helping others added light.</p>
+  <p>Laziness added heaviness.</p>
+
+  <p>A wise guide said, “Karma is not punishment. It is cause and effect.”</p>
+
+  <hr>
+  <p>Vedh realised: every small action builds tomorrow.</p>
+  `
+},
+
+{
+  id: 28,
+  category: "Hindu Wisdom & Science",
+  catIcon: "🕉️",
+  color: "#7c3aed",
+  title: "The Mind Like Hanuman",
+  icon: "🐒",
+  themes: ["Strength", "Devotion", "Confidence"],
+  moral: "Your strength appears when you believe in yourself.",
+  content: `
+  <p>Vedh heard the story of Hanuman who forgot his powers.</p>
+  <p>Only when reminded did he realise he could fly across oceans.</p>
+
+  <p>A voice told Vedh, “Many children forget their inner strength.”</p>
+
+  <hr>
+  <p>“Confidence reveals hidden power,” the voice said.</p>
+  `
+},
+
+{
+  id: 29,
+  category: "Hindu Wisdom & Science",
+  catIcon: "🕉️",
+  color: "#0891b2",
+  title: "The Discipline of Arjuna",
+  icon: "🏹",
+  themes: ["Focus", "Practice", "Mastery"],
+  moral: "Total focus leads to mastery.",
+  content: `
+  <p>Vedh saw Arjuna practising archery.</p>
+  <p>“What do you see?” a teacher asked.</p>
+  <p>“Only the target,” Arjuna replied.</p>
+
+  <p>Distractions disappeared.</p>
+  <p>Focus remained.</p>
+
+  <hr>
+  <p>Vedh realised: mastery requires total attention.</p>
+  `
+},
+
+{
+  id: 30,
+  category: "Hindu Wisdom & Science",
+  catIcon: "🕉️",
+  color: "#16a34a",
+  title: "The Universe Inside You",
+  icon: "🌌",
+  themes: ["Universe", "Consciousness", "Science"],
+  moral: "The same elements in stars exist within you.",
+  content: `
+  <p>A sage showed Vedh the night sky.</p>
+  <p>“The atoms in your body were once inside stars,” he said.</p>
+
+  <p>Vedh looked at his hands in wonder.</p>
+  <p>He was made of the universe.</p>
+
+  <hr>
+  <p>He realised: humans are small yet incredibly powerful.</p>
+  `
+},
+   // ════════════════════════════════════════
+// ULTRA BRAIN DEVELOPMENT SERIES
+// ════════════════════════════════════════
+
+{
+  id: 31,
+  category: "Ultra Brain Development",
+  catIcon: "🧠",
+  color: "#2563eb",
+  title: "The Brain That Grew Stronger Daily",
+  icon: "🧠",
+  themes: ["Neuroplasticity", "Learning", "Growth"],
+  moral: "Your brain grows every time you challenge it.",
+  content: `
+  <p>Vedh saw his brain like a glowing network.</p>
+  <p>Each time he learned something new, new connections formed.</p>
+
+  <p>“Your brain grows with use,” a guide said.</p>
+
+  <hr>
+  <p>Vedh decided to learn something new daily.</p>
+  `
+},
+
+{
+  id: 32,
+  category: "Ultra Brain Development",
+  catIcon: "🧠",
+  color: "#dc2626",
+  title: "The Memory Palace",
+  icon: "🏛️",
+  themes: ["Memory", "Visualization", "Learning"],
+  moral: "Visualising helps you remember faster.",
+  content: `
+  <p>Vedh entered a palace filled with rooms.</p>
+  <p>Each room stored information visually.</p>
+
+  <p>“Imagine what you learn,” a mentor said.</p>
+  <p>“Your memory will strengthen.”</p>
+  `
+},
+
+{
+  id: 33,
+  category: "Ultra Brain Development",
+  catIcon: "🧠",
+  color: "#059669",
+  title: "The Power of Deep Thinking",
+  icon: "🤔",
+  themes: ["Thinking", "Problem Solving", "Intelligence"],
+  moral: "Deep thinking creates intelligent decisions.",
+  content: `
+  <p>Vedh saw two minds.</p>
+  <p>One reacted quickly.</p>
+  <p>The other paused and thought deeply.</p>
+
+  <p>The second made wiser decisions.</p>
+
+  <hr>
+  <p>Vedh learned to think before reacting.</p>
+  `
+},
+
+{
+  id: 34,
+  category: "Ultra Brain Development",
+  catIcon: "🧠",
+  color: "#7c3aed",
+  title: "The Focus Muscle",
+  icon: "🏋️",
+  themes: ["Focus", "Training", "Mental Strength"],
+  moral: "Focus becomes stronger when trained daily.",
+  content: `
+  <p>Vedh trained his focus like a muscle.</p>
+  <p>Each day he worked without distraction for short periods.</p>
+
+  <p>Soon, his concentration became powerful.</p>
+
+  <hr>
+  <p>Focus training made studying easier.</p>
+  `
+},
+
+{
+  id: 35,
+  category: "Ultra Brain Development",
+  catIcon: "🧠",
+  color: "#ea580c",
+  title: "The Calm Super Brain",
+  icon: "🌊",
+  themes: ["Calmness", "Clarity", "Emotional Intelligence"],
+  moral: "A calm brain makes the best decisions.",
+  content: `
+  <p>When Vedh stayed calm, his thinking became clear.</p>
+  <p>When he panicked, mistakes increased.</p>
+
+  <p>He learned to breathe slowly and stay steady.</p>
+
+  <hr>
+  <p>Calmness became his mental advantage.</p>
+  `
+},
+   // ════════════════════════════════════════
+// BHAGAVAD GITA — KRISHNA WISDOM FOR KIDS
+// ════════════════════════════════════════
+
+{
+  id: 36,
+  category: "Bhagavad Gita Wisdom",
+  catIcon: "🪔",
+  color: "#2563eb",
+  title: "Krishna Teaches Arjuna About Courage",
+  icon: "🏹",
+  themes: ["Courage", "Duty", "Confidence"],
+  moral: "Do your duty bravely, without fear.",
+  content: `
+  <p>On the great battlefield of Kurukshetra, Arjuna felt nervous.</p>
+  <p>“Krishna,” he said, “what if I fail?”</p>
+
+  <p>Krishna smiled calmly. “Focus on doing what is right. Do not fear success or failure.”</p>
+
+  <p>“Your duty is to try your best with honesty and courage.”</p>
+
+  <hr>
+  <p>Arjuna stood strong again, ready to do his duty bravely.</p>
+  `
+},
+
+{
+  id: 37,
+  category: "Bhagavad Gita Wisdom",
+  catIcon: "🪔",
+  color: "#7c3aed",
+  title: "Krishna and the Calm Mind",
+  icon: "🧘",
+  themes: ["Calmness", "Mind Control", "Wisdom"],
+  moral: "A calm mind makes the best decisions.",
+  content: `
+  <p>Arjuna once asked Krishna, “Why is my mind sometimes restless?”</p>
+
+  <p>Krishna replied, “The mind becomes powerful when it is calm and controlled.”</p>
+
+  <p>He taught Arjuna to breathe, think clearly, and act calmly.</p>
+
+  <hr>
+  <p>A calm mind, Krishna said, is the greatest strength of all.</p>
+  `
+},
+
+{
+  id: 38,
+  category: "Bhagavad Gita Wisdom",
+  catIcon: "🪔",
+  color: "#16a34a",
+  title: "The Secret of Karma",
+  icon: "⚖️",
+  themes: ["Karma", "Responsibility", "Choices"],
+  moral: "Every action creates your future.",
+  content: `
+  <p>Krishna explained to Arjuna, “Every action is like planting a seed.”</p>
+
+  <p>Good actions grow into happiness.</p>
+  <p>Wrong actions grow into problems.</p>
+
+  <p>“Choose your actions wisely,” Krishna said.</p>
+
+  <hr>
+  <p>Arjuna understood that every small action matters.</p>
+  `
+},
+
+{
+  id: 39,
+  category: "Bhagavad Gita Wisdom",
+  catIcon: "🪔",
+  color: "#ea580c",
+  title: "Arjuna’s Focus",
+  icon: "🎯",
+  themes: ["Focus", "Discipline", "Excellence"],
+  moral: "Total focus leads to success.",
+  content: `
+  <p>Arjuna practised archery every day.</p>
+  <p>When asked what he saw, he replied, “Only the target.”</p>
+
+  <p>His focus made him the greatest archer.</p>
+
+  <hr>
+  <p>Krishna taught: when you focus fully, success follows.</p>
+  `
+},
+
+{
+  id: 40,
+  category: "Bhagavad Gita Wisdom",
+  catIcon: "🪔",
+  color: "#0891b2",
+  title: "Yudhishthira and Truth",
+  icon: "👑",
+  themes: ["Truth", "Honesty", "Leadership"],
+  moral: "Truth builds trust and respect.",
+  content: `
+  <p>Yudhishthira always spoke the truth.</p>
+  <p>People trusted him because he was honest.</p>
+
+  <p>Krishna said, “Truth is the foundation of strong character.”</p>
+
+  <hr>
+  <p>Vedh learned that honesty builds lasting respect.</p>
+  `
+},
+   // ════════════════════════════════════════
+// RAMAYANA CHARACTER STORIES
+// ════════════════════════════════════════
+
+{
+  id: 41,
+  category: "Ramayana Wisdom",
+  catIcon: "🏹",
+  color: "#dc2626",
+  title: "Rama: The Prince of Discipline",
+  icon: "👑",
+  themes: ["Discipline", "Respect", "Duty"],
+  moral: "True strength comes from discipline and respect.",
+  content: `
+  <p>Prince Rama always respected his parents and teachers.</p>
+  <p>He followed discipline even when life became difficult.</p>
+
+  <p>Because of this, everyone trusted and loved him.</p>
+
+  <hr>
+  <p>Rama showed that discipline builds greatness.</p>
+  `
+},
+
+{
+  id: 42,
+  category: "Ramayana Wisdom",
+  catIcon: "🏹",
+  color: "#16a34a",
+  title: "Hanuman’s Hidden Power",
+  icon: "🐒",
+  themes: ["Strength", "Confidence", "Devotion"],
+  moral: "Believe in yourself and your strength will appear.",
+  content: `
+  <p>Hanuman once forgot how powerful he was.</p>
+  <p>When reminded, he leaped across the ocean.</p>
+
+  <p>He realised his strength was always within him.</p>
+
+  <hr>
+  <p>We are stronger than we think.</p>
+  `
+},
+
+{
+  id: 43,
+  category: "Ramayana Wisdom",
+  catIcon: "🏹",
+  color: "#7c3aed",
+  title: "Sita’s Inner Strength",
+  icon: "🌸",
+  themes: ["Patience", "Strength", "Courage"],
+  moral: "Inner strength is more powerful than outer strength.",
+  content: `
+  <p>Sita remained calm and strong even during difficult times.</p>
+  <p>Her courage came from within.</p>
+
+  <hr>
+  <p>True strength comes from character and patience.</p>
+  `
+},
+
+{
+  id: 44,
+  category: "Ramayana Wisdom",
+  catIcon: "🏹",
+  color: "#2563eb",
+  title: "Lakshmana’s Loyalty",
+  icon: "🛡️",
+  themes: ["Loyalty", "Service", "Family"],
+  moral: "Stand by those you love and support them.",
+  content: `
+  <p>Lakshmana stayed beside Rama through every challenge.</p>
+  <p>His loyalty showed true strength of character.</p>
+
+  <hr>
+  <p>Loyalty builds strong relationships.</p>
+  `
+},
+
+{
+  id: 45,
+  category: "Ramayana Wisdom",
+  catIcon: "🏹",
+  color: "#ea580c",
+  title: "Bharata’s Integrity",
+  icon: "⚖️",
+  themes: ["Integrity", "Selflessness", "Honor"],
+  moral: "True leaders are humble and honest.",
+  content: `
+  <p>Bharata refused to take Rama’s throne unfairly.</p>
+  <p>He ruled with honesty and respect for Rama.</p>
+
+  <hr>
+  <p>Integrity makes a person truly noble.</p>
+  `
+}
 ];
 
 // ══════════════════════════════════════════════
