@@ -10,15 +10,15 @@
    WORKSHEET THEME - CREATIVITY
 ══════════════════════════════════════════ */
 :root {
-  --primary: #ec4899; /* Bright Pink */
-  --secondary: #8b5cf6; /* Purple */
+  --primary: #ec4899; 
+  --secondary: #8b5cf6; 
   --danger: #ef4444; 
   --blue: #0ea5e9;
   --green: #10b981;
   --orange: #f97316;
   --dark: #1e293b; 
   --paper: #ffffff;
-  --grid: #fce7f3; /* Light pink grid */
+  --grid: #fce7f3; 
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -49,16 +49,17 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
 .worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(30, 41, 59, 0.1); text-align: center; position: relative; }
 
 /* Modes grid for many buttons */
-.modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-.mode-btn { width: 100%; display: flex; align-items: center; gap: 10px; background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 15px; margin-bottom: 10px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
-.mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
-.mode-icon { font-size: 2rem; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.1)); }
-.mode-text h3 { font-family:'Fredoka One'; font-size: 1.2rem; color: var(--dark); margin-bottom: 2px; }
-.mode-text p { font-weight: 600; color: #64748b; font-size: 0.9rem; }
+.mode-btn { width: 100%; display: flex; align-items: center; gap: 10px; background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 10px 15px; margin-bottom: 5px; cursor: pointer; text-align: left; box-shadow: 0 4px 0 var(--dark); transition: all 0.1s; }
+.mode-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--dark); }
+.mode-icon { font-size: 1.8rem; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.1)); }
+.mode-text h3 { font-family:'Fredoka One'; font-size: 1.1rem; color: var(--dark); margin-bottom: 0px; }
+.mode-text p { font-weight: 600; color: #64748b; font-size: 0.8rem; }
 
 /* Game Area */
-.top-bar { display: flex; justify-content: space-between; align-items: center; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+.top-bar { display: flex; justify-content: space-between; align-items: center; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 5px; color: var(--dark); }
+.color-hint { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 15px; background: #fdf2f8; border: 2px dashed var(--primary); padding: 8px; border-radius: 12px;}
 
 /* Pixel Canvas */
 .canvas-container {
@@ -88,7 +89,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
 .tools-container { display: flex; flex-direction: column; gap: 15px; }
 .palette { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; background: #f8fafc; padding: 15px; border-radius: 16px; border: 3px dashed #cbd5e1; }
 .color-swatch {
-  width: 35px; height: 35px; border-radius: 50%;
+  width: 32px; height: 32px; border-radius: 50%;
   border: 3px solid rgba(0,0,0,0.2); cursor: pointer;
   transition: transform 0.1s; box-shadow: 0 3px 0 rgba(0,0,0,0.1);
 }
@@ -103,8 +104,8 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
 .btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #be185d; }
 
 @media(max-width: 500px) {
-  .modes-grid { grid-template-columns: 1fr; gap: 10px; }
-  .color-swatch { width: 30px; height: 30px; }
+  .modes-grid { grid-template-columns: 1fr; gap: 8px; }
+  .color-swatch { width: 28px; height: 28px; }
   .tool-btn { font-size: 1rem; }
 }
 </style>
@@ -120,56 +121,70 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
 
 <div id="modeScreen" class="screen active">
   <div class="worksheet-card" style="max-width: 800px;">
-    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; margin-bottom: 20px; color: var(--dark);">What shall we draw?</h2>
+    <h2 style="font-family:'Fredoka One'; font-size: 1.6rem; margin-bottom: 15px; color: var(--dark);">What shall we draw?</h2>
     
     <div class="modes-grid">
-      <button class="mode-btn" style="border-color: var(--primary); box-shadow: 0 6px 0 var(--primary);" onclick="startGame('free')">
+      <button class="mode-btn" style="border-color: var(--primary);" onclick="startGame('free')">
         <div class="mode-icon">🖌️</div>
         <div class="mode-text"><h3>Free Draw</h3><p>Blank canvas!</p></div>
       </button>
 
-      <button class="mode-btn" style="border-color: var(--green); box-shadow: 0 6px 0 var(--green);" onclick="startGame('creeper')">
+      <button class="mode-btn" style="border-color: var(--green);" onclick="startGame('creeper')">
         <div class="mode-icon">🟩</div>
-        <div class="mode-text"><h3>Creeper Face</h3><p>Minecraft</p></div>
+        <div class="mode-text"><h3>Creeper</h3><p>Minecraft</p></div>
       </button>
-      <button class="mode-btn" style="border-color: #795548; box-shadow: 0 6px 0 #795548;" onclick="startGame('steve')">
+      <button class="mode-btn" style="border-color: #795548;" onclick="startGame('steve')">
         <div class="mode-icon">👦🏻</div>
         <div class="mode-text"><h3>Steve</h3><p>Minecraft</p></div>
       </button>
-
-      <button class="mode-btn" style="border-color: var(--primary); box-shadow: 0 6px 0 var(--primary);" onclick="startGame('peppa')">
+      <button class="mode-btn" style="border-color: #166534;" onclick="startGame('zombie')">
+        <div class="mode-icon">🧟</div>
+        <div class="mode-text"><h3>Zombie</h3><p>Minecraft</p></div>
+      </button>
+      <button class="mode-btn" style="border-color: #9ca3af;" onclick="startGame('enderman')">
+        <div class="mode-icon">👁️</div>
+        <div class="mode-text"><h3>Enderman</h3><p>Minecraft</p></div>
+      </button>
+      <button class="mode-btn" style="border-color: #fca5a5;" onclick="startGame('pig')">
         <div class="mode-icon">🐷</div>
+        <div class="mode-text"><h3>Pig</h3><p>Minecraft</p></div>
+      </button>
+
+      <button class="mode-btn" style="border-color: var(--blue);" onclick="startGame('pickaxe')">
+        <div class="mode-icon">⛏️</div>
+        <div class="mode-text"><h3>Pickaxe</h3><p>Minecraft</p></div>
+      </button>
+      <button class="mode-btn" style="border-color: var(--danger);" onclick="startGame('tnt')">
+        <div class="mode-icon">🧨</div>
+        <div class="mode-text"><h3>TNT Block</h3><p>Minecraft</p></div>
+      </button>
+      <button class="mode-btn" style="border-color: #10b981;" onclick="startGame('grassblock')">
+        <div class="mode-icon">🟫</div>
+        <div class="mode-text"><h3>Grass Block</h3><p>Minecraft</p></div>
+      </button>
+
+      <button class="mode-btn" style="border-color: var(--primary);" onclick="startGame('peppa')">
+        <div class="mode-icon">🐽</div>
         <div class="mode-text"><h3>Peppa Pig</h3><p>TV Character</p></div>
       </button>
-      <button class="mode-btn" style="border-color: var(--blue); box-shadow: 0 6px 0 var(--blue);" onclick="startGame('bluey')">
+      <button class="mode-btn" style="border-color: var(--blue);" onclick="startGame('bluey')">
         <div class="mode-icon">🐶</div>
         <div class="mode-text"><h3>Bluey</h3><p>TV Character</p></div>
       </button>
 
-      <button class="mode-btn" style="border-color: var(--secondary); box-shadow: 0 6px 0 var(--secondary);" onclick="startGame('rocket')">
+      <button class="mode-btn" style="border-color: var(--secondary);" onclick="startGame('rocket')">
         <div class="mode-icon">🚀</div>
         <div class="mode-text"><h3>Rocket</h3><p>Space</p></div>
       </button>
-      <button class="mode-btn" style="border-color: var(--orange); box-shadow: 0 6px 0 var(--orange);" onclick="startGame('saturn')">
+      <button class="mode-btn" style="border-color: var(--orange);" onclick="startGame('saturn')">
         <div class="mode-icon">🪐</div>
         <div class="mode-text"><h3>Saturn</h3><p>Space</p></div>
       </button>
-
-       <button class="mode-btn" style="border-color: var(--danger); box-shadow: 0 6px 0 var(--danger);" onclick="startGame('car')">
+       <button class="mode-btn" style="border-color: var(--danger);" onclick="startGame('car')">
         <div class="mode-icon">🏎️</div>
         <div class="mode-text"><h3>Sports Car</h3><p>Vehicle</p></div>
       </button>
-
-      <button class="mode-btn" style="border-color: var(--danger); box-shadow: 0 6px 0 var(--danger);" onclick="startGame('heart')">
-        <div class="mode-icon">❤️</div>
-        <div class="mode-text"><h3>Heart</h3><p>Object</p></div>
-      </button>
-      <button class="mode-btn" style="border-color: #94a3b8; box-shadow: 0 6px 0 #94a3b8;" onclick="startGame('sword')">
-        <div class="mode-icon">🗡️</div>
-        <div class="mode-text"><h3>Sword</h3><p>Object</p></div>
-      </button>
     </div>
-
   </div>
 </div>
 
@@ -180,6 +195,8 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
       <div id="modeDisplay" style="color: var(--primary);">🖌️ Studio</div>
     </div>
 
+    <div id="colorHint" class="color-hint">🎨 Suggested: Use your imagination!</div>
+
     <div class="canvas-container">
       <div class="pixel-canvas" id="canvas"></div>
     </div>
@@ -187,14 +204,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
     <div class="tools-container">
       <div class="palette" id="palette">
         <div class="color-swatch active" style="background: #000000;" onclick="setColor('#000000', this)"></div>
-        <div class="color-swatch" style="background: #22c55e;" onclick="setColor('#22c55e', this)"></div> <div class="color-swatch" style="background: #795548;" onclick="setColor('#795548', this)"></div> <div class="color-swatch" style="background: #fca5a5;" onclick="setColor('#fca5a5', this)"></div> <div class="color-swatch" style="background: #3b82f6;" onclick="setColor('#3b82f6', this)"></div> <div class="color-swatch" style="background: #ef4444;" onclick="setColor('#ef4444', this)"></div>
-        <div class="color-swatch" style="background: #f97316;" onclick="setColor('#f97316', this)"></div>
-        <div class="color-swatch" style="background: #eab308;" onclick="setColor('#eab308', this)"></div>
-        <div class="color-swatch" style="background: #06b6d4;" onclick="setColor('#06b6d4', this)"></div>
-        <div class="color-swatch" style="background: #a855f7;" onclick="setColor('#a855f7', this)"></div>
-        <div class="color-swatch" style="background: #ec4899;" onclick="setColor('#ec4899', this)"></div>
-        <div class="color-swatch" style="background: #ffffff;" onclick="setColor('#ffffff', this)"></div>
-      </div>
+        <div class="color-swatch" style="background: #166534;" onclick="setColor('#166534', this)"></div> <div class="color-swatch" style="background: #22c55e;" onclick="setColor('#22c55e', this)"></div> <div class="color-swatch" style="background: #795548;" onclick="setColor('#795548', this)"></div> <div class="color-swatch" style="background: #fed7aa;" onclick="setColor('#fed7aa', this)"></div> <div class="color-swatch" style="background: #fca5a5;" onclick="setColor('#fca5a5', this)"></div> <div class="color-swatch" style="background: #3b82f6;" onclick="setColor('#3b82f6', this)"></div> <div class="color-swatch" style="background: #0ea5e9;" onclick="setColor('#0ea5e9', this)"></div> <div class="color-swatch" style="background: #ef4444;" onclick="setColor('#ef4444', this)"></div> <div class="color-swatch" style="background: #f97316;" onclick="setColor('#f97316', this)"></div> <div class="color-swatch" style="background: #eab308;" onclick="setColor('#eab308', this)"></div> <div class="color-swatch" style="background: #a855f7;" onclick="setColor('#a855f7', this)"></div> <div class="color-swatch" style="background: #9ca3af;" onclick="setColor('#9ca3af', this)"></div> <div class="color-swatch" style="background: #ffffff;" onclick="setColor('#ffffff', this)"></div> </div>
       
       <div class="action-row">
         <button class="tool-btn active" id="btnDraw" onclick="setTool('draw')">🖌️ Draw</button>
@@ -216,9 +226,30 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
   </div>
 </div>
 
+<script src="sounds.js"></script>
+
 <script>
-// --- TEMPLATES (16x16 Grid) ---
-// 'X' represents the outline to color, '.' is blank
+// --- COLOR HINTS ---
+const HINTS = {
+  free: "🎨 Suggested: Use your imagination!",
+  creeper: "🎨 Suggested: Light Green, Dark Green, Black",
+  steve: "🎨 Suggested: Brown (Hair), Tan (Face), Blue (Shirt)",
+  zombie: "🎨 Suggested: Dark Green (Face), Black (Eyes), Blue (Shirt)",
+  enderman: "🎨 Suggested: Black, Purple (Eyes)",
+  pig: "🎨 Suggested: Pink, Black (Eyes)",
+  pickaxe: "🎨 Suggested: Brown (Stick), Light Blue (Diamond)",
+  tnt: "🎨 Suggested: Red, White, Black",
+  grassblock: "🎨 Suggested: Light Green (Top), Brown (Bottom)",
+  peppa: "🎨 Suggested: Pink (Face), Red (Dress)",
+  bluey: "🎨 Suggested: Blue, Light Blue, Tan, Black",
+  rocket: "🎨 Suggested: Grey, Red, Orange, Blue",
+  saturn: "🎨 Suggested: Orange, Yellow, Grey",
+  car: "🎨 Suggested: Red, Black (Tires), Light Blue (Windows)",
+  heart: "🎨 Suggested: Red, Pink",
+  sword: "🎨 Suggested: Grey, Brown, Yellow"
+};
+
+// --- TEMPLATES (Exactly 16x16 Grid) ---
 const TEMPLATES = {
   heart: [
     "................", "................", "...XXXX..XXXX...", "..X....XX....X..",
@@ -232,7 +263,6 @@ const TEMPLATES = {
     "...X...XX.......", "..XXX.XX........", "...XXX..........", "..X.XXX.........",
     ".X...X.X........", "X.......X.......", "................", "................"
   ],
-  // --- MINECRAFT ---
   creeper: [
     "................", "...XXXX..XXXX...", "...XXXX..XXXX...", "................",
     "......XXXX......", ".....XX..XX.....", "....XX....XX....", "...XX..XX..XX...",
@@ -245,7 +275,42 @@ const TEMPLATES = {
     "................", "................", "................", "................",
     "................", "................", "................", "................"
   ],
-  // --- CHARACTERS (Abstract due to 16x16 limit) ---
+  zombie: [
+    "................", "....XXXXXXXX....", "....XXXXXXXX....", "....XX....XX....",
+    "....X.X..X.X....", "....XXXXXXXX....", "....XX.XX.XX....", "....XXXXXXXX....",
+    "....XXXXXXXX....", "................", "................", "................",
+    "................", "................", "................", "................"
+  ],
+  enderman: [
+    "................", "................", "....XXXXXXXX....", "....XXXXXXXX....",
+    "....XXXXXXXX....", "....XXXXXXXX....", "....XXXXXXXX....", "...X..X..X..X...",
+    "....XXXXXXXX....", "....XXXXXXXX....", "................", "................",
+    "................", "................", "................", "................"
+  ],
+  pig: [
+    "................", "................", "....XXXXXXXX....", "....XXXXXXXX....",
+    "....X.X..X.X....", "....XXXXXXXX....", ".....XXXXXX.....", ".....X.XX.X.....",
+    "....XXXXXXXX....", "................", "................", "................",
+    "................", "................", "................", "................"
+  ],
+  pickaxe: [
+    ".......XXXXXX...", "......XXXXXXXX..", ".....XX....XXX..", ".........X.XX...",
+    "........X.......", ".......X........", "......X.........", ".....X..........",
+    "....X...........", "...X............", "..X.............", "................",
+    "................", "................", "................", "................"
+  ],
+  tnt: [
+    "................", "...XXXXXXXXXX...", "...XXXXXXXXXX...", "...XXXXXXXXXX...",
+    "...X..X..X..X...", "...X.XX.XX.XX...", "...X..X..X..X...", "...XXXXXXXXXX...",
+    "...XXXXXXXXXX...", "...XXXXXXXXXX...", "................", "................",
+    "................", "................", "................", "................"
+  ],
+  grassblock: [
+    "................", "................", "...XXXXXXXXXX...", "...XXXXXXXXXX...",
+    "...XX.X..X.XX...", "...X.X.XX.X.X...", "...XXXXXXXXXX...", "...XXXXXXXXXX...",
+    "...XXXXXXXXXX...", "...XXXXXXXXXX...", "...XXXXXXXXXX...", "................",
+    "................", "................", "................", "................"
+  ],
   peppa: [
     "......XXXX......", "....XX....X.....", "...X.......X....", "...X.......X....",
     "..X....X....XXXX", "..X.........X..X", "..X....X....XXXX", "...X.......X....",
@@ -256,9 +321,8 @@ const TEMPLATES = {
     "...X........X...", "...X........X...", "..X.X......X.X..", "..X..XXXXXX..X..",
     ".X............X.", ".X............X.", ".X...X....X...X.", ".X............X.",
     "..X....XX....X..", "..X...X..X...X..", "...XXXX..XXXX...", "................",
-    "................", "................", "................"
+    "................", "................", "................", "................"
   ],
-  // --- SPACE ---
   rocket: [
     ".......X........", "......X.X.......", ".....X...X......", ".....X...X......",
     "....X.....X.....", "....X.....X.....", "....X.....X.....", "...X.......X....",
@@ -271,7 +335,6 @@ const TEMPLATES = {
     "......XXXX......", "................", "................", "................",
     "................", "................", "................", "................"
   ],
-   // --- VEHICLES ---
   car: [
     "................", "................", "................", "......XXXXXX....",
     "....XX......X...", "...X.........X..", "..X...........X.", ".XXXXXXXXXXXXXXX",
@@ -301,8 +364,10 @@ function switchScreen(screenName) {
 
 function startGame(mode) {
   currentMode = mode;
+  document.getElementById('colorHint').innerText = HINTS[mode] || HINTS.free;
   createCanvas();
   switchScreen('gameScreen');
+  if(typeof playSound === 'function') playSound('click');
 }
 
 function setColor(color, element) {
@@ -312,6 +377,7 @@ function setColor(color, element) {
   document.getElementById('btnErase').classList.remove('active');
   document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
   element.classList.add('active');
+  if(typeof playSound === 'function') playSound('click');
 }
 
 function setTool(tool) {
@@ -324,9 +390,13 @@ function setTool(tool) {
   } else {
     document.getElementById('btnErase').classList.add('active');
   }
+  if(typeof playSound === 'function') playSound('click');
 }
 
-function clearCanvas() { createCanvas(); }
+function clearCanvas() { 
+  createCanvas(); 
+  if(typeof playSound === 'function') playSound('wrong');
+}
 
 function createCanvas() {
   canvas.innerHTML = '';
@@ -336,7 +406,12 @@ function createCanvas() {
       const cell = document.createElement('div');
       cell.className = 'pixel-cell';
       cell.dataset.x = x; cell.dataset.y = y;
-      if (template && template[y][x] === 'X') cell.classList.add('pixel-outline');
+      
+      // Safety check just in case a template is missing a row
+      if (template && template[y] && template[y][x] === 'X') {
+        cell.classList.add('pixel-outline');
+      }
+      
       // Mouse Events (PC)
       cell.addEventListener('mousedown', (e) => { isDrawing = true; paintCell(e.target); });
       cell.addEventListener('mouseover', (e) => { if (isDrawing) paintCell(e.target); });
@@ -372,7 +447,9 @@ function paintCell(cell) {
     cell.style.backgroundColor = 'white';
     let template = currentMode !== 'free' ? TEMPLATES[currentMode] : null;
     let x = cell.dataset.x; let y = cell.dataset.y;
-    if (template && template[y][x] === 'X') cell.classList.add('pixel-outline');
+    if (template && template[y] && template[y][x] === 'X') {
+      cell.classList.add('pixel-outline');
+    }
   }
 }
 
@@ -380,6 +457,7 @@ function endGame() {
   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
   localStorage.setItem('vedhTotalXP', currentXP + 15);
   switchScreen('endScreen');
+  if(typeof playSound === 'function') playSound('win');
 }
 </script>
 </body>
