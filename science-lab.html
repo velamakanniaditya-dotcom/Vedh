@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Lab 🔬 - Super Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   WORKSHEET THEME - SCIENCE
+══════════════════════════════════════════ */
+:root {
+  --primary: #8b5cf6; /* Science Purple */
+  --secondary: #06b6d4; /* Cyan Liquid */
+  --danger: #ef4444; 
+  --warning: #fbbf24; 
+  --green: #10b981;
+  --dark: #1e293b; 
+  --paper: #ffffff;
+  --grid: #ede9fe; /* Light purple dots */
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f5f3ff;
+  /* Dot Matrix Background for Lab feel */
+  background-image: radial-gradient(var(--grid) 3px, transparent 3px);
+  background-size: 30px 30px; 
+  color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(30, 41, 59, 0.1); text-align: center; position: relative; }
+
+/* Category Grid */
+.cat-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+.cat-btn {
+  background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 15px 20px;
+  cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: flex-start; gap: 20px;
+  box-shadow: 0 6px 0 var(--dark);
+}
+.cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.cat-icon { font-size: 3.5rem; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
+.cat-info { text-align: left; }
+.cat-info h3 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--dark); margin-bottom: 4px; }
+.cat-info p { font-size: 1rem; font-weight: 700; color: #64748b; }
+
+/* Modes */
+.mode-btn { width: 100%; display: flex; align-items: center; gap: 15px; background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); }
+.mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+
+/* Game Area */
+.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+.timer-container { width: 100%; height: 20px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 25px; position: relative; }
+.timer-fill { height: 100%; background: var(--secondary); width: 100%; transition: width 0.3s linear, background-color 0.3s; }
+.time-plus { position: absolute; right: 10px; top: -5px; color: var(--secondary); font-weight: 900; font-size: 1.2rem; opacity: 0; }
+.time-plus.show { animation: floatUpFade 1s ease-out forwards; }
+@keyframes floatUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+
+/* Flashcard Layout */
+.flashcard { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; min-height: 180px; }
+.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--secondary); margin-bottom: 15px; text-transform: uppercase; }
+.card-emoji { font-size: 7rem; line-height: 1; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15)); animation: floatLab 3s infinite ease-in-out; }
+@keyframes floatLab { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.item-name { font-size: 2rem; font-weight: 900; color: var(--dark); margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
+
+/* Options Grid */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.8rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 10px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.opt-btn.correct { background: var(--green); color: white; border-color: var(--green); box-shadow: 0 6px 0 #059669; }
+.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #b91c1c; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #6d28d9; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #6d28d9; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #6d28d9; }
+
+.feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
+.feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+@media(max-width: 500px) {
+  .cat-btn { flex-direction: column; text-align: center; gap: 5px; }
+  .cat-info { text-align: center; }
+  .opt-btn { font-size: 1.3rem; padding: 12px 5px; }
+  .hint-text { font-size: 1.2rem; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Science Lab</h1>
+  <div class="subtitle">Physics, Biology & Space 🔭</div>
+</header>
+
+<div id="categoryScreen" class="screen active">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">Choose an Experiment!</h2>
+    <div class="cat-grid">
+      <button class="cat-btn" style="border-color: var(--secondary);" onclick="selectCategory('sink')">
+        <span class="cat-icon">🌊</span>
+        <div class="cat-info">
+          <h3 style="color: var(--secondary);">Sink or Float?</h3>
+          <p>Physics: Predict how objects act in water!</p>
+        </div>
+      </button>
+
+      <button class="cat-btn" style="border-color: var(--green);" onclick="selectCategory('living')">
+        <span class="cat-icon">🌱</span>
+        <div class="cat-info">
+          <h3 style="color: var(--green);">Living or Non-Living?</h3>
+          <p>Biology: What breathes, grows, and eats?</p>
+        </div>
+      </button>
+
+      <button class="cat-btn" style="border-color: var(--warning);" onclick="selectCategory('space')">
+        <span class="cat-icon">🪐</span>
+        <div class="cat-info">
+          <h3 style="color: #d97706;">Space Explorer</h3>
+          <p>Astronomy: Facts about our Solar System!</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modeScreen" class="screen">
+  <div class="worksheet-card">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('categoryScreen')">🔙 Back to Lab</button>
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; margin-bottom: 20px; color: var(--dark);">Choose Your Mode</h2>
+    
+    <button class="mode-btn" style="border-color: var(--primary); box-shadow: 0 6px 0 var(--primary);" onclick="startGame('relaxed')">
+      <div class="mode-icon">👨‍🔬</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Researcher Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">Relaxed! Timer resets every question.</p>
+      </div>
+    </button>
+
+    <button class="mode-btn" style="border-color: var(--warning); box-shadow: 0 6px 0 var(--warning);" onclick="startGame('blast')">
+      <div class="mode-icon">🧪</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Mad Scientist</h3>
+        <p style="font-weight: 600; color: #64748b;">Survival! Get +5s for correct answers.</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="worksheet-card" style="position:relative;">
+    <div class="feedback-star" id="fStar">💡</div>
+    
+    <div class="top-bar">
+      <div>Score: <span id="scoreDisplay">0</span></div>
+      <div id="modeDisplay" style="color: var(--primary);">👨‍🔬 Researcher</div>
+    </div>
+
+    <div class="timer-container">
+      <div class="timer-fill" id="timerFill"></div>
+      <div class="time-plus" id="timePlus">+5s</div>
+    </div>
+
+    <div id="problemArea" class="flashcard"></div>
+
+    <div class="options-grid" id="optionsContainer">
+      </div>
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Experiment Over!</h2>
+    <div style="font-size: 5rem; margin: 10px 0; color: var(--primary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
+    <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great Science!</div>
+    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Do Another Experiment 🔬</button>
+  </div>
+</div>
+
+<script>
+// --- DATABASES ---
+const SINK_FLOAT = [
+  { e: "🪨", n: "Heavy Rock", a: "Sink ⚓" }, { e: "🪵", n: "Wooden Log", a: "Float 🎈" },
+  { e: "🪙", n: "Metal Coin", a: "Sink ⚓" }, { e: "🦆", n: "Rubber Duck", a: "Float 🎈" },
+  { e: "⚓", n: "Iron Anchor", a: "Sink ⚓" }, { e: "🍎", n: "Apple", a: "Float 🎈" },
+  { e: "🍃", n: "Dry Leaf", a: "Float 🎈" }, { e: "🗝️", n: "Metal Key", a: "Sink ⚓" },
+  { e: "🚢", n: "Big Boat", a: "Float 🎈" }, { e: "🎳", n: "Bowling Ball", a: "Sink ⚓" }
+];
+
+const LIVING = [
+  { e: "🐶", n: "Dog", a: "Living 🌱" }, { e: "🚗", n: "Toy Car", a: "Non-Living 🪨" },
+  { e: "🌳", n: "Oak Tree", a: "Living 🌱" }, { e: "🤖", n: "Robot", a: "Non-Living 🪨" },
+  { e: "🍄", n: "Mushroom", a: "Living 🌱" }, { e: "📖", n: "Story Book", a: "Non-Living 🪨" },
+  { e: "🦋", n: "Butterfly", a: "Living 🌱" }, { e: "🌋", n: "Volcano", a: "Non-Living 🪨" },
+  { e: "🌻", n: "Sunflower", a: "Living 🌱" }, { e: "📱", n: "Smartphone", a: "Non-Living 🪨" }
+];
+
+const SPACE = [
+  { q: "Which is the largest planet in our solar system?", e: "🪐", a: "Jupiter", w: ["Earth", "Mars", "Venus"] },
+  { q: "Which planet is famous for its giant rings?", e: "🪐", a: "Saturn", w: ["Mercury", "Uranus", "Jupiter"] },
+  { q: "Which planet is known as the Red Planet?", e: "🪐", a: "Mars", w: ["Earth", "Venus", "Neptune"] },
+  { q: "Which planet is closest to the Sun?", e: "☀️", a: "Mercury", w: ["Mars", "Venus", "Earth"] },
+  { q: "Which is the only planet where humans live?", e: "🌍", a: "Earth", w: ["Mars", "Jupiter", "Saturn"] },
+  { q: "Which is the farthest planet from the Sun?", e: "🪐", a: "Neptune", w: ["Uranus", "Mars", "Mercury"] },
+  { q: "What is the Sun made of?", e: "☀️", a: "Hot Gas", w: ["Lava", "Fire", "Rock"] }
+];
+
+// --- GAME STATE ---
+let currentCategory = '';
+let currentMode = '';
+let score = 0;
+let timeLeft = 0;
+let timeTotal = 0;
+let timerInterval;
+let correctAnswer = null;
+
+const SECONDS_RELAXED = 20; 
+const SECONDS_BLAST_START = 20; 
+const BONUS_TIME = 5; 
+
+const screens = {
+  categoryScreen: document.getElementById('categoryScreen'),
+  modeScreen: document.getElementById('modeScreen'),
+  gameScreen: document.getElementById('gameScreen'),
+  endScreen: document.getElementById('endScreen')
+};
+
+const els = {
+  problem: document.getElementById('problemArea'),
+  opts: document.getElementById('optionsContainer'),
+  score: document.getElementById('scoreDisplay'),
+  timer: document.getElementById('timerFill'),
+  plus: document.getElementById('timePlus'),
+  mode: document.getElementById('modeDisplay'),
+  star: document.getElementById('fStar')
+};
+
+function switchScreen(screenName) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[screenName].classList.add('active');
+  clearInterval(timerInterval);
+}
+
+function selectCategory(cat) {
+  currentCategory = cat;
+  switchScreen('modeScreen');
+}
+
+function startGame(mode) {
+  currentMode = mode;
+  score = 0;
+  els.score.innerText = score;
+  
+  if (mode === 'relaxed') {
+    els.mode.innerHTML = '👨‍🔬 Researcher';
+    els.mode.style.color = 'var(--primary)';
+    timeTotal = SECONDS_RELAXED;
+    timeLeft = SECONDS_RELAXED;
+  } else {
+    els.mode.innerHTML = '🧪 Mad Scientist';
+    els.mode.style.color = 'var(--warning)';
+    timeTotal = SECONDS_BLAST_START;
+    timeLeft = SECONDS_BLAST_START;
+  }
+
+  updateTimerUI();
+  generateQuestion();
+  switchScreen('gameScreen');
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(countdown, 1000);
+}
+
+function countdown() {
+  timeLeft--;
+  updateTimerUI();
+  if (timeLeft <= 0) endGame();
+}
+
+function updateTimerUI() {
+  let percentage = (timeLeft / timeTotal) * 100;
+  if (percentage > 100) percentage = 100; if (percentage < 0) percentage = 0;
+  els.timer.style.width = percentage + '%';
+  if (timeLeft <= 5) els.timer.classList.add('low'); else els.timer.classList.remove('low');
+}
+
+function generateQuestion() {
+  if (currentMode === 'relaxed') { timeLeft = SECONDS_RELAXED; timeTotal = SECONDS_RELAXED; updateTimerUI(); }
+  els.problem.innerHTML = '';
+  let options = [];
+
+  if (currentCategory === 'sink') {
+    let item = SINK_FLOAT[Math.floor(Math.random() * SINK_FLOAT.length)];
+    correctAnswer = item.a;
+    els.problem.innerHTML = `
+      <div class="hint-text" style="color:var(--secondary)">Will it Sink or Float?</div>
+      <div class="card-emoji">${item.e}</div>
+      <div class="item-name">${item.n}</div>
+    `;
+    options = ["Sink ⚓", "Float 🎈"];
+
+  } else if (currentCategory === 'living') {
+    let item = LIVING[Math.floor(Math.random() * LIVING.length)];
+    correctAnswer = item.a;
+    els.problem.innerHTML = `
+      <div class="hint-text" style="color:var(--green)">Living or Non-Living?</div>
+      <div class="card-emoji">${item.e}</div>
+      <div class="item-name">${item.n}</div>
+    `;
+    options = ["Living 🌱", "Non-Living 🪨"];
+
+  } else if (currentCategory === 'space') {
+    let item = SPACE[Math.floor(Math.random() * SPACE.length)];
+    correctAnswer = item.a;
+    els.problem.innerHTML = `
+      <div class="hint-text" style="color:var(--warning)">Space Trivia</div>
+      <div class="card-emoji" style="font-size: 5rem; animation:none; margin-bottom: 5px;">${item.e}</div>
+      <div style="font-size: 1.4rem; font-weight: 800; line-height: 1.3;">${item.q}</div>
+    `;
+    options = [correctAnswer, ...item.w];
+  }
+
+  renderOptions(options);
+}
+
+function renderOptions(options) {
+  // Only shuffle if there are more than 2 options (keep Sink/Float consistent buttons)
+  if(options.length > 2) options.sort(() => Math.random() - 0.5);
+  
+  els.opts.innerHTML = '';
+  els.opts.style.gridTemplateColumns = '1fr 1fr';
+
+  options.forEach(opt => {
+    let btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerText = opt;
+    if (opt.length > 10) btn.style.fontSize = '1.2rem'; // Shrink long text
+    
+    btn.onclick = () => checkAnswer(opt, btn);
+    els.opts.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+  if (selected === correctAnswer) {
+    btn.classList.add('correct');
+    score++; els.score.innerText = score;
+    
+    // Star pop
+    els.star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 30 + 'px';
+    els.star.style.top = btn.offsetTop - 30 + 'px';
+    els.star.classList.remove('pop'); void els.star.offsetWidth; els.star.classList.add('pop');
+
+    if (currentMode === 'blast') {
+      timeLeft += BONUS_TIME; if(timeLeft > timeTotal) timeTotal = timeLeft; 
+      els.plus.classList.remove('show'); void els.plus.offsetWidth; els.plus.classList.add('show');
+      updateTimerUI();
+    }
+    setTimeout(generateQuestion, 600);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText === correctAnswer) b.classList.add('correct'); });
+    setTimeout(generateQuestion, 1500); 
+  }
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  document.getElementById('finalScore').innerText = score;
+  
+  // --- XP SYSTEM INTEGRATION ---
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + score);
+  
+  let msg = "Keep Experimenting! 👍";
+  if (score > 10) msg = "Great Scientist! 🧪";
+  if (score > 20) msg = "Nobel Prize Winner! 🏆";
+  document.getElementById('endMessage').innerText = msg;
+  switchScreen('endScreen');
+}
+</script>
+</body>
+</html>
