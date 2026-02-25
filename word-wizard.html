@@ -181,7 +181,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primar
     <button class="btn-primary" onclick="switchScreen('categoryScreen')">Choose Another Topic 📚</button>
   </div>
 </div>
-
+<script src="sounds.js"></script>
 <script>
 // --- DATABASES ---
 const DICT = [
@@ -398,6 +398,7 @@ function checkAnswer(selected, btn) {
   document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
 
   if (selected === correctAnswer) {
+     playSound('correct');
     btn.classList.add('correct');
     score++; els.score.innerText = score;
     
@@ -417,6 +418,7 @@ function checkAnswer(selected, btn) {
     }
     setTimeout(generateQuestion, 700);
   } else {
+     playSound('wrong');
     btn.classList.add('wrong');
     document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText === correctAnswer) b.classList.add('correct'); });
     
@@ -428,6 +430,7 @@ function checkAnswer(selected, btn) {
 }
 
 function endGame() {
+   playSound('win');
   clearInterval(timerInterval);
   document.getElementById('finalScore').innerText = score;
    let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
