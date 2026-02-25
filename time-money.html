@@ -300,15 +300,15 @@ function getWrongClocks(correct) {
 }
 
 function getWrongMoney(correct) {
-  let opts = [correct + "c"]; // <-- FIX: Added the "c" so it matches perfectly!
+  let opts = [correct + "P"]; // <-- FIX: Added the "c" so it matches perfectly!
   while(opts.length < 4) {
     let offset = Math.floor(Math.random() * 4) + 1; // 1 to 4
     let multiplier = Math.random() > 0.5 ? 5 : 1; // offset by 5s or 1s
     let wrong = Math.random() > 0.5 ? correct + (offset * multiplier) : correct - (offset * multiplier);
     
-    // Format as string with 'c'
-    let wrongStr = wrong + "c";
-    let correctStr = correct + "c";
+    // Format as string with 'P'
+    let wrongStr = wrong + "P";
+    let correctStr = correct + "P";
     
     if(wrong > 0 && !opts.includes(wrongStr) && wrongStr !== correctStr) {
       opts.push(wrongStr);
@@ -344,7 +344,7 @@ function generateQuestion() {
     if (numTens === 0 && numFives === 0 && numOnes === 0) numTens = 1;
 
     let totalVal = (numTens * 10) + (numFives * 5) + (numOnes * 1);
-    correctAnswer = totalVal + "c";
+    correctAnswer = totalVal + "P";
 
     let toy = TOYS[Math.floor(Math.random() * TOYS.length)];
 
