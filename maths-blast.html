@@ -87,9 +87,28 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 .feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 @keyframes starPop { 0% { opacity: 1; transform: scale(0.5) rotate(-20deg); } 50% { transform: scale(1.2) rotate(10deg); } 100% { opacity: 0; transform: scale(1) translateY(-30px); } }
 
+/* ══════════════════════════════════════════
+   NEW TEST SHEET STYLES
+══════════════════════════════════════════ */
+.test-header { display: flex; justify-content: space-between; font-family: 'Fredoka One'; font-size: 1.3rem; border-bottom: 3px dashed #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
+.q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.6rem; font-family: 'Fredoka One'; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
+.q-math { display: flex; align-items: center; gap: 10px; width: 60%; }
+.q-input-wrap { position: relative; width: 35%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.5rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; }
+.q-input:focus { border-color: var(--primary); }
+select.q-input { appearance: none; cursor: pointer; }
+
+/* Grading Styles */
+.q-row.correct .q-input { background: #d1fae5; border-color: #10b981; color: #10b981; }
+.q-row.wrong .q-input { background: #fee2e2; border-color: var(--danger); color: var(--danger); }
+.correction { font-size: 1rem; color: #10b981; display: none; font-weight: 800; }
+.q-row.wrong .correction { display: block; animation: popIn 0.3s; }
+
 @media(max-width: 500px) {
   .cat-grid { grid-template-columns: 1fr; }
   .opt-btn { font-size: 1.5rem; }
+  .q-row { font-size: 1.2rem; }
+  .q-input { font-size: 1.2rem; }
 }
 </style>
 </head>
@@ -148,27 +167,51 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
         <p style="font-weight: 600; color: #64748b;">Survival! Get +5s for correct answers.</p>
       </div>
     </button>
+
+    <button class="mode-btn" style="border-color: #3b82f6; box-shadow: 0 6px 0 #3b82f6;" onclick="startGame('test')">
+      <div class="mode-icon">📝</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Test Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">10 Questions. Grade at the end!</p>
+      </div>
+    </button>
   </div>
 </div>
 
 <div id="gameScreen" class="screen">
   <div class="worksheet-card" style="position:relative;">
     <div class="feedback-star" id="fStar">⭐</div>
-    
     <div class="top-bar">
       <div>Score: <span id="scoreDisplay">0</span></div>
       <div id="modeDisplay" style="color: var(--warning);">🌟 Relaxed</div>
     </div>
-
     <div class="timer-container">
       <div class="timer-fill" id="timerFill"></div>
       <div class="time-plus" id="timePlus">+5s</div>
     </div>
-
     <div id="problemArea" class="math-problem"></div>
+    <div class="options-grid" id="optionsContainer"></div>
+  </div>
+</div>
 
-    <div class="options-grid" id="optionsContainer">
-      </div>
+<div id="testScreen" class="screen">
+  <div class="worksheet-card" style="padding: 20px;">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('modeScreen')">🔙 Quit Test</button>
+    
+    <div class="test-header">
+      <span id="testTitle">Maths Test</span>
+      <span>Name: Vedh</span>
+    </div>
+    
+    <div id="testQuestionsContainer"></div>
+
+    <button class="btn-primary" id="submitTestBtn" style="margin-top: 30px;" onclick="gradeTest()">Submit Test 📋</button>
+
+    <div id="testResultArea" style="display:none; margin-top:30px;">
+      <h2 style="font-family:'Fredoka One'; font-size: 2.5rem;">Score: <span id="testScoreDisplay" style="color:var(--primary);">0/10</span></h2>
+      <p id="testResultMsg" style="font-weight: 800; font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Review your answers above!</p>
+      <button class="btn-primary" onclick="switchScreen('categoryScreen')">Take Another Test</button>
+    </div>
   </div>
 </div>
 
@@ -192,6 +235,7 @@ let timeLeft = 0;
 let timeTotal = 0;
 let timerInterval;
 let correctAnswer = null;
+let testQuestionsData = []; // Store test answers
 
 const SECONDS_RELAXED = 20; 
 const SECONDS_BLAST_START = 20; 
@@ -209,6 +253,7 @@ const screens = {
   categoryScreen: document.getElementById('categoryScreen'),
   modeScreen: document.getElementById('modeScreen'),
   gameScreen: document.getElementById('gameScreen'),
+  testScreen: document.getElementById('testScreen'),
   endScreen: document.getElementById('endScreen')
 };
 
@@ -238,6 +283,12 @@ function startGame(mode) {
   score = 0;
   els.score.innerText = score;
   
+  if (mode === 'test') {
+    generateTest();
+    switchScreen('testScreen');
+    return; // Stop here for test mode
+  }
+
   if (mode === 'relaxed') {
     els.mode.innerHTML = '🌟 Relaxed';
     timeTotal = SECONDS_RELAXED;
@@ -256,6 +307,134 @@ function startGame(mode) {
   timerInterval = setInterval(countdown, 1000);
 }
 
+// ══════════════════════════════════════════════
+// NEW TEST MODE LOGIC
+// ══════════════════════════════════════════════
+function generateTest() {
+  testQuestionsData = [];
+  document.getElementById('submitTestBtn').style.display = 'block';
+  document.getElementById('testResultArea').style.display = 'none';
+  
+  let titleMap = { 'add': 'Addition', 'sub': 'Subtraction', 'mul': 'Multiplication', 'div': 'Division', 'comp': 'Greater/Less', 'shape': 'Shapes' };
+  document.getElementById('testTitle').innerText = titleMap[currentCategory] + " Test";
+  
+  const container = document.getElementById('testQuestionsContainer');
+  container.innerHTML = '';
+
+  for (let i = 0; i < 10; i++) {
+    let questionHTML = '';
+    let inputHTML = '';
+    let ans = '';
+
+    if (currentCategory === 'add' || currentCategory === 'sub') {
+      let n1 = Math.floor(Math.random() * 20) + 1;
+      let n2 = Math.floor(Math.random() * 20) + 1;
+      let op = currentCategory === 'add' ? '+' : '-';
+      if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1];
+      ans = currentCategory === 'add' ? n1 + n2 : n1 - n2;
+      questionHTML = `${n1} <span style="color:var(--primary);">${op}</span> ${n2} <span style="color:#94a3b8;">=</span>`;
+      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
+
+    } else if (currentCategory === 'mul') {
+      let n1 = Math.floor(Math.random() * 10) + 1;
+      let n2 = Math.floor(Math.random() * 10) + 1;
+      ans = n1 * n2;
+      questionHTML = `${n1} <span style="color:var(--primary);">×</span> ${n2} <span style="color:#94a3b8;">=</span>`;
+      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
+
+    } else if (currentCategory === 'div') {
+      let a = Math.floor(Math.random() * 10) + 1;
+      let n2 = Math.floor(Math.random() * 10) + 1;
+      let n1 = a * n2; 
+      ans = a;
+      questionHTML = `${n1} <span style="color:var(--purple);">÷</span> ${n2} <span style="color:#94a3b8;">=</span>`;
+      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
+
+    } else if (currentCategory === 'comp') {
+      let n1 = Math.floor(Math.random() * 50) + 1;
+      let n2 = Math.floor(Math.random() * 50) + 1;
+      if(Math.random() > 0.8) n2 = n1; 
+      if (n1 > n2) ans = '>'; else if (n1 < n2) ans = '<'; else ans = '=';
+      questionHTML = `${n1} <span style="color:#d97706;">[ ? ]</span> ${n2}`;
+      
+      // Dropdown for iPad ease
+      inputHTML = `
+        <select class="q-input" id="t-input-${i}">
+          <option value="">?</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option>
+        </select>`;
+
+    } else if (currentCategory === 'shape') {
+      let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+      ans = shape.n;
+      questionHTML = `<span style="font-size:3rem; line-height:1;">${shape.e}</span>`;
+      
+      let opts = SHAPES.map(s => `<option value="${s.n}">${s.n}</option>`).join('');
+      inputHTML = `<select class="q-input" id="t-input-${i}"><option value="">?</option>${opts}</select>`;
+    }
+
+    testQuestionsData.push(ans);
+
+    let row = document.createElement('div');
+    row.className = 'q-row';
+    row.id = `qrow-${i}`;
+    row.innerHTML = `
+      <div class="q-math">
+        <span style="font-size:1.2rem; color:#94a3b8; margin-right:10px;">${i + 1}.</span>
+        ${questionHTML}
+      </div>
+      <div class="q-input-wrap">
+        ${inputHTML}
+        <span class="correction" id="corr-${i}">✓ ${ans}</span>
+      </div>
+    `;
+    container.appendChild(row);
+  }
+}
+
+function gradeTest() {
+  let testScore = 0;
+  
+  testQuestionsData.forEach((ans, i) => {
+    let inputEl = document.getElementById(`t-input-${i}`);
+    let rowEl = document.getElementById(`qrow-${i}`);
+    let userVal = inputEl.value.toString().trim();
+    let correctVal = ans.toString().trim();
+
+    inputEl.disabled = true;
+
+    if (userVal === correctVal) {
+      rowEl.classList.add('correct');
+      testScore++;
+    } else {
+      rowEl.classList.add('wrong');
+    }
+  });
+
+  document.getElementById('submitTestBtn').style.display = 'none';
+  document.getElementById('testResultArea').style.display = 'block';
+  document.getElementById('testScoreDisplay').innerText = `${testScore}/10`;
+  
+  if (testScore === 10) {
+    if(typeof playSound === 'function') playSound('win');
+    document.getElementById('testResultMsg').innerText = "Perfect Score! Amazing! 🌟";
+  } else if (testScore >= 7) {
+    if(typeof playSound === 'function') playSound('correct');
+    document.getElementById('testResultMsg').innerText = "Great job! Review your mistakes. 👍";
+  } else {
+    if(typeof playSound === 'function') playSound('wrong');
+    document.getElementById('testResultMsg').innerText = "Keep practicing! Review your answers. 💪";
+  }
+
+  // Add XP
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + (testScore * 2)); 
+
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════════
+// REGULAR GAME LOGIC
+// ══════════════════════════════════════════════
 function countdown() {
   timeLeft--;
   updateTimerUI();
@@ -279,18 +458,14 @@ function generateQuestion() {
   els.problem.innerHTML = '';
   let options = [];
   
-  // Difficulty scaling based on score
   let maxNum = score < 10 ? 10 : (score < 20 ? 20 : 50);
 
   if (currentCategory === 'add' || currentCategory === 'sub') {
     let n1 = Math.floor(Math.random() * maxNum) + 1;
     let n2 = Math.floor(Math.random() * maxNum) + 1;
     let op = currentCategory === 'add' ? '+' : '-';
-    
-    if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1]; // No negative numbers
+    if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1]; 
     correctAnswer = currentCategory === 'add' ? n1 + n2 : n1 - n2;
-    
-    // Vertical Layout
     els.problem.innerHTML = `
       <div class="vertical-math">
         <span class="top-num">${n1}</span>
@@ -299,11 +474,10 @@ function generateQuestion() {
     options = generateNumberOptions(correctAnswer);
 
   } else if (currentCategory === 'mul') {
-    let mMax = score < 10 ? 5 : 10; // Times tables up to 10
+    let mMax = score < 10 ? 5 : 10; 
     let n1 = Math.floor(Math.random() * mMax) + 1;
     let n2 = Math.floor(Math.random() * 10) + 1;
     correctAnswer = n1 * n2;
-    
     els.problem.innerHTML = `
       <div class="vertical-math">
         <span class="top-num">${n1}</span>
@@ -314,39 +488,31 @@ function generateQuestion() {
   } else if (currentCategory === 'div') {
     let ans = Math.floor(Math.random() * 10) + 1;
     let n2 = Math.floor(Math.random() * 10) + 1;
-    let n1 = ans * n2; // ensures clean division
+    let n1 = ans * n2; 
     correctAnswer = ans;
-    
-    // Horizontal layout is better for division visually
     els.problem.innerHTML = `<div class="horizontal-math">${n1} <span style="color:var(--purple);">÷</span> ${n2}</div>`;
     options = generateNumberOptions(correctAnswer);
 
   } else if (currentCategory === 'comp') {
     let n1 = Math.floor(Math.random() * maxNum) + 1;
     let n2 = Math.floor(Math.random() * maxNum) + 1;
-    // 20% chance to force them to be equal
     if(Math.random() > 0.8) n2 = n1; 
-    
     els.problem.innerHTML = `<div class="horizontal-math">${n1} <span style="color:#d97706;">[ ? ]</span> ${n2}</div>`;
-    
     if (n1 > n2) correctAnswer = '>';
     else if (n1 < n2) correctAnswer = '<';
     else correctAnswer = '=';
-    
     options = ['>', '<', '='];
 
   } else if (currentCategory === 'shape') {
     let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
     correctAnswer = shape.n;
     els.problem.innerHTML = `<div class="shape-display">${shape.e}</div>`;
-    
     options = [correctAnswer];
     while(options.length < 4) {
       let randShape = SHAPES[Math.floor(Math.random() * SHAPES.length)].n;
       if(!options.includes(randShape)) options.push(randShape);
     }
   }
-
   renderOptions(options);
 }
 
@@ -361,11 +527,8 @@ function generateNumberOptions(correct) {
 }
 
 function renderOptions(options) {
-  // Shuffle options
   options.sort(() => Math.random() - 0.5);
   els.opts.innerHTML = '';
-  
-  // Adjust grid layout for "Compare" mode (3 buttons instead of 4)
   if(currentCategory === 'comp') els.opts.style.gridTemplateColumns = '1fr 1fr 1fr';
   else els.opts.style.gridTemplateColumns = '1fr 1fr';
 
@@ -373,9 +536,7 @@ function renderOptions(options) {
     let btn = document.createElement('button');
     btn.className = 'opt-btn';
     btn.innerText = opt;
-    // Make text smaller if it's long words (like shapes)
     if(typeof opt === 'string' && opt.length > 3 && opt !== '=' && opt !== '<' && opt !== '>') btn.style.fontSize = '1.3rem';
-    
     btn.onclick = () => checkAnswer(opt, btn);
     els.opts.appendChild(btn);
   });
@@ -383,20 +544,16 @@ function renderOptions(options) {
 
 function checkAnswer(selected, btn) {
   document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
-
   if (selected == correctAnswer) {
      if(typeof playSound === 'function') playSound('correct');
     btn.classList.add('correct');
     score++;
     els.score.innerText = score;
-    
-    // Star Animation
     els.star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 20 + 'px';
     els.star.style.top = btn.offsetTop - 30 + 'px';
     els.star.classList.remove('pop');
     void els.star.offsetWidth; 
     els.star.classList.add('pop');
-
     if (currentMode === 'blast') {
       timeLeft += BONUS_TIME;
       if(timeLeft > timeTotal) timeTotal = timeLeft; 
