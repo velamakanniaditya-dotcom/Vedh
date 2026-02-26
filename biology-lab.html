@@ -6,6 +6,9 @@
 <title>Biology Lab 🧬 - Super Worksheets</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
+/* ══════════════════════════════════════════
+   WORKSHEET THEME - BIOLOGY
+══════════════════════════════════════════ */
 :root {
   --primary: #f43f5e; /* Rose / Heart color */
   --secondary: #10b981; /* Nature Green */
@@ -57,31 +60,46 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
 .cat-info h3 { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--dark); margin-bottom: 4px; }
 .cat-info p { font-size: 1rem; font-weight: 700; color: #64748b; }
 
-/* Game Area */
-.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
-.flashcard { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; min-height: 180px; }
-.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; }
-.card-emoji { font-size: 7rem; line-height: 1; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15)); animation: floatLab 3s infinite ease-in-out; }
-@keyframes floatLab { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-.trivia-text { font-size: 1.5rem; font-weight: 900; color: var(--dark); margin-top: 15px; line-height: 1.3; }
+/* Modes */
+.mode-btn { width: 100%; display: flex; align-items: center; gap: 15px; background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); }
+.mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
 
-/* Options Grid */
-.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.4rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 10px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
-.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
-.opt-btn.correct { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 6px 0 #047857; }
-.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #b91c1c; }
+/* Learning Area */
+.learning-display { background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 16px; padding: 20px; margin-bottom: 20px; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.learn-emoji { font-size: 6rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); margin-bottom: 10px; animation: floatLab 3s infinite ease-in-out; }
+@keyframes floatLab { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.learn-title { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+.learn-desc { font-size: 1.2rem; font-weight: 800; color: var(--dark); line-height: 1.4; }
+
+/* Item Grid */
+.item-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.item-btn { font-size: 3rem; background: white; border: 3px solid var(--dark); border-radius: 12px; padding: 10px; cursor: pointer; box-shadow: 0 4px 0 var(--dark); transition: all 0.1s; }
+.item-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--dark); }
+.item-btn.active { border-color: var(--primary); background: #fff1f2; }
+
+/* Test Area */
+.test-header { display: flex; justify-content: space-between; font-family: 'Fredoka One'; font-size: 1.3rem; border-bottom: 3px dashed #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
+.q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.2rem; font-family: 'Nunito', sans-serif; font-weight: 900; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
+.q-content { display: flex; align-items: center; gap: 10px; width: 65%; line-height: 1.3; }
+.q-input-wrap { position: relative; width: 30%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; cursor: pointer; }
+.q-input:focus { border-color: var(--primary); }
+
+/* Grading Styles */
+.q-row.correct .q-input { background: #d1fae5; border-color: #10b981; color: #10b981; }
+.q-row.wrong .q-input { background: #fee2e2; border-color: var(--danger); color: var(--danger); }
+.correction { font-size: 1rem; color: #10b981; display: none; font-weight: 800; }
+.q-row.wrong .correction { display: block; animation: popIn 0.3s; }
 
 .btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #be123c; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #be123c; margin-top: 20px;}
 .btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #be123c; }
 
-.feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
-.feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-
 @media(max-width: 500px) {
   .cat-btn { flex-direction: column; text-align: center; gap: 5px; }
   .cat-info { text-align: center; }
-  .opt-btn { font-size: 1.1rem; padding: 12px 5px; }
+  .q-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .q-content { width: 100%; }
+  .q-input-wrap { width: 100%; }
 }
 </style>
 </head>
@@ -98,7 +116,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
   <div class="worksheet-card">
     <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">What shall we study?</h2>
     <div class="cat-grid">
-      <button class="cat-btn" style="border-color: var(--primary);" onclick="startGame('human')">
+      <button class="cat-btn" style="border-color: var(--primary);" onclick="selectTopic('human')">
         <span class="cat-icon">🫀</span>
         <div class="cat-info">
           <h3 style="color: var(--primary);">Human Body</h3>
@@ -106,90 +124,107 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
         </div>
       </button>
 
-      <button class="cat-btn" style="border-color: var(--secondary);" onclick="startGame('animals')">
+      <button class="cat-btn" style="border-color: var(--secondary);" onclick="selectTopic('animals')">
         <span class="cat-icon">🐆</span>
         <div class="cat-info">
           <h3 style="color: var(--secondary);">Animal Superpowers</h3>
           <p>The fastest, biggest, and coolest animals!</p>
         </div>
       </button>
-
-      <button class="cat-btn" style="border-color: var(--blue);" onclick="startGame('senses')">
-        <span class="cat-icon">👁️</span>
-        <div class="cat-info">
-          <h3 style="color: var(--blue);">The 5 Senses</h3>
-          <p>Sight, hearing, taste, touch, and smell!</p>
-        </div>
-      </button>
     </div>
   </div>
 </div>
 
-<div id="gameScreen" class="screen">
-  <div class="worksheet-card" style="position:relative;">
-    <div class="feedback-star" id="fStar">⭐</div>
+<div id="modeScreen" class="screen">
+  <div class="worksheet-card">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('categoryScreen')">🔙 Back to Topics</button>
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; margin-bottom: 20px; color: var(--dark);">Choose Your Mode</h2>
     
-    <div class="top-bar">
-      <button style="background:none; border:none; color:#64748b; font-family:'Fredoka One'; font-size:1.2rem; cursor:pointer;" onclick="switchScreen('categoryScreen')">🔙 Back</button>
-      <div>Score: <span id="scoreDisplay">0</span></div>
+    <button class="mode-btn" style="border-color: var(--primary); box-shadow: 0 6px 0 var(--primary);" onclick="startMode('learn')">
+      <div class="mode-icon">📖</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Learn Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">Tap pictures to read cool facts!</p>
+      </div>
+    </button>
+
+    <button class="mode-btn" style="border-color: var(--blue); box-shadow: 0 6px 0 var(--blue);" onclick="startMode('test')">
+      <div class="mode-icon">📝</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Test Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">10 Questions. Let's see what you learned!</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<div id="learnScreen" class="screen">
+  <div class="worksheet-card">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('modeScreen')">🔙 Back to Menu</button>
+    
+    <div class="learning-display" id="learnDisplay">
+      <div class="learn-emoji">👆</div>
+      <div class="learn-title">Tap an icon below!</div>
+      <div class="learn-desc">Let's learn some amazing Biology facts.</div>
     </div>
 
-    <div id="problemArea" class="flashcard"></div>
-
-    <div class="options-grid" id="optionsContainer">
+    <div class="item-grid" id="learnGrid">
       </div>
   </div>
 </div>
 
-<div id="endScreen" class="screen">
-  <div class="worksheet-card">
-    <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Research Complete!</h2>
-    <div style="font-size: 5rem; margin: 10px 0; color: var(--primary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
-    <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great Biology!</div>
-    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Study Something Else 🔬</button>
+<div id="testScreen" class="screen">
+  <div class="worksheet-card" style="padding: 20px;">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('modeScreen')">🔙 Quit Test</button>
+    
+    <div class="test-header">
+      <span id="testTitle">Biology Test</span>
+      <span>Name: Vedh</span>
+    </div>
+    
+    <div id="testQuestionsContainer"></div>
+
+    <button class="btn-primary" id="submitTestBtn" style="margin-top: 30px;" onclick="gradeTest()">Submit Test 📋</button>
+
+    <div id="testResultArea" style="display:none; margin-top:30px;">
+      <h2 style="font-family:'Fredoka One'; font-size: 2.5rem;">Score: <span id="testScoreDisplay" style="color:var(--primary);">0/10</span></h2>
+      <p id="testResultMsg" style="font-weight: 800; font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Review your answers above!</p>
+      <button class="btn-primary" onclick="switchScreen('categoryScreen')">Study Another Topic 🧬</button>
+    </div>
   </div>
 </div>
 
 <script src="sounds.js"></script>
 
 <script>
-// --- BIOLOGY DATABASE ---
+// --- BIOLOGY DATABASE ENCYCLOPEDIA & TESTS ---
 const BIO_DATA = {
   human: [
-    { q: "Which organ pumps blood around your body?", e: "🫀", a: "Heart", w: ["Brain", "Lungs", "Stomach"] },
-    { q: "What do you use to breathe in air?", e: "🫁", a: "Lungs", w: ["Heart", "Liver", "Kidneys"] },
-    { q: "What is the control center that does your thinking?", e: "🧠", a: "Brain", w: ["Heart", "Stomach", "Bones"] },
-    { q: "What hard parts give your body its shape and structure?", e: "🦴", a: "Bones / Skeleton", w: ["Muscles", "Skin", "Hair"] },
-    { q: "Where does your food go to be digested?", e: "🥪", a: "Stomach", w: ["Lungs", "Brain", "Heart"] },
-    { q: "What covers your entire body and protects it?", e: "✋", a: "Skin", w: ["Hair", "Bones", "Muscles"] }
+    { name: "Heart", emoji: "🫀", desc: "The heart is a strong muscle that pumps blood all around your body! It beats about 100,000 times a day.", q: "Which organ pumps blood around your body?", opts: ["Heart", "Brain", "Lungs", "Stomach"] },
+    { name: "Brain", emoji: "🧠", desc: "The control center of your body! It helps you think, learn, feel, and controls everything you do.", q: "What is the control center that does your thinking?", opts: ["Brain", "Heart", "Bones", "Skin"] },
+    { name: "Lungs", emoji: "🫁", desc: "Your lungs help you breathe. They take in fresh oxygen from the air and push out the used air.", q: "What do you use to breathe in air?", opts: ["Lungs", "Stomach", "Bones", "Heart"] },
+    { name: "Skeleton", emoji: "🦴", desc: "Bones give your body its shape and protect your soft organs. Without them, you would be a wobbly puddle!", q: "What hard parts give your body its shape and structure?", opts: ["Skeleton / Bones", "Muscles", "Skin", "Hair"] },
+    { name: "Stomach", emoji: "🍲", desc: "After you chew and swallow, food goes here! The stomach mashes it up so your body can use it for energy.", q: "Where does your food go to be digested?", opts: ["Stomach", "Lungs", "Brain", "Heart"] },
+    { name: "Skin", emoji: "✋", desc: "The largest organ! It covers your whole body, keeps your insides safe, and helps you feel hot, cold, and soft things.", q: "What covers your entire body and protects it?", opts: ["Skin", "Hair", "Bones", "Muscles"] }
   ],
   animals: [
-    { q: "What is the fastest land animal?", e: "🐆", a: "Cheetah", w: ["Lion", "Horse", "Dog"] },
-    { q: "Which animal has a very long neck to eat from tall trees?", e: "🦒", a: "Giraffe", w: ["Elephant", "Zebra", "Hippo"] },
-    { q: "Which bird is the largest but cannot fly?", e: "🦅", a: "Ostrich", w: ["Penguin", "Eagle", "Parrot"] },
-    { q: "Which ocean animal is the largest living creature on Earth?", e: "🐋", a: "Blue Whale", w: ["Great White Shark", "Dolphin", "Octopus"] },
-    { q: "Which animal carries its baby in a pouch?", e: "🦘", a: "Kangaroo", w: ["Koala", "Monkey", "Bear"] },
-    { q: "Which animal can change its color to hide?", e: "🦎", a: "Chameleon", w: ["Snake", "Frog", "Turtle"] }
-  ],
-  senses: [
-    { q: "Which sense do you use to watch a cartoon?", e: "📺", a: "Sight (Eyes)", w: ["Hearing (Ears)", "Smell (Nose)", "Touch (Hands)"] },
-    { q: "Which sense do you use to listen to music?", e: "🎵", a: "Hearing (Ears)", w: ["Sight (Eyes)", "Taste (Tongue)", "Smell (Nose)"] },
-    { q: "Which sense do you use to know a flower smells nice?", e: "🌹", a: "Smell (Nose)", w: ["Taste (Tongue)", "Touch (Hands)", "Hearing (Ears)"] },
-    { q: "Which sense do you use to feel if a blanket is soft?", e: "🧸", a: "Touch (Hands)", w: ["Sight (Eyes)", "Taste (Tongue)", "Smell (Nose)"] },
-    { q: "Which sense do you use to know that an apple is sweet?", e: "🍎", a: "Taste (Tongue)", w: ["Hearing (Ears)", "Smell (Nose)", "Touch (Hands)"] }
+    { name: "Cheetah", emoji: "🐆", desc: "The fastest land animal on Earth! It can sprint as fast as a car on the highway to catch its dinner.", q: "What is the fastest land animal?", opts: ["Cheetah", "Lion", "Horse", "Dog"] },
+    { name: "Giraffe", emoji: "🦒", desc: "It has a super long neck and a purple tongue! It uses its height to eat leaves from the tops of tall trees.", q: "Which animal has a very long neck to eat from tall trees?", opts: ["Giraffe", "Elephant", "Zebra", "Hippo"] },
+    { name: "Blue Whale", emoji: "🐋", desc: "The largest animal to ever live! It is even bigger than the biggest dinosaurs and lives in the ocean.", q: "Which ocean animal is the largest living creature on Earth?", opts: ["Blue Whale", "Great White Shark", "Dolphin", "Octopus"] },
+    { name: "Kangaroo", emoji: "🦘", desc: "A marsupial from Australia. It has powerful back legs for jumping and carries its baby (a joey) in a pouch!", q: "Which animal carries its baby in a pouch?", opts: ["Kangaroo", "Koala", "Monkey", "Bear"] },
+    { name: "Chameleon", emoji: "🦎", desc: "A special lizard that can change its skin color to hide from danger or show how it feels.", q: "Which animal can change its color to hide?", opts: ["Chameleon", "Snake", "Frog", "Turtle"] },
+    { name: "Ostrich", emoji: "🦅", desc: "The biggest bird in the world. It cannot fly, but it can run super fast on its long, strong legs.", q: "Which bird is the largest but cannot fly?", opts: ["Ostrich", "Penguin", "Eagle", "Parrot"] }
   ]
 };
 
-let currentCategory = '';
-let score = 0;
-let correctAnswer = null;
-let questionCount = 0;
-const MAX_QUESTIONS = 10; // Play 10 questions then finish
+let currentTopic = '';
+let testQuestionsData = []; 
 
 const screens = {
   categoryScreen: document.getElementById('categoryScreen'),
-  gameScreen: document.getElementById('gameScreen'),
-  endScreen: document.getElementById('endScreen')
+  modeScreen: document.getElementById('modeScreen'),
+  learnScreen: document.getElementById('learnScreen'),
+  testScreen: document.getElementById('testScreen')
 };
 
 function switchScreen(screenName) {
@@ -197,92 +232,146 @@ function switchScreen(screenName) {
   screens[screenName].classList.add('active');
 }
 
-function startGame(category) {
-  currentCategory = category;
-  score = 0;
-  questionCount = 0;
-  document.getElementById('scoreDisplay').innerText = score;
-  
+function selectTopic(topic) {
+  currentTopic = topic;
+  switchScreen('modeScreen');
   if(typeof playSound === 'function') playSound('click');
-  generateQuestion();
-  switchScreen('gameScreen');
 }
 
-function generateQuestion() {
-  if (questionCount >= MAX_QUESTIONS) {
-    endGame();
-    return;
+function startMode(mode) {
+  if (mode === 'learn') {
+    setupLearnMode();
+    switchScreen('learnScreen');
+  } else if (mode === 'test') {
+    setupTestMode();
+    switchScreen('testScreen');
   }
-
-  let dataSet = BIO_DATA[currentCategory];
-  let item = dataSet[Math.floor(Math.random() * dataSet.length)];
-  correctAnswer = item.a;
-  
-  let area = document.getElementById('problemArea');
-  area.innerHTML = `
-    <div class="card-emoji" style="margin-bottom:10px; font-size:6rem; animation:none;">${item.e}</div>
-    <div class="trivia-text">${item.q}</div>
-  `;
-  
-  let options = [item.a, ...item.w].sort(() => Math.random() - 0.5);
-  renderOptions(options);
+  if(typeof playSound === 'function') playSound('click');
 }
 
-function renderOptions(options) {
-  let container = document.getElementById('optionsContainer');
-  container.innerHTML = '';
+// ══════════════════════════════════════════════
+// LEARN MODE (ENCYCLOPEDIA)
+// ══════════════════════════════════════════════
+function setupLearnMode() {
+  const data = BIO_DATA[currentTopic];
+  const grid = document.getElementById('learnGrid');
+  grid.innerHTML = '';
   
-  options.forEach(opt => {
+  // Reset Display
+  document.getElementById('learnDisplay').innerHTML = `
+    <div class="learn-emoji">👆</div>
+    <div class="learn-title">Tap an icon below!</div>
+    <div class="learn-desc">Let's learn some amazing Biology facts.</div>
+  `;
+
+  data.forEach((item, index) => {
     let btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.innerText = opt;
-    btn.onclick = () => checkAnswer(opt, btn);
-    container.appendChild(btn);
+    btn.className = 'item-btn';
+    btn.innerText = item.emoji;
+    btn.onclick = () => showFact(item, btn);
+    grid.appendChild(btn);
   });
 }
 
-function checkAnswer(selected, btn) {
-  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
-  questionCount++;
+function showFact(item, btnElement) {
+  if(typeof playSound === 'function') playSound('click');
+  
+  // Remove active from all buttons, add to clicked
+  document.querySelectorAll('.item-btn').forEach(b => b.classList.remove('active'));
+  btnElement.classList.add('active');
 
-  if (selected === correctAnswer) {
-    if(typeof playSound === 'function') playSound('correct');
-    btn.classList.add('correct');
-    score++; 
-    document.getElementById('scoreDisplay').innerText = score;
-    
-    // Star pop
-    let star = document.getElementById('fStar');
-    star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 30 + 'px';
-    star.style.top = btn.offsetTop - 30 + 'px';
-    star.classList.remove('pop'); void star.offsetWidth; star.classList.add('pop');
-
-    setTimeout(generateQuestion, 800);
-  } else {
-    if(typeof playSound === 'function') playSound('wrong');
-    btn.classList.add('wrong');
-    document.querySelectorAll('.opt-btn').forEach(b => { 
-      if (b.innerText === correctAnswer) b.classList.add('correct'); 
-    });
-    setTimeout(generateQuestion, 1500); 
-  }
+  // Update Top Display
+  document.getElementById('learnDisplay').innerHTML = `
+    <div class="learn-emoji">${item.emoji}</div>
+    <div class="learn-title">${item.name}</div>
+    <div class="learn-desc">${item.desc}</div>
+  `;
 }
 
-function endGame() {
-  if(typeof playSound === 'function') playSound('win');
-  document.getElementById('finalScore').innerText = `${score}/${MAX_QUESTIONS}`;
+// ══════════════════════════════════════════════
+// TEST MODE
+// ══════════════════════════════════════════════
+function setupTestMode() {
+  testQuestionsData = [];
+  document.getElementById('submitTestBtn').style.display = 'block';
+  document.getElementById('testResultArea').style.display = 'none';
   
-  // XP SYSTEM
+  let titleMap = { 'human': 'Human Body', 'animals': 'Animal Superpowers' };
+  document.getElementById('testTitle').innerText = titleMap[currentTopic] + " Test";
+  
+  const container = document.getElementById('testQuestionsContainer');
+  container.innerHTML = '';
+
+  // Get data and duplicate/shuffle to get exactly 10 questions
+  let sourceData = [...BIO_DATA[currentTopic], ...BIO_DATA[currentTopic]].sort(() => Math.random() - 0.5).slice(0, 10);
+
+  sourceData.forEach((item, i) => {
+    let ans = item.opts[0]; // The correct answer is always first in the array in our DB
+    testQuestionsData.push(ans);
+    
+    // Shuffle options for the dropdown
+    let shuffledOpts = [...item.opts].sort(() => Math.random() - 0.5);
+    let optsHTML = shuffledOpts.map(o => `<option value="${o}">${o}</option>`).join('');
+
+    let row = document.createElement('div');
+    row.className = 'q-row';
+    row.id = `qrow-${i}`;
+    row.innerHTML = `
+      <div class="q-content">
+        <span style="font-size:1.2rem; color:#94a3b8; margin-right:5px;">${i + 1}.</span>
+        ${item.q}
+      </div>
+      <div class="q-input-wrap">
+        <select class="q-input" id="t-input-${i}">
+          <option value="">Select...</option>
+          ${optsHTML}
+        </select>
+        <span class="correction" id="corr-${i}">✓ ${ans}</span>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function gradeTest() {
+  let testScore = 0;
+  
+  testQuestionsData.forEach((ans, i) => {
+    let inputEl = document.getElementById(`t-input-${i}`);
+    let rowEl = document.getElementById(`qrow-${i}`);
+    let userVal = inputEl.value;
+
+    inputEl.disabled = true;
+
+    if (userVal === ans) {
+      rowEl.classList.add('correct');
+      testScore++;
+    } else {
+      rowEl.classList.add('wrong');
+    }
+  });
+
+  document.getElementById('submitTestBtn').style.display = 'none';
+  document.getElementById('testResultArea').style.display = 'block';
+  document.getElementById('testScoreDisplay').innerText = `${testScore}/10`;
+  
+  if (testScore === 10) {
+    if(typeof playSound === 'function') playSound('win');
+    document.getElementById('testResultMsg').innerText = "Perfect Score! Amazing Biologist! 🌟";
+  } else if (testScore >= 7) {
+    if(typeof playSound === 'function') playSound('correct');
+    document.getElementById('testResultMsg').innerText = "Great job! Review your mistakes. 👍";
+  } else {
+    if(typeof playSound === 'function') playSound('wrong');
+    document.getElementById('testResultMsg').innerText = "Keep studying! Review your answers. 💪";
+  }
+
+  // Add XP
   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
-  localStorage.setItem('vedhTotalXP', currentXP + score);
-  
-  let msg = "Keep Learning! 🧠";
-  if (score >= 7) msg = "Great Biologist! 🧬";
-  if (score === 10) msg = "Perfect Score! 🩺";
-  document.getElementById('endMessage').innerText = msg;
-  switchScreen('endScreen');
+  localStorage.setItem('vedhTotalXP', currentXP + (testScore * 2)); 
+
+  window.scrollTo(0, 0);
 }
 </script>
 </body>
 </html>
-
