@@ -179,24 +179,35 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primar
 <script src="sounds.js"></script>
 <script>
 // --- DATABASES ---
+// --- REPLACE THESE IN world-explorer.html ---
 const FLAGS = [
   { e: "🇮🇳", a: "India" }, { e: "🇺🇸", a: "USA" }, { e: "🇬🇧", a: "UK" },
   { e: "🇯🇵", a: "Japan" }, { e: "🇨🇦", a: "Canada" }, { e: "🇦🇺", a: "Australia" },
   { e: "🇧🇷", a: "Brazil" }, { e: "🇫🇷", a: "France" }, { e: "🇩🇪", a: "Germany" },
-  { e: "🇿🇦", a: "South Africa" }, { e: "🇮🇹", a: "Italy" }, { e: "🇲🇽", a: "Mexico" }
+  { e: "🇿🇦", a: "South Africa" }, { e: "🇮🇹", a: "Italy" }, { e: "🇲🇽", a: "Mexico" },
+  { e: "🇪🇸", a: "Spain" }, { e: "🇨🇳", a: "China" }, { e: "🇷🇺", a: "Russia" },
+  { e: "🇦🇷", a: "Argentina" }, { e: "🇪🇬", a: "Egypt" }, { e: "🇰🇷", a: "South Korea" },
+  { e: "🇳🇿", a: "New Zealand" }, { e: "🇨🇭", a: "Switzerland" }, { e: "🇸🇪", a: "Sweden" },
+  { e: "🇳🇱", a: "Netherlands" }, { e: "🇬🇷", a: "Greece" }, { e: "🇮🇪", a: "Ireland" }
 ];
 
 const LANDMARKS = [
   { e: "🗼", a: "Eiffel Tower" }, { e: "🗽", a: "Statue of Liberty" },
   { e: "🕌", a: "Taj Mahal" }, { e: "🗿", a: "Moai Statues" },
-  { e: "🏯", a: "Japanese Castle" }, { e: "⛰️", a: "Mount Everest" }
+  { e: "🏯", a: "Japanese Castle" }, { e: "⛰️", a: "Mount Everest" },
+  { e: "🌉", a: "Golden Gate Bridge" }, { e: "🏟️", a: "Colosseum" },
+  { e: "🎡", a: "London Eye" }, { e: " pyramids", a: "Pyramids of Giza" },
+  { e: "🏰", a: "Disney Castle" }, { e: "🌋", a: "Mount Fuji" }
 ];
 
 const ANIMALS = [
   { e: "🐼", a: "Asia (China)" }, { e: "🦁", a: "Africa" },
   { e: "🦘", a: "Australia" }, { e: "🐧", a: "Antarctica" },
   { e: "🦅", a: "North America" }, { e: "🦙", a: "South America" },
-  { e: "🐅", a: "Asia (India)" }, { e: "🦒", a: "Africa" }
+  { e: "🐅", a: "Asia (India)" }, { e: "🦒", a: "Africa" },
+  { e: "🐘", a: "Africa" }, { e: "🐨", a: "Australia" },
+  { e: "🐻‍❄️", a: "Arctic (North)" }, { e: "🦥", a: "South America" },
+  { e: "🦍", a: "Africa" }, { e: "🐫", a: "Middle East" }
 ];
 
 const TRIVIA = [
@@ -205,8 +216,14 @@ const TRIVIA = [
   { q: "What is the largest ocean on Earth?", a: "Pacific Ocean", w: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean"] },
   { q: "Which ocean is between America and Europe?", a: "Atlantic Ocean", w: ["Pacific Ocean", "Indian Ocean", "Southern Ocean"] },
   { q: "Which continent is known as the 'Land Down Under'?", a: "Australia", w: ["South America", "Africa", "Antarctica"] },
-  { q: "What is the tallest mountain in the world?", a: "Mount Everest", w: ["Mount Kilimanjaro", "Mount Fuji", "The Alps"] }
+  { q: "What is the tallest mountain in the world?", a: "Mount Everest", w: ["Mount Kilimanjaro", "Mount Fuji", "The Alps"] },
+  { q: "Which country has the most people?", a: "India/China", w: ["USA", "Russia", "Brazil"] },
+  { q: "What is the longest river in the world?", a: "The Nile", w: ["The Amazon", "The Thames", "The Mississippi"] },
+  { q: "Which country is famous for the Pyramids?", a: "Egypt", w: ["Mexico", "Italy", "Greece"] },
+  { q: "Which continent is the Sahara Desert in?", a: "Africa", w: ["Asia", "South America", "Australia"] },
+  { q: "What is the capital of the United Kingdom?", a: "London", w: ["Paris", "New York", "Dublin"] }
 ];
+// ------------------------------------------
 
 // --- GAME STATE ---
 let currentCategory = '';
