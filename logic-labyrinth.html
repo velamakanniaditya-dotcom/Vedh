@@ -153,13 +153,30 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: var(--primary)
 // ══════════════════════════════════════════════
 
 // Levels: define grid size, start position, goal, and an array of walls {x, y}
+// --- REPLACE THIS IN logic-labyrinth.html ---
 const LEVELS = [
-  { size: 4, start: {x:0, y:0}, goal: {x:3, y:0}, walls: [] }, // Simple right
-  { size: 4, start: {x:0, y:0}, goal: {x:3, y:3}, walls: [{x:1, y:0}, {x:1, y:1}, {x:2, y:3}] }, // L-shape
-  { size: 5, start: {x:0, y:4}, goal: {x:4, y:0}, walls: [{x:1, y:4}, {x:1, y:3}, {x:3, y:0}, {x:3, y:1}, {x:3, y:2}] }, // Zig zag
-  { size: 5, start: {x:2, y:2}, goal: {x:0, y:0}, walls: [{x:1, y:2}, {x:2, y:1}, {x:1, y:1}] }, // Out of the box
-  { size: 6, start: {x:0, y:0}, goal: {x:5, y:5}, walls: [{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:3,y:5},{x:3,y:4},{x:3,y:3},{x:4,y:1}] } // Complex
+  // Levels 1-5: The Basics
+  { size: 4, start: {x:0, y:0}, goal: {x:3, y:0}, walls: [] }, 
+  { size: 4, start: {x:0, y:0}, goal: {x:3, y:3}, walls: [{x:1, y:0}, {x:1, y:1}, {x:2, y:3}] }, 
+  { size: 5, start: {x:0, y:4}, goal: {x:4, y:0}, walls: [{x:1, y:4}, {x:1, y:3}, {x:3, y:0}, {x:3, y:1}, {x:3, y:2}] }, 
+  { size: 5, start: {x:2, y:2}, goal: {x:0, y:0}, walls: [{x:1, y:2}, {x:2, y:1}, {x:1, y:1}] }, 
+  { size: 6, start: {x:0, y:0}, goal: {x:5, y:5}, walls: [{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:3,y:5},{x:3,y:4},{x:3,y:3},{x:4,y:1}] },
+  
+  // Levels 6-10: The Zig-Zags
+  { size: 5, start: {x:0, y:0}, goal: {x:4, y:4}, walls: [{x:0,y:1},{x:1,y:1},{x:2,y:1},{x:4,y:3},{x:3,y:3},{x:2,y:3}] },
+  { size: 6, start: {x:5, y:0}, goal: {x:0, y:5}, walls: [{x:4,y:0},{x:4,y:1},{x:4,y:2},{x:1,y:5},{x:1,y:4},{x:1,y:3}] },
+  { size: 5, start: {x:2, y:0}, goal: {x:2, y:4}, walls: [{x:2,y:1},{x:1,y:2},{x:3,y:2},{x:2,y:3}] },
+  { size: 7, start: {x:0, y:3}, goal: {x:6, y:3}, walls: [{x:2,y:2},{x:2,y:3},{x:2,y:4},{x:4,y:2},{x:4,y:3},{x:4,y:4}] },
+  { size: 6, start: {x:0, y:5}, goal: {x:5, y:0}, walls: [{x:1,y:5},{x:1,y:4},{x:3,y:2},{x:3,y:1},{x:4,y:4},{x:2,y:1}] },
+
+  // Levels 11-15: Master Coder
+  { size: 7, start: {x:0, y:0}, goal: {x:6, y:6}, walls: [{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:3,y:2},{x:3,y:3},{x:3,y:4},{x:5,y:4},{x:5,y:5},{x:5,y:6}] },
+  { size: 6, start: {x:3, y:3}, goal: {x:0, y:0}, walls: [{x:2,y:3},{x:3,y:2},{x:2,y:2},{x:1,y:1}] },
+  { size: 8, start: {x:0, y:7}, goal: {x:7, y:0}, walls: [{x:0,y:6},{x:1,y:6},{x:2,y:6},{x:3,y:6},{x:4,y:6},{x:5,y:6},{x:7,y:1},{x:6,y:1},{x:5,y:1},{x:4,y:1},{x:3,y:1},{x:2,y:1}] },
+  { size: 5, start: {x:0, y:0}, goal: {x:4, y:0}, walls: [{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:3,y:0},{x:3,y:1},{x:3,y:2}] },
+  { size: 7, start: {x:3, y:6}, goal: {x:3, y:0}, walls: [{x:2,y:5},{x:3,y:5},{x:4,y:5},{x:1,y:3},{x:2,y:3},{x:4,y:3},{x:5,y:3},{x:2,y:1},{x:3,y:1},{x:4,y:1}] }
 ];
+// ------------------------------------------
 
 let currentLevelIdx = 0;
 let commands = [];
