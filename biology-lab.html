@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biology Lab 🧬 - Super Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #f43f5e; /* Rose / Heart color */
+  --secondary: #10b981; /* Nature Green */
+  --danger: #ef4444; 
+  --warning: #fbbf24; 
+  --blue: #0ea5e9;
+  --dark: #1e293b; 
+  --paper: #ffffff;
+  --grid: #ffe4e6; /* Light pink grid */
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #fff1f2;
+  background-image: radial-gradient(var(--grid) 3px, transparent 3px);
+  background-size: 30px 30px; 
+  color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(30, 41, 59, 0.1); text-align: center; position: relative; }
+
+/* Category Grid */
+.cat-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+.cat-btn {
+  background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 15px 20px;
+  cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: flex-start; gap: 20px;
+  box-shadow: 0 6px 0 var(--dark);
+}
+.cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.cat-icon { font-size: 3.5rem; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
+.cat-info { text-align: left; }
+.cat-info h3 { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--dark); margin-bottom: 4px; }
+.cat-info p { font-size: 1rem; font-weight: 700; color: #64748b; }
+
+/* Game Area */
+.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+.flashcard { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; min-height: 180px; }
+.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; }
+.card-emoji { font-size: 7rem; line-height: 1; filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15)); animation: floatLab 3s infinite ease-in-out; }
+@keyframes floatLab { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.trivia-text { font-size: 1.5rem; font-weight: 900; color: var(--dark); margin-top: 15px; line-height: 1.3; }
+
+/* Options Grid */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.4rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 10px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.opt-btn.correct { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 6px 0 #047857; }
+.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #b91c1c; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #be123c; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #be123c; margin-top: 20px;}
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #be123c; }
+
+.feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
+.feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+@media(max-width: 500px) {
+  .cat-btn { flex-direction: column; text-align: center; gap: 5px; }
+  .cat-info { text-align: center; }
+  .opt-btn { font-size: 1.1rem; padding: 12px 5px; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Biology Lab</h1>
+  <div class="subtitle">Life & Nature 🧬</div>
+</header>
+
+<div id="categoryScreen" class="screen active">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">What shall we study?</h2>
+    <div class="cat-grid">
+      <button class="cat-btn" style="border-color: var(--primary);" onclick="startGame('human')">
+        <span class="cat-icon">🫀</span>
+        <div class="cat-info">
+          <h3 style="color: var(--primary);">Human Body</h3>
+          <p>Organs, bones, and how we work!</p>
+        </div>
+      </button>
+
+      <button class="cat-btn" style="border-color: var(--secondary);" onclick="startGame('animals')">
+        <span class="cat-icon">🐆</span>
+        <div class="cat-info">
+          <h3 style="color: var(--secondary);">Animal Superpowers</h3>
+          <p>The fastest, biggest, and coolest animals!</p>
+        </div>
+      </button>
+
+      <button class="cat-btn" style="border-color: var(--blue);" onclick="startGame('senses')">
+        <span class="cat-icon">👁️</span>
+        <div class="cat-info">
+          <h3 style="color: var(--blue);">The 5 Senses</h3>
+          <p>Sight, hearing, taste, touch, and smell!</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="worksheet-card" style="position:relative;">
+    <div class="feedback-star" id="fStar">⭐</div>
+    
+    <div class="top-bar">
+      <button style="background:none; border:none; color:#64748b; font-family:'Fredoka One'; font-size:1.2rem; cursor:pointer;" onclick="switchScreen('categoryScreen')">🔙 Back</button>
+      <div>Score: <span id="scoreDisplay">0</span></div>
+    </div>
+
+    <div id="problemArea" class="flashcard"></div>
+
+    <div class="options-grid" id="optionsContainer">
+      </div>
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Research Complete!</h2>
+    <div style="font-size: 5rem; margin: 10px 0; color: var(--primary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
+    <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great Biology!</div>
+    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Study Something Else 🔬</button>
+  </div>
+</div>
+
+<script src="sounds.js"></script>
+
+<script>
+// --- BIOLOGY DATABASE ---
+const BIO_DATA = {
+  human: [
+    { q: "Which organ pumps blood around your body?", e: "🫀", a: "Heart", w: ["Brain", "Lungs", "Stomach"] },
+    { q: "What do you use to breathe in air?", e: "🫁", a: "Lungs", w: ["Heart", "Liver", "Kidneys"] },
+    { q: "What is the control center that does your thinking?", e: "🧠", a: "Brain", w: ["Heart", "Stomach", "Bones"] },
+    { q: "What hard parts give your body its shape and structure?", e: "🦴", a: "Bones / Skeleton", w: ["Muscles", "Skin", "Hair"] },
+    { q: "Where does your food go to be digested?", e: "🥪", a: "Stomach", w: ["Lungs", "Brain", "Heart"] },
+    { q: "What covers your entire body and protects it?", e: "✋", a: "Skin", w: ["Hair", "Bones", "Muscles"] }
+  ],
+  animals: [
+    { q: "What is the fastest land animal?", e: "🐆", a: "Cheetah", w: ["Lion", "Horse", "Dog"] },
+    { q: "Which animal has a very long neck to eat from tall trees?", e: "🦒", a: "Giraffe", w: ["Elephant", "Zebra", "Hippo"] },
+    { q: "Which bird is the largest but cannot fly?", e: "🦅", a: "Ostrich", w: ["Penguin", "Eagle", "Parrot"] },
+    { q: "Which ocean animal is the largest living creature on Earth?", e: "🐋", a: "Blue Whale", w: ["Great White Shark", "Dolphin", "Octopus"] },
+    { q: "Which animal carries its baby in a pouch?", e: "🦘", a: "Kangaroo", w: ["Koala", "Monkey", "Bear"] },
+    { q: "Which animal can change its color to hide?", e: "🦎", a: "Chameleon", w: ["Snake", "Frog", "Turtle"] }
+  ],
+  senses: [
+    { q: "Which sense do you use to watch a cartoon?", e: "📺", a: "Sight (Eyes)", w: ["Hearing (Ears)", "Smell (Nose)", "Touch (Hands)"] },
+    { q: "Which sense do you use to listen to music?", e: "🎵", a: "Hearing (Ears)", w: ["Sight (Eyes)", "Taste (Tongue)", "Smell (Nose)"] },
+    { q: "Which sense do you use to know a flower smells nice?", e: "🌹", a: "Smell (Nose)", w: ["Taste (Tongue)", "Touch (Hands)", "Hearing (Ears)"] },
+    { q: "Which sense do you use to feel if a blanket is soft?", e: "🧸", a: "Touch (Hands)", w: ["Sight (Eyes)", "Taste (Tongue)", "Smell (Nose)"] },
+    { q: "Which sense do you use to know that an apple is sweet?", e: "🍎", a: "Taste (Tongue)", w: ["Hearing (Ears)", "Smell (Nose)", "Touch (Hands)"] }
+  ]
+};
+
+let currentCategory = '';
+let score = 0;
+let correctAnswer = null;
+let questionCount = 0;
+const MAX_QUESTIONS = 10; // Play 10 questions then finish
+
+const screens = {
+  categoryScreen: document.getElementById('categoryScreen'),
+  gameScreen: document.getElementById('gameScreen'),
+  endScreen: document.getElementById('endScreen')
+};
+
+function switchScreen(screenName) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[screenName].classList.add('active');
+}
+
+function startGame(category) {
+  currentCategory = category;
+  score = 0;
+  questionCount = 0;
+  document.getElementById('scoreDisplay').innerText = score;
+  
+  if(typeof playSound === 'function') playSound('click');
+  generateQuestion();
+  switchScreen('gameScreen');
+}
+
+function generateQuestion() {
+  if (questionCount >= MAX_QUESTIONS) {
+    endGame();
+    return;
+  }
+
+  let dataSet = BIO_DATA[currentCategory];
+  let item = dataSet[Math.floor(Math.random() * dataSet.length)];
+  correctAnswer = item.a;
+  
+  let area = document.getElementById('problemArea');
+  area.innerHTML = `
+    <div class="card-emoji" style="margin-bottom:10px; font-size:6rem; animation:none;">${item.e}</div>
+    <div class="trivia-text">${item.q}</div>
+  `;
+  
+  let options = [item.a, ...item.w].sort(() => Math.random() - 0.5);
+  renderOptions(options);
+}
+
+function renderOptions(options) {
+  let container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  
+  options.forEach(opt => {
+    let btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt, btn);
+    container.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  questionCount++;
+
+  if (selected === correctAnswer) {
+    if(typeof playSound === 'function') playSound('correct');
+    btn.classList.add('correct');
+    score++; 
+    document.getElementById('scoreDisplay').innerText = score;
+    
+    // Star pop
+    let star = document.getElementById('fStar');
+    star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 30 + 'px';
+    star.style.top = btn.offsetTop - 30 + 'px';
+    star.classList.remove('pop'); void star.offsetWidth; star.classList.add('pop');
+
+    setTimeout(generateQuestion, 800);
+  } else {
+    if(typeof playSound === 'function') playSound('wrong');
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => { 
+      if (b.innerText === correctAnswer) b.classList.add('correct'); 
+    });
+    setTimeout(generateQuestion, 1500); 
+  }
+}
+
+function endGame() {
+  if(typeof playSound === 'function') playSound('win');
+  document.getElementById('finalScore').innerText = `${score}/${MAX_QUESTIONS}`;
+  
+  // XP SYSTEM
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + score);
+  
+  let msg = "Keep Learning! 🧠";
+  if (score >= 7) msg = "Great Biologist! 🧬";
+  if (score === 10) msg = "Perfect Score! 🩺";
+  document.getElementById('endMessage').innerText = msg;
+  switchScreen('endScreen');
+}
+</script>
+</body>
+</html>
+
