@@ -66,23 +66,25 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
 
 /* Learning Area */
 .learning-display { background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 16px; padding: 20px; margin-bottom: 20px; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.learn-emoji { font-size: 6rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); margin-bottom: 10px; animation: floatLab 3s infinite ease-in-out; }
+.learn-emoji { font-size: 5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); margin-bottom: 10px; animation: floatLab 3s infinite ease-in-out; }
 @keyframes floatLab { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 .learn-title { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
-.learn-desc { font-size: 1.2rem; font-weight: 800; color: var(--dark); line-height: 1.4; }
+.learn-desc { font-size: 1.1rem; font-weight: 800; color: var(--dark); line-height: 1.4; margin-bottom: 15px; }
+.learn-fact { background: #d1fae5; color: #047857; padding: 12px; border-radius: 12px; font-size: 1.1rem; border: 2px dashed #10b981; font-weight: 800; display: none; }
+.learn-fact.show { display: block; animation: popIn 0.3s ease; }
 
 /* Item Grid */
-.item-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.item-btn { font-size: 3rem; background: white; border: 3px solid var(--dark); border-radius: 12px; padding: 10px; cursor: pointer; box-shadow: 0 4px 0 var(--dark); transition: all 0.1s; }
+.item-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.item-btn { font-size: 2.5rem; background: white; border: 3px solid var(--dark); border-radius: 12px; padding: 10px 15px; cursor: pointer; box-shadow: 0 4px 0 var(--dark); transition: all 0.1s; }
 .item-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--dark); }
-.item-btn.active { border-color: var(--primary); background: #fff1f2; }
+.item-btn.active { border-color: var(--primary); background: #fff1f2; transform: translateY(4px); box-shadow: 0 0 0 var(--dark); }
 
 /* Test Area */
 .test-header { display: flex; justify-content: space-between; font-family: 'Fredoka One'; font-size: 1.3rem; border-bottom: 3px dashed #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
 .q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.2rem; font-family: 'Nunito', sans-serif; font-weight: 900; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
 .q-content { display: flex; align-items: center; gap: 10px; width: 65%; line-height: 1.3; }
 .q-input-wrap { position: relative; width: 30%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; cursor: pointer; }
+.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; cursor: pointer; }
 .q-input:focus { border-color: var(--primary); }
 
 /* Grading Styles */
@@ -100,6 +102,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
   .q-row { flex-direction: column; align-items: flex-start; gap: 10px; }
   .q-content { width: 100%; }
   .q-input-wrap { width: 100%; }
+  .learn-emoji { font-size: 4rem; }
 }
 </style>
 </head>
@@ -124,11 +127,19 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
         </div>
       </button>
 
-      <button class="cat-btn" style="border-color: var(--secondary);" onclick="selectTopic('animals')">
-        <span class="cat-icon">🐆</span>
+      <button class="cat-btn" style="border-color: var(--warning);" onclick="selectTopic('animals')">
+        <span class="cat-icon">🐅</span>
         <div class="cat-info">
-          <h3 style="color: var(--secondary);">Animal Superpowers</h3>
+          <h3 style="color: var(--warning);">Animal Superpowers</h3>
           <p>The fastest, biggest, and coolest animals!</p>
+        </div>
+      </button>
+
+      <button class="cat-btn" style="border-color: var(--blue);" onclick="selectTopic('senses')">
+        <span class="cat-icon">👂</span>
+        <div class="cat-info">
+          <h3 style="color: var(--blue);">The 5 Senses</h3>
+          <p>Sight, hearing, taste, touch, and smell!</p>
         </div>
       </button>
     </div>
@@ -197,23 +208,36 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
 <script src="sounds.js"></script>
 
 <script>
-// --- BIOLOGY DATABASE ENCYCLOPEDIA & TESTS ---
+// --- MASSIVE BIOLOGY DATABASE ---
 const BIO_DATA = {
   human: [
-    { name: "Heart", emoji: "🫀", desc: "The heart is a strong muscle that pumps blood all around your body! It beats about 100,000 times a day.", q: "Which organ pumps blood around your body?", opts: ["Heart", "Brain", "Lungs", "Stomach"] },
-    { name: "Brain", emoji: "🧠", desc: "The control center of your body! It helps you think, learn, feel, and controls everything you do.", q: "What is the control center that does your thinking?", opts: ["Brain", "Heart", "Bones", "Skin"] },
-    { name: "Lungs", emoji: "🫁", desc: "Your lungs help you breathe. They take in fresh oxygen from the air and push out the used air.", q: "What do you use to breathe in air?", opts: ["Lungs", "Stomach", "Bones", "Heart"] },
-    { name: "Skeleton", emoji: "🦴", desc: "Bones give your body its shape and protect your soft organs. Without them, you would be a wobbly puddle!", q: "What hard parts give your body its shape and structure?", opts: ["Skeleton / Bones", "Muscles", "Skin", "Hair"] },
-    { name: "Stomach", emoji: "🍲", desc: "After you chew and swallow, food goes here! The stomach mashes it up so your body can use it for energy.", q: "Where does your food go to be digested?", opts: ["Stomach", "Lungs", "Brain", "Heart"] },
-    { name: "Skin", emoji: "✋", desc: "The largest organ! It covers your whole body, keeps your insides safe, and helps you feel hot, cold, and soft things.", q: "What covers your entire body and protects it?", opts: ["Skin", "Hair", "Bones", "Muscles"] }
+    { name: "Heart", emoji: "🫀", desc: "The heart is a strong muscle that pumps blood all around your body!", funFact: "Your heart is about the exact same size as your fist.", q: "Which organ pumps blood around your body?", opts: ["Heart", "Brain", "Lungs", "Stomach"] },
+    { name: "Brain", emoji: "🧠", desc: "The control center of your body! It helps you think, learn, feel, and move.", funFact: "Your brain generates enough electricity to power a small lightbulb!", q: "What is the control center that does your thinking?", opts: ["Brain", "Heart", "Bones", "Skin"] },
+    { name: "Lungs", emoji: "🫁", desc: "Your lungs help you breathe. They take in fresh oxygen from the air.", funFact: "Your left lung is slightly smaller to make room for your heart!", q: "What do you use to breathe in air?", opts: ["Lungs", "Stomach", "Bones", "Heart"] },
+    { name: "Skeleton", emoji: "🦴", desc: "Bones give your body its shape. Without them, you would be a wobbly puddle!", funFact: "Babies are born with 300 bones, but adults only have 206!", q: "What hard parts give your body its shape and structure?", opts: ["Skeleton", "Muscles", "Skin", "Hair"] },
+    { name: "Stomach", emoji: "🍎", desc: "After you swallow, food goes here! The stomach mashes it up for energy.", funFact: "Your stomach makes a new lining every two weeks so it doesn't digest itself!", q: "Where does your food go to be digested?", opts: ["Stomach", "Lungs", "Brain", "Heart"] },
+    { name: "Skin", emoji: "🖐️", desc: "The largest organ! It covers your whole body and keeps your insides safe.", funFact: "You shed around 30,000 to 40,000 dead skin cells every single minute.", q: "What covers your entire body and protects it?", opts: ["Skin", "Hair", "Bones", "Muscles"] }
   ],
   animals: [
-    { name: "Cheetah", emoji: "🐆", desc: "The fastest land animal on Earth! It can sprint as fast as a car on the highway to catch its dinner.", q: "What is the fastest land animal?", opts: ["Cheetah", "Lion", "Horse", "Dog"] },
-    { name: "Giraffe", emoji: "🦒", desc: "It has a super long neck and a purple tongue! It uses its height to eat leaves from the tops of tall trees.", q: "Which animal has a very long neck to eat from tall trees?", opts: ["Giraffe", "Elephant", "Zebra", "Hippo"] },
-    { name: "Blue Whale", emoji: "🐋", desc: "The largest animal to ever live! It is even bigger than the biggest dinosaurs and lives in the ocean.", q: "Which ocean animal is the largest living creature on Earth?", opts: ["Blue Whale", "Great White Shark", "Dolphin", "Octopus"] },
-    { name: "Kangaroo", emoji: "🦘", desc: "A marsupial from Australia. It has powerful back legs for jumping and carries its baby (a joey) in a pouch!", q: "Which animal carries its baby in a pouch?", opts: ["Kangaroo", "Koala", "Monkey", "Bear"] },
-    { name: "Chameleon", emoji: "🦎", desc: "A special lizard that can change its skin color to hide from danger or show how it feels.", q: "Which animal can change its color to hide?", opts: ["Chameleon", "Snake", "Frog", "Turtle"] },
-    { name: "Ostrich", emoji: "🦅", desc: "The biggest bird in the world. It cannot fly, but it can run super fast on its long, strong legs.", q: "Which bird is the largest but cannot fly?", opts: ["Ostrich", "Penguin", "Eagle", "Parrot"] }
+    { name: "Cheetah", emoji: "🐆", desc: "The fastest land animal on Earth! It runs to catch its dinner.", funFact: "It can accelerate faster than a sports car!", q: "What is the fastest land animal?", opts: ["Cheetah", "Lion", "Horse", "Dog"] },
+    { name: "Giraffe", emoji: "🦒", desc: "It has a super long neck to eat leaves from the tops of tall trees.", funFact: "Giraffes only need 5 to 30 minutes of sleep a day!", q: "Which animal has a very long neck?", opts: ["Giraffe", "Elephant", "Zebra", "Hippo"] },
+    { name: "Blue Whale", emoji: "🐋", desc: "The largest animal to ever live! It lives deep in the ocean.", funFact: "A Blue Whale's heart is the size of a car!", q: "Which ocean animal is the largest living creature on Earth?", opts: ["Blue Whale", "Shark", "Dolphin", "Octopus"] },
+    { name: "Kangaroo", emoji: "🦘", desc: "A bouncy animal from Australia. It carries its baby in a pouch.", funFact: "Kangaroos cannot walk backwards!", q: "Which animal carries its baby in a pouch?", opts: ["Kangaroo", "Koala", "Monkey", "Bear"] },
+    { name: "Chameleon", emoji: "🦎", desc: "A special lizard that can change its skin color to hide from danger.", funFact: "Its tongue can be as long as its entire body!", q: "Which animal can change its color to hide?", opts: ["Chameleon", "Snake", "Frog", "Turtle"] },
+    { name: "Elephant", emoji: "🐘", desc: "The largest animal on land. It has big ears and a long trunk.", funFact: "An elephant's trunk has over 40,000 muscles in it!", q: "Which is the largest land animal?", opts: ["Elephant", "Rhino", "Hippo", "Bear"] },
+    { name: "Tiger", emoji: "🐅", desc: "The biggest wild cat in the world, known for its orange fur and black stripes.", funFact: "No two tigers have the exact same stripe pattern!", q: "Which is the largest wild cat?", opts: ["Tiger", "Lion", "Panther", "Leopard"] },
+    { name: "Octopus", emoji: "🐙", desc: "A clever ocean animal with eight long arms and no bones.", funFact: "An octopus has three hearts and blue blood!", q: "Which ocean animal has 8 arms?", opts: ["Octopus", "Crab", "Starfish", "Shark"] },
+    { name: "Sloth", emoji: "🦥", desc: "A very sleepy animal that lives in trees and moves incredibly slowly.", funFact: "They move so slowly that green algae grows on their fur!", q: "Which animal is known for moving very slowly?", opts: ["Sloth", "Turtle", "Snail", "Monkey"] },
+    { name: "Frog", emoji: "🐸", desc: "An amphibian that loves to jump and catch flies with its sticky tongue.", funFact: "Frogs don't need to drink; they absorb water through their skin!", q: "Which animal catches flies with its tongue and jumps?", opts: ["Frog", "Snake", "Lizard", "Fish"] },
+    { name: "Dolphin", emoji: "🐬", desc: "A highly intelligent ocean mammal that loves to jump out of the water.", funFact: "Dolphins sleep with one eye open to watch for danger!", q: "Which smart ocean animal loves to jump from the water?", opts: ["Dolphin", "Shark", "Whale", "Seal"] },
+    { name: "Penguin", emoji: "🐧", desc: "A bird that wears a 'tuxedo' and lives in the freezing cold, but cannot fly.", funFact: "Penguins have a special gland that filters salt out of ocean water!", q: "Which bird swims in the cold ocean but cannot fly?", opts: ["Penguin", "Ostrich", "Eagle", "Parrot"] }
+  ],
+  senses: [
+    { name: "Sight", emoji: "👀", desc: "Your eyes let you see colors, shapes, and read books.", funFact: "Your eyes blink around 15 to 20 times every single minute.", q: "Which sense do you use to watch a cartoon?", opts: ["Sight (Eyes)", "Hearing (Ears)", "Smell (Nose)", "Touch (Hands)"] },
+    { name: "Hearing", emoji: "👂", desc: "Your ears catch sound waves so you can listen to music or people talking.", funFact: "The smallest bone in your entire body is inside your ear!", q: "Which sense do you use to listen to music?", opts: ["Hearing (Ears)", "Sight (Eyes)", "Taste (Tongue)", "Smell (Nose)"] },
+    { name: "Smell", emoji: "👃", desc: "Your nose breathes in air and tells you if something smells good or bad.", funFact: "Your nose can remember up to 50,000 different scents!", q: "Which sense do you use to know a flower smells nice?", opts: ["Smell (Nose)", "Taste (Tongue)", "Touch (Hands)", "Hearing (Ears)"] },
+    { name: "Touch", emoji: "🖐️", desc: "Your skin lets you feel if something is hot, cold, hard, or soft.", funFact: "Your fingertips are the most sensitive part of your body.", q: "Which sense do you use to feel if a blanket is soft?", opts: ["Touch (Hands)", "Sight (Eyes)", "Taste (Tongue)", "Smell (Nose)"] },
+    { name: "Taste", emoji: "👅", desc: "Your tongue lets you enjoy sweet, salty, sour, and bitter foods.", funFact: "You have around 10,000 tiny taste buds on your tongue.", q: "Which sense do you use to know that an apple is sweet?", opts: ["Taste (Tongue)", "Hearing (Ears)", "Smell (Nose)", "Touch (Hands)"] }
   ]
 };
 
@@ -257,14 +281,13 @@ function setupLearnMode() {
   const grid = document.getElementById('learnGrid');
   grid.innerHTML = '';
   
-  // Reset Display
   document.getElementById('learnDisplay').innerHTML = `
     <div class="learn-emoji">👆</div>
     <div class="learn-title">Tap an icon below!</div>
     <div class="learn-desc">Let's learn some amazing Biology facts.</div>
   `;
 
-  data.forEach((item, index) => {
+  data.forEach((item) => {
     let btn = document.createElement('button');
     btn.className = 'item-btn';
     btn.innerText = item.emoji;
@@ -276,15 +299,14 @@ function setupLearnMode() {
 function showFact(item, btnElement) {
   if(typeof playSound === 'function') playSound('click');
   
-  // Remove active from all buttons, add to clicked
   document.querySelectorAll('.item-btn').forEach(b => b.classList.remove('active'));
   btnElement.classList.add('active');
 
-  // Update Top Display
   document.getElementById('learnDisplay').innerHTML = `
-    <div class="learn-emoji">${item.emoji}</div>
+    <div class="learn-emoji" style="animation:none;">${item.emoji}</div>
     <div class="learn-title">${item.name}</div>
     <div class="learn-desc">${item.desc}</div>
+    <div class="learn-fact show">🌟 <strong>Fun Fact:</strong> ${item.funFact}</div>
   `;
 }
 
@@ -296,20 +318,19 @@ function setupTestMode() {
   document.getElementById('submitTestBtn').style.display = 'block';
   document.getElementById('testResultArea').style.display = 'none';
   
-  let titleMap = { 'human': 'Human Body', 'animals': 'Animal Superpowers' };
+  let titleMap = { 'human': 'Human Body', 'animals': 'Animal Superpowers', 'senses': 'The 5 Senses' };
   document.getElementById('testTitle').innerText = titleMap[currentTopic] + " Test";
   
   const container = document.getElementById('testQuestionsContainer');
   container.innerHTML = '';
 
-  // Get data and duplicate/shuffle to get exactly 10 questions
+  // Get data and duplicate if necessary to get 10 questions, then shuffle
   let sourceData = [...BIO_DATA[currentTopic], ...BIO_DATA[currentTopic]].sort(() => Math.random() - 0.5).slice(0, 10);
 
   sourceData.forEach((item, i) => {
-    let ans = item.opts[0]; // The correct answer is always first in the array in our DB
+    let ans = item.opts[0]; 
     testQuestionsData.push(ans);
     
-    // Shuffle options for the dropdown
     let shuffledOpts = [...item.opts].sort(() => Math.random() - 0.5);
     let optsHTML = shuffledOpts.map(o => `<option value="${o}">${o}</option>`).join('');
 
@@ -366,7 +387,6 @@ function gradeTest() {
     document.getElementById('testResultMsg').innerText = "Keep studying! Review your answers. 💪";
   }
 
-  // Add XP
   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
   localStorage.setItem('vedhTotalXP', currentXP + (testScore * 2)); 
 
