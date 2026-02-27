@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Puzzle 🚰 - Logic & Coding</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --primary: #0ea5e9; --secondary: #10b981; --dark: #1e293b; --paper: #ffffff; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Nunito', sans-serif; background-color: #e0f2fe; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+.home-btn { position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary); color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none; font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); }
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 25px; box-shadow: 0 10px 0 rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 100%; }
+
+.board { display: grid; gap: 4px; background: #94a3b8; padding: 8px; border-radius: 12px; border: 4px solid var(--dark); margin: 20px auto; width: fit-content;}
+.tile { width: 70px; height: 70px; background: #e2e8f0; border-radius: 8px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.2s ease; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+.tile:active { background: #cbd5e1; }
+.tile img { width: 100%; height: 100%; pointer-events: none; }
+/* Pipe visuals using CSS */
+.pipe-straight { width: 20px; height: 100%; background: var(--primary); border-left: 4px solid #0284c7; border-right: 4px solid #0284c7; }
+.pipe-corner { width: 50%; height: 50%; background: var(--primary); align-self: flex-start; margin-left: auto; border-bottom-left-radius: 20px; border-left: 4px solid #0284c7; border-bottom: 4px solid #0284c7; }
+.start-tile { font-size: 2.5rem; background: #d1fae5; cursor: default; }
+.end-tile { font-size: 2.5rem; background: #fef08a; cursor: default; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--secondary); color: white; border: 4px solid #047857; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #047857; margin-top: 15px;}
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #047857; }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+<header>
+  <h1>The Pipeline</h1>
+  <div class="subtitle">Spatial Logic 🚰</div>
+</header>
+
+<div class="card" id="gameArea">
+  <div style="font-family:'Fredoka One'; font-size:1.5rem; display:flex; justify-content:space-between;">
+    <span>Level <span id="lvlDisplay">1</span>/5</span>
+    <span id="msg" style="color:var(--primary);">Connect the pipes!</span>
+  </div>
+  
+  <div class="board" id="board"></div>
+  
+  <button class="btn-primary" onclick="checkWin()">Turn on Water! 💧</button>
+</div>
+
+<script src="sounds.js"></script>
+<script>
+// Logic: Each pipe must reach its correct rotation. 
+// Straight pipes have 2 correct states (e.g., 0 and 180). Corners have 1.
+const LEVELS = [
+  { cols: 3, 
+    tiles: [
+      { t: 'start', e: '🚰', locked: true }, { t: 'straight', ans: [90, 270] }, { t: 'corner', ans: [90] },
+      { t: 'empty' }, { t: 'empty' }, { t: 'straight', ans: [0, 180] },
+      { t: 'empty' }, { t: 'empty' }, { t: 'end', e: '🌻', locked: true }
+    ]
+  },
+  { cols: 3, 
+    tiles: [
+      { t: 'start', e: '🚰', locked: true }, { t: 'straight', ans: [90, 270] }, { t: 'corner', ans: [90] },
+      { t: 'corner', ans: [0] }, { t: 'straight', ans: [90, 270] }, { t: 'corner', ans: [180] },
+      { t: 'corner', ans: [270] }, { t: 'straight', ans: [90, 270] }, { t: 'end', e: '🌻', locked: true }
+    ]
+  },
+  { cols: 4, 
+    tiles: [
+      { t: 'start', e: '🚰', locked: true }, { t: 'empty' }, { t: 'empty' }, { t: 'empty' },
+      { t: 'straight', ans: [0, 180] }, { t: 'corner', ans: [90] }, { t: 'straight', ans: [90, 270] }, { t: 'corner', ans: [180] },
+      { t: 'corner', ans: [0] }, { t: 'corner', ans: [270] }, { t: 'empty' }, { t: 'straight', ans: [0, 180] },
+      { t: 'empty' }, { t: 'end', e: '🌻', locked: true }, { t: 'empty' }, { t: 'corner', ans: [270] }
+    ]
+  }
+];
+
+let currLvl = 0;
+let gridState = [];
+
+function loadLevel() {
+  if(currLvl >= LEVELS.length) {
+    document.getElementById('gameArea').innerHTML = `<h2 style="font-family:'Fredoka One'; font-size:2.5rem; color:#10b981;">Master Plumber! 🏆</h2><p style="font-size:1.2rem; font-weight:bold;">You fixed all the pipes! (+30 XP)</p><button class="btn-primary" onclick="window.location.href='index.html'">Dashboard</button>`;
+    return;
+  }
+  document.getElementById('lvlDisplay').innerText = currLvl + 1;
+  document.getElementById('msg').innerText = "Connect the pipes!";
+  document.getElementById('msg').style.color = "var(--primary)";
+  
+  let board = document.getElementById('board');
+  let lvlData = LEVELS[currLvl];
+  board.style.gridTemplateColumns = `repeat(${lvlData.cols}, 1fr)`;
+  board.innerHTML = '';
+  gridState = [];
+
+  lvlData.tiles.forEach((tile, i) => {
+    // Randomize initial rotation for playable pipes
+    let initialRot = tile.locked || tile.t === 'empty' ? 0 : [0, 90, 180, 270][Math.floor(Math.random()*4)];
+    gridState.push({ ...tile, currentRot: initialRot });
+    
+    let el = document.createElement('div');
+    el.className = `tile ${tile.t === 'start' ? 'start-tile' : ''} ${tile.t === 'end' ? 'end-tile' : ''}`;
+    el.id = `tile-${i}`;
+    
+    if(tile.t === 'start' || tile.t === 'end') el.innerText = tile.e;
+    else if(tile.t === 'straight') el.innerHTML = `<div class="pipe-straight"></div>`;
+    else if(tile.t === 'corner') el.innerHTML = `<div class="pipe-corner"></div>`;
+    
+    // Apply rotation only to the inner content so tile background stays still
+    if(el.firstChild && !tile.locked) {
+      el.firstChild.style.transform = `rotate(${initialRot}deg)`;
+      el.firstChild.style.transition = "transform 0.2s";
+    }
+
+    if(!tile.locked && tile.t !== 'empty') {
+      el.onclick = () => rotateTile(i);
+    }
+    board.appendChild(el);
+  });
+}
+
+function rotateTile(index) {
+  if(typeof playSound === 'function') playSound('click');
+  gridState[index].currentRot = (gridState[index].currentRot + 90) % 360;
+  let el = document.getElementById(`tile-${index}`).firstChild;
+  el.style.transform = `rotate(${gridState[index].currentRot}deg)`;
+}
+
+function checkWin() {
+  let isWin = true;
+  gridState.forEach(tile => {
+    if(!tile.locked && tile.t !== 'empty') {
+      if(!tile.ans.includes(tile.currentRot)) isWin = false;
+    }
+  });
+
+  if(isWin) {
+    if(typeof playSound === 'function') playSound('win');
+    document.getElementById('msg').innerText = "Water is flowing! 🌊";
+    document.getElementById('msg').style.color = "var(--secondary)";
+    let xp = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+    localStorage.setItem('vedhTotalXP', xp + 10);
+    setTimeout(() => { currLvl++; loadLevel(); }, 1500);
+  } else {
+    if(typeof playSound === 'function') playSound('wrong');
+    document.getElementById('msg').innerText = "Uh oh! It's leaking! 💦";
+    document.getElementById('msg').style.color = "var(--danger)";
+  }
+}
+
+loadLevel();
+</script>
+</body>
+</html>
+
