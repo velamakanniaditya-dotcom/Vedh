@@ -62,7 +62,7 @@ header p{font-size:.95rem;font-weight:800;color:#a8a29e;margin-top:4px;}
 .rank-labels{display:flex;flex-direction:column;}
 .rank-labels span{height:52px;width:16px;display:flex;align-items:center;justify-content:flex-end;font-family:'Fredoka One',cursive;font-size:.6rem;color:#a8a29e;padding-right:2px;}
 .board-row-wrap{display:flex;}
-.chessboard{display:grid;grid-template-columns:repeat(8,52px);border:4px solid var(--dark);border-radius:7px;overflow:hidden;box-shadow:0 8px 0 rgba(0,0,0,.35);}
+.chessboard{display:grid;grid-template-columns:repeat(8,52px);border:4px solid var(--dark);border-radius:7px;overflow:hidden;box-shadow:0 8px 0 rgba(0,0,0,.35);position:relative;}
 .sq{
   width:52px;height:52px;display:flex;align-items:center;justify-content:center;
   font-size:1.75rem;cursor:pointer;position:relative;user-select:none;
@@ -83,6 +83,18 @@ header p{font-size:.95rem;font-weight:800;color:#a8a29e;margin-top:4px;}
 @keyframes threatPulse{0%,100%{box-shadow:inset 0 0 0 3px rgba(239,68,68,.0);}50%{box-shadow:inset 0 0 0 3px rgba(239,68,68,.9),inset 0 0 12px rgba(239,68,68,.4);}}
 /* Last move highlight */
 .sq.lastmove{background:rgba(99,102,241,.35)!important;}
+/* Leo move animation highlights */
+.sq.leo-from{background:rgba(245,158,11,.55)!important;animation:leoFromPulse .35s ease-in-out 3;}
+.sq.leo-to  {background:rgba(34,197,94,.6)!important;animation:leoToPulse .4s ease-in-out 2;}
+@keyframes leoFromPulse{0%,100%{filter:brightness(1);}50%{filter:brightness(1.35);}}
+@keyframes leoToPulse  {0%,100%{filter:brightness(1);}50%{filter:brightness(1.4);}}
+/* Floating piece that travels across the board */
+.float-piece{
+  position:absolute;pointer-events:none;z-index:50;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.75rem;transition:left .42s cubic-bezier(.4,0,.2,1),top .42s cubic-bezier(.4,0,.2,1);
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));
+}
 .sq:hover:not(.sel){filter:brightness(1.07);}
 @media(max-width:500px){
   .sq{width:42px;height:42px;font-size:1.35rem;}
@@ -802,40 +814,94 @@ function doPlayerMove(fr,fc,tr,tc){
   setTimeout(()=>leoMove(),700);
 }
 
-/* ═══ LEO MOVE ═══ */
+/* ═══ LEO MOVE — with animated piece flight ═══ */
 function leoMove(){
   leoThinking=true;
-  leoSay("Hmm... let me think... 🤔",'tip');
+  leoSay("Hmm... let me think...",'tip');
   document.getElementById('leoFace').textContent='🤔';
   setTimeout(()=>{
     const m=getBestMove(board,diff);
     if(!m){ leoThinking=false; checkGameOver(); return; }
-    const captured=board[m.tr][m.tc];
-    if(captured) leoCap.push(captured);
-    const prev=board[m.fr][m.fc];
-    board[m.tr][m.tc]=board[m.fr][m.fc]; board[m.fr][m.fc]='';
-    if(board[m.tr][m.tc]==='♟'&&m.tr===7) board[m.tr][m.tc]='♛';
-    lastFrom=[m.fr,m.fc]; lastTo=[m.tr,m.tc];
-    const notation=`Leo: ${board[m.tr][m.tc]}${SQ(m.tr,m.tc)}${captured?'x'+PNAME[captured]:''}`;
-    moveLog.push(notation);
-    updateMoveLog();
-    renderBoard();
-    const explanation=explainLeoMove(m.fr,m.fc,m.tr,m.tc,captured,board);
-    const tag=inCheck(board,true)?'warn':captured?'opp':'plan';
-    document.getElementById('leoFace').textContent=getDiffFace();
-    leoSay(explanation, tag);
-    leoThinking=false;
-    if(checkGameOver()) return;
-    turn='w'; updateTurnIndicator();
-    // Immediate threat warning after Leo moves
+
+    // ── Step 1: Flash the FROM square so child sees what's moving ──
+    const fromSq=document.getElementById(`sq_${m.fr}_${m.fc}`);
+    const toSq  =document.getElementById(`sq_${m.tr}_${m.tc}`);
+    if(!fromSq||!toSq){ commitLeoMove(m); return; }
+
+    const piece=board[m.fr][m.fc];
+    fromSq.classList.add('leo-from');
+
+    // ── Step 2: After brief pause, float the piece across the board ──
     setTimeout(()=>{
-      const th=findThreats();
-      if(th.length>0&&!inCheck(board,true)){
-        const pn=PNAME[th[0].piece];
-        leoSay(`👀 Look carefully! Your ${pn} on ${SQ(th[0].r,th[0].c)} can now be taken by me! Should you move it?`,'warn');
-      }
-    }, 1800);
-  }, 600);
+      toSq.classList.add('leo-to');
+      animateLeoPiece(fromSq, toSq, piece, ()=>{
+        fromSq.classList.remove('leo-from');
+        toSq.classList.remove('leo-to');
+        commitLeoMove(m);
+      });
+    }, 420);
+  }, 650);
+}
+
+function animateLeoPiece(fromEl, toEl, piece, onDone){
+  const board_el=document.getElementById('chessboard');
+  const br=board_el.getBoundingClientRect();
+  const fr=fromEl.getBoundingClientRect();
+  const tr=toEl.getBoundingClientRect();
+  const sqW=fr.width;
+
+  // Create floating piece div
+  const fp=document.createElement('div');
+  fp.className='float-piece';
+  fp.textContent=piece;
+  fp.style.width=sqW+'px';
+  fp.style.height=sqW+'px';
+  fp.style.fontSize=(sqW*0.7)+'px';
+  fp.style.left=(fr.left-br.left)+'px';
+  fp.style.top =(fr.top -br.top )+'px';
+  board_el.appendChild(fp);
+
+  // Hide original piece while floating
+  fromEl.style.opacity='0.15';
+
+  // Trigger transition on next frame
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    fp.style.left=(tr.left-br.left)+'px';
+    fp.style.top =(tr.top -br.top )+'px';
+  }));
+
+  // After animation completes, remove float and commit
+  setTimeout(()=>{
+    fp.remove();
+    fromEl.style.opacity='';
+    onDone();
+  }, 480);
+}
+
+function commitLeoMove(m){
+  const captured=board[m.tr][m.tc];
+  if(captured) leoCap.push(captured);
+  board[m.tr][m.tc]=board[m.fr][m.fc]; board[m.fr][m.fc]='';
+  if(board[m.tr][m.tc]==='♟'&&m.tr===7) board[m.tr][m.tc]='♛';
+  lastFrom=[m.fr,m.fc]; lastTo=[m.tr,m.tc];
+  const notation=`Leo: ${board[m.tr][m.tc]}${SQ(m.tr,m.tc)}${captured?'x'+PNAME[captured]:''}`;
+  moveLog.push(notation);
+  updateMoveLog();
+  renderBoard();
+  const explanation=explainLeoMove(m.fr,m.fc,m.tr,m.tc,captured,board);
+  const tag=inCheck(board,true)?'warn':captured?'opp':'plan';
+  document.getElementById('leoFace').textContent=getDiffFace();
+  leoSay(explanation, tag);
+  leoThinking=false;
+  if(checkGameOver()) return;
+  turn='w'; updateTurnIndicator();
+  setTimeout(()=>{
+    const th=findThreats();
+    if(th.length>0&&!inCheck(board,true)){
+      const pn=PNAME[th[0].piece];
+      leoSay(`Look carefully! Your ${pn} on ${SQ(th[0].r,th[0].c)} can now be taken by me! Should you move it?`,'warn');
+    }
+  }, 2200);
 }
 
 /* ═══ PREVIEW MODE ═══ */
@@ -933,48 +999,81 @@ window.addEventListener('load', ()=>{
     leoSpeak("Welcome to Chess Coach! I am Leo, your chess teacher! Choose how hard you want to play, then I will help you every step of the way!");
   }, 800);
 });
-let soundOn=true, speechReady=false, preferredVoice=null, speakQueue=[];
+let soundOn=true, speechReady=false, allVoices=[];
 
-// Strip emojis and symbols so speech sounds natural
+/* ── CLEAN TEXT FOR SPEECH ── */
 function cleanForSpeech(txt){
   return txt
-    .replace(/[🦁🐣🧙♚♛♜♝♞♟♔♕♖♗♘♙🎉😔🤝🔊💡👁📖⚠️✅🏰🌟😈🎯💥🍴📌🔄💫🎮🧠🛡️📝⚖️❌🔴🟢🟡🚨]/gu,'')
-    .replace(/[^\x00-\x7F]/g,'')   // remove remaining non-ASCII
+    .replace(/[^\u0000-\u007F]/g,' ')  // strip all non-ASCII (emojis, chess symbols)
     .replace(/\s+/g,' ')
-    .replace(/[↔️→←↑↓↗↘↙↖]/g,'')
+    .replace(/[→←↑↓↗↘↙↖↔]/g,'')
+    .replace(/\b(SQ|sq)\b/g,'square')
     .trim();
 }
 
-// Pick the best available voice for kids
-function pickVoice(){
-  const voices=window.speechSynthesis.getVoices();
-  if(!voices.length) return null;
-  // Preference order: friendly named voices first
-  const preferred=['Google UK English Female','Samantha','Karen','Moira','Fiona','Google US English','Microsoft Zira','Microsoft Hazel'];
-  for(const name of preferred){
-    const v=voices.find(v=>v.name.includes(name.split(' ')[0])&&(name.split(' ').length<3||v.name.includes(name.split(' ')[1])));
-    if(v) return v;
-  }
-  // Fall back: prefer English female
-  const engFem=voices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().includes('fem'));
-  if(engFem) return engFem;
-  // Fall back: any English
-  const eng=voices.find(v=>v.lang.startsWith('en'));
-  return eng||voices[0]||null;
+/* ── VOICE PICKER ──
+   Priority lists for each character. We want UK English male voices.
+   Browser voices vary by OS so we try many fallback names.
+   Pitch/rate are then used to shape the age feel on top of whatever voice we get. */
+function pickVoiceFor(character){
+  const v=allVoices;
+  if(!v.length) return null;
+
+  // Helper: find by partial name match (case-insensitive)
+  const find=(...names)=>{
+    for(const n of names){
+      const match=v.find(x=>x.name.toLowerCase().includes(n.toLowerCase()));
+      if(match) return match;
+    }
+    return null;
+  };
+
+  // UK English male voices by name — different browsers expose different ones
+  const ukMale = find(
+    'Daniel',          // macOS/iOS — clear, British male — BEST
+    'Google UK English Male',
+    'Microsoft George', // Windows UK male
+    'Microsoft Rishi',
+    'Arthur',
+    'Oliver',
+    'James',
+    'Malcolm'
+  );
+
+  // UK English any
+  const ukAny = v.find(x=>(x.lang==='en-GB'||x.lang.startsWith('en-GB')));
+
+  // English male fallback
+  const enMale = find('Alex','Fred','Tom','Bruce','Microsoft David','Google US English Male');
+
+  // Any English fallback
+  const enAny = v.find(x=>x.lang.startsWith('en'));
+
+  // All characters get a male voice — pitch/rate shapes the age
+  return ukMale || ukAny || enMale || enAny || v[0];
 }
 
 function initSpeech(){
   if(!('speechSynthesis' in window)) return;
-  const load=()=>{ preferredVoice=pickVoice(); speechReady=true; };
-  if(window.speechSynthesis.getVoices().length) load();
+  const load=()=>{
+    allVoices=window.speechSynthesis.getVoices();
+    speechReady=allVoices.length>0;
+  };
+  load();
   window.speechSynthesis.onvoiceschanged=load;
 }
 
-// Voice personality per character
-function getVoiceSettings(){
-  if(diff==='easy')   return {rate:0.78, pitch:1.35};  // Tiny Tim: slow, high, cute
-  if(diff==='hard')   return {rate:0.88, pitch:0.92};  // Wizard Max: slightly deeper, mysterious
-  return               {rate:0.82, pitch:1.15};         // Captain Leo: warm, clear, friendly
+/* ── CHARACTER VOICE PROFILES ──
+   All share the same UK male voice base but pitch+rate create the age illusion.
+   
+   Tiny Tim  → small boy : high pitch (1.6), slow rate (0.72) — breathy, cute
+   Captain Leo → young boy: medium-high pitch (1.25), normal-slow rate (0.82) — energetic
+   Wizard Max  → adult man : low pitch (0.75), measured rate (0.88) — deep, wise
+*/
+function getVoiceProfile(){
+  if(diff==='easy') return {pitch:1.65, rate:0.70, volume:1.0};  // Tiny Tim — small boy
+  if(diff==='hard') return {pitch:0.72, rate:0.86, volume:1.0};  // Wizard Max — man
+  return                   {pitch:1.22, rate:0.80, volume:1.0};  // Captain Leo — young boy
 }
 
 function leoSpeak(text){
@@ -982,15 +1081,23 @@ function leoSpeak(text){
   window.speechSynthesis.cancel();
   const clean=cleanForSpeech(text);
   if(!clean) return;
+
   const utt=new SpeechSynthesisUtterance(clean);
-  const {rate,pitch}=getVoiceSettings();
-  utt.rate=rate; utt.pitch=pitch; utt.volume=1;
-  if(preferredVoice) utt.voice=preferredVoice;
-  // Animate Leo's face while talking
+  const prof=getVoiceProfile();
+  const voice=pickVoiceFor(diff);
+
+  utt.voice=voice||null;
+  utt.lang='en-GB';          // force UK English pronunciation regardless of voice
+  utt.pitch=prof.pitch;
+  utt.rate=prof.rate;
+  utt.volume=prof.volume;
+
   const face=document.getElementById('leoFace');
   const msgEl=document.getElementById('leoMsg');
   utt.onstart=()=>{ face.classList.add('talking'); msgEl.classList.add('speaking'); };
   utt.onend=utt.onerror=()=>{ face.classList.remove('talking'); msgEl.classList.remove('speaking'); };
+
+  // Chrome bug workaround — long utterances get cut off; split at punctuation
   window.speechSynthesis.speak(utt);
 }
 
