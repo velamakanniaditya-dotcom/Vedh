@@ -102,6 +102,19 @@ header p{font-size:.95rem;font-weight:800;color:#a8a29e;margin-top:4px;}
 .coach-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .leo-face{font-size:2.4rem;animation:leoBob 2s ease-in-out infinite;}
 @keyframes leoBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+.leo-face.talking{animation:leoTalk .25s ease-in-out infinite;}
+@keyframes leoTalk{0%,100%{transform:scale(1) translateY(0);}50%{transform:scale(1.18) translateY(-3px);}}
+.sound-btn{
+  font-family:'Fredoka One',cursive;font-size:.78rem;
+  padding:4px 10px;border:2px solid #b45309;border-radius:20px;
+  background:rgba(245,158,11,.15);color:#78350f;cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+}
+.sound-btn:hover{background:rgba(245,158,11,.3);}
+.sound-btn.muted{background:rgba(100,116,139,.15);border-color:#94a3b8;color:#64748b;}
+/* Typing cursor animation on Leo's text */
+.coach-msg.speaking::after{content:'▌';animation:blink .6s step-end infinite;color:var(--gold);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 .coach-name{font-family:'Fredoka One',cursive;font-size:.9rem;color:#78350f;}
 .coach-msg{font-size:.88rem;font-weight:800;color:#44403c;line-height:1.6;min-height:44px;}
 .coach-tag{display:inline-block;font-size:.65rem;font-weight:900;padding:2px 8px;border-radius:20px;text-transform:uppercase;margin-top:5px;}
@@ -267,10 +280,11 @@ header p{font-size:.95rem;font-weight:800;color:#a8a29e;margin-top:4px;}
       <div class="coach-box">
         <div class="coach-header">
           <span class="leo-face" id="leoFace">🦁</span>
-          <div>
+          <div style="flex:1;">
             <div class="coach-name" id="leoName">King Leo says:</div>
             <span class="coach-tag tag-tip" id="leoTag">TIP</span>
           </div>
+          <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Toggle Leo's voice">🔊 Voice ON</button>
         </div>
         <div class="coach-msg" id="leoMsg">Welcome! I'm Leo — your chess coach! Pick a piece and I'll show you which moves are safe. Green = go, Yellow = careful, Red = trap!</div>
       </div>
@@ -912,13 +926,98 @@ function checkGameOver(){
   return false;
 }
 
+// Speak welcome when page loads
+window.addEventListener('load', ()=>{
+  initSpeech();
+  setTimeout(()=>{
+    leoSpeak("Welcome to Chess Coach! I am Leo, your chess teacher! Choose how hard you want to play, then I will help you every step of the way!");
+  }, 800);
+});
+let soundOn=true, speechReady=false, preferredVoice=null, speakQueue=[];
+
+// Strip emojis and symbols so speech sounds natural
+function cleanForSpeech(txt){
+  return txt
+    .replace(/[🦁🐣🧙♚♛♜♝♞♟♔♕♖♗♘♙🎉😔🤝🔊💡👁📖⚠️✅🏰🌟😈🎯💥🍴📌🔄💫🎮🧠🛡️📝⚖️❌🔴🟢🟡🚨]/gu,'')
+    .replace(/[^\x00-\x7F]/g,'')   // remove remaining non-ASCII
+    .replace(/\s+/g,' ')
+    .replace(/[↔️→←↑↓↗↘↙↖]/g,'')
+    .trim();
+}
+
+// Pick the best available voice for kids
+function pickVoice(){
+  const voices=window.speechSynthesis.getVoices();
+  if(!voices.length) return null;
+  // Preference order: friendly named voices first
+  const preferred=['Google UK English Female','Samantha','Karen','Moira','Fiona','Google US English','Microsoft Zira','Microsoft Hazel'];
+  for(const name of preferred){
+    const v=voices.find(v=>v.name.includes(name.split(' ')[0])&&(name.split(' ').length<3||v.name.includes(name.split(' ')[1])));
+    if(v) return v;
+  }
+  // Fall back: prefer English female
+  const engFem=voices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().includes('fem'));
+  if(engFem) return engFem;
+  // Fall back: any English
+  const eng=voices.find(v=>v.lang.startsWith('en'));
+  return eng||voices[0]||null;
+}
+
+function initSpeech(){
+  if(!('speechSynthesis' in window)) return;
+  const load=()=>{ preferredVoice=pickVoice(); speechReady=true; };
+  if(window.speechSynthesis.getVoices().length) load();
+  window.speechSynthesis.onvoiceschanged=load;
+}
+
+// Voice personality per character
+function getVoiceSettings(){
+  if(diff==='easy')   return {rate:0.78, pitch:1.35};  // Tiny Tim: slow, high, cute
+  if(diff==='hard')   return {rate:0.88, pitch:0.92};  // Wizard Max: slightly deeper, mysterious
+  return               {rate:0.82, pitch:1.15};         // Captain Leo: warm, clear, friendly
+}
+
+function leoSpeak(text){
+  if(!soundOn||!speechReady||!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const clean=cleanForSpeech(text);
+  if(!clean) return;
+  const utt=new SpeechSynthesisUtterance(clean);
+  const {rate,pitch}=getVoiceSettings();
+  utt.rate=rate; utt.pitch=pitch; utt.volume=1;
+  if(preferredVoice) utt.voice=preferredVoice;
+  // Animate Leo's face while talking
+  const face=document.getElementById('leoFace');
+  const msgEl=document.getElementById('leoMsg');
+  utt.onstart=()=>{ face.classList.add('talking'); msgEl.classList.add('speaking'); };
+  utt.onend=utt.onerror=()=>{ face.classList.remove('talking'); msgEl.classList.remove('speaking'); };
+  window.speechSynthesis.speak(utt);
+}
+
+function toggleSound(){
+  soundOn=!soundOn;
+  const btn=document.getElementById('soundBtn');
+  if(soundOn){
+    btn.textContent='🔊 Voice ON'; btn.classList.remove('muted');
+    leoSpeak('Voice is on! I can talk to you now!');
+  } else {
+    window.speechSynthesis?.cancel();
+    document.getElementById('leoFace').classList.remove('talking');
+    document.getElementById('leoMsg').classList.remove('speaking');
+    btn.textContent='🔇 Voice OFF'; btn.classList.add('muted');
+  }
+}
+
 /* ═══ UI HELPERS ═══ */
 function leoSay(msg, tag='tip'){
+  // Strip emoji prefixes for display cleanliness but keep content
   document.getElementById('leoMsg').textContent=msg;
   const tags={tip:'TIP 💡',warn:'⚠️ DANGER',good:'✅ NICE!',plan:'📖 PLAN',opp:'🎮 LEO SAYS'};
   const cls={tip:'tag-tip',warn:'tag-warn',good:'tag-good',plan:'tag-plan',opp:'tag-opp'};
   const t=document.getElementById('leoTag');
   t.textContent=tags[tag]||tags.tip; t.className='coach-tag '+(cls[tag]||cls.tip);
+  // Speak it!
+  leoSpeak(msg);
 }
 function updateTurnIndicator(){
   const el=document.getElementById('turnIndicator');
@@ -943,6 +1042,8 @@ function showResult(emoji,title,msg){
   document.getElementById('resTitle').textContent=title;
   document.getElementById('resMsg').textContent=msg;
   document.getElementById('resultOverlay').classList.add('show');
+  // Speak the result with extra enthusiasm
+  setTimeout(()=>leoSpeak(title+'. '+msg), 400);
 }
 function confetti(){
   const w=document.getElementById('confettiWrap'); w.innerHTML='';
@@ -958,6 +1059,7 @@ function confetti(){
 /* ═══ GAME INIT ═══ */
 function startGame(d){
   diff=d;
+  initSpeech();
   document.getElementById('diffScreen').classList.remove('active');
   document.getElementById('gameScreen').classList.add('active');
   document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('active'));
@@ -975,7 +1077,11 @@ function changeDiff(d){
   leoSay(`Difficulty changed to ${d==='easy'?'Easy 🐣':d==='medium'?'Medium 🦁':'Hard 🧙'}! Starting a new game…`,'tip');
   setTimeout(initGame,800);
 }
-function newGame(){ document.getElementById('resultOverlay').classList.remove('show'); initGame(); }
+function newGame(){ 
+  window.speechSynthesis?.cancel();
+  document.getElementById('resultOverlay').classList.remove('show'); 
+  initGame(); 
+}
 function initGame(){
   board=START.map(r=>[...r]); sel=null; turn='w'; previewMode=false; previewPiece=null;
   moveLog=[]; youCap=[]; leoCap=[]; leoThinking=false; lastFrom=null; lastTo=null; hintSquare=null;
@@ -993,4 +1099,3 @@ function initGame(){
 </script>
 </body>
 </html>
-
