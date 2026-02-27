@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cargo Sorter 🤖 - Logic & Coding</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --primary: #f97316; --secondary: #3b82f6; --danger: #ef4444; --dark: #1e293b; --paper: #ffffff; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Nunito', sans-serif; background-color: #fff7ed; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+.home-btn { position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary); color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none; font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); }
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 25px; box-shadow: 0 10px 0 rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 100%; }
+
+/* Logic Rule Builder */
+.rule-box { background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: left; }
+.rule-line { font-family: 'Fredoka One'; font-size: 1.2rem; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+select { font-family: 'Fredoka One'; font-size: 1.1rem; padding: 5px; border: 3px solid var(--dark); border-radius: 8px; }
+
+/* Conveyor Area */
+.factory { position: relative; height: 200px; background: #e2e8f0; border: 4px solid var(--dark); border-radius: 12px; overflow: hidden; margin-bottom: 20px; display: flex; flex-direction: column; justify-content: flex-end; }
+.baskets { display: flex; justify-content: space-between; width: 100%; padding: 0 20px; padding-bottom: 10px; }
+.basket { font-size: 3rem; position: relative; z-index: 10; }
+.item { font-size: 3rem; position: absolute; top: -50px; left: 50%; transform: translateX(-50%); transition: all 1s ease-in-out; z-index: 5; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #c2410c; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #c2410c;}
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #c2410c; }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+<header>
+  <h1>Cargo Sorter</h1>
+  <div class="subtitle">If/Then Logic 🤖</div>
+</header>
+
+<div class="card" id="gameArea">
+  <div style="font-family:'Fredoka One'; font-size:1.5rem; display:flex; justify-content:space-between; margin-bottom: 10px;">
+    <span>Task <span id="lvlDisplay">1</span></span>
+    <span id="msg" style="color:var(--secondary);">Program the machine!</span>
+  </div>
+
+  <div class="rule-box">
+    <div class="rule-line">
+      <span style="color:var(--danger);">IF</span> item is <span id="target1">🍎</span> 
+      <span style="color:var(--primary);">THEN</span> go
+      <select id="rule1"><option value="">?</option><option value="L">Left ⬅️</option><option value="R">Right ➡️</option></select>
+    </div>
+    <div class="rule-line">
+      <span style="color:var(--danger);">IF</span> item is <span id="target2">🍌</span> 
+      <span style="color:var(--primary);">THEN</span> go
+      <select id="rule2"><option value="">?</option><option value="L">Left ⬅️</option><option value="R">Right ➡️</option></select>
+    </div>
+  </div>
+  
+  <div class="factory">
+    <div class="item" id="fallingItem">🍎</div>
+    <div class="baskets">
+      <div class="basket" id="basketL">🛒</div>
+      <div class="basket" id="basketR">🛒</div>
+    </div>
+  </div>
+  
+  <button class="btn-primary" onclick="runMachine()">Start Conveyor ⚙️</button>
+</div>
+
+<script src="sounds.js"></script>
+<script>
+const LEVELS = [
+  { t1: '🍎', t2: '🍌', bL: '🍎', bR: '🍌', ans1: 'L', ans2: 'R' },
+  { t1: '⚽', t2: '🏀', bL: '🏀', bR: '⚽', ans1: 'R', ans2: 'L' },
+  { t1: '🚗', t2: '🚀', bL: '🚗', bR: '🚀', ans1: 'L', ans2: 'R' }
+];
+
+let currLvl = 0;
+
+function loadLevel() {
+  if(currLvl >= LEVELS.length) {
+    document.getElementById('gameArea').innerHTML = `<h2 style="font-family:'Fredoka One'; font-size:2.5rem; color:#f97316;">Master Programmer! 🏆</h2><p style="font-size:1.2rem; font-weight:bold;">You sorted everything correctly! (+20 XP)</p><button class="btn-primary" onclick="window.location.href='index.html'">Dashboard</button>`;
+    return;
+  }
+  let lvl = LEVELS[currLvl];
+  document.getElementById('lvlDisplay').innerText = currLvl + 1;
+  document.getElementById('msg').innerText = "Program the machine!";
+  document.getElementById('msg').style.color = "var(--secondary)";
+  
+  document.getElementById('target1').innerText = lvl.t1;
+  document.getElementById('target2').innerText = lvl.t2;
+  document.getElementById('basketL').innerText = `📦 ${lvl.bL}`;
+  document.getElementById('basketR').innerText = `${lvl.bR} 📦`;
+  
+  document.getElementById('rule1').value = "";
+  document.getElementById('rule2').value = "";
+  
+  resetItem(lvl.t1);
+}
+
+function resetItem(emoji) {
+  let item = document.getElementById('fallingItem');
+  item.style.transition = 'none';
+  item.style.top = '-50px';
+  item.style.left = '50%';
+  item.innerText = emoji;
+}
+
+function runMachine() {
+  let r1 = document.getElementById('rule1').value;
+  let r2 = document.getElementById('rule2').value;
+  if(!r1 || !r2) { alert("Please set both rules!"); return; }
+  
+  if(typeof playSound === 'function') playSound('click');
+  let lvl = LEVELS[currLvl];
+  
+  // Test if rules match the required logic
+  if(r1 === lvl.ans1 && r2 === lvl.ans2) {
+    document.getElementById('msg').innerText = "Sorting... ⚙️";
+    animateItem(lvl.t1, r1, () => {
+      resetItem(lvl.t2);
+      setTimeout(() => {
+        animateItem(lvl.t2, r2, () => {
+          if(typeof playSound === 'function') playSound('win');
+          document.getElementById('msg').innerText = "Perfectly Sorted! ✅";
+          let xp = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+          localStorage.setItem('vedhTotalXP', xp + 10);
+          setTimeout(() => { currLvl++; loadLevel(); }, 1500);
+        });
+      }, 500);
+    });
+  } else {
+    document.getElementById('msg').innerText = "Sorting... ⚙️";
+    // Animate the mistake to show him WHY it's wrong
+    let wrongDir = r1 !== lvl.ans1 ? r1 : r2; 
+    let wrongItem = r1 !== lvl.ans1 ? lvl.t1 : lvl.t2;
+    resetItem(wrongItem);
+    setTimeout(() => {
+      animateItem(wrongItem, wrongDir, () => {
+        if(typeof playSound === 'function') playSound('wrong');
+        document.getElementById('msg').innerText = "Oops! Wrong basket! 🛑";
+        document.getElementById('msg').style.color = "var(--danger)";
+        setTimeout(() => resetItem(lvl.t1), 1500);
+      });
+    }, 100);
+  }
+}
+
+function animateItem(emoji, dir, callback) {
+  let item = document.getElementById('fallingItem');
+  item.innerText = emoji;
+  item.style.transition = 'all 1s ease-in-out';
+  item.style.top = '120px'; // Move down
+  
+  setTimeout(() => {
+    item.style.left = dir === 'L' ? '20%' : '80%'; // Move to basket
+    setTimeout(callback, 1000);
+  }, 1000);
+}
+
+loadLevel();
+</script>
+</body>
+</html>
+
