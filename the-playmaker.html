@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Playmaker ⚽ - Coding & Logic</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #22c55e; /* Pitch Green */
+  --secondary: #3b82f6; /* Team Blue */
+  --danger: #ef4444; /* Red Card / Defender */
+  --dark: #1e293b; 
+  --paper: #ffffff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f0fdf4;
+  background-image: linear-gradient(#bbf7d0 2px, transparent 2px), linear-gradient(90deg, #bbf7d0 2px, transparent 2px);
+  background-size: 30px 30px; 
+  color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 25px; box-shadow: 0 10px 0 rgba(30, 41, 59, 0.1); text-align: center; }
+
+/* The Pitch (Game Board) */
+.pitch-container { display: flex; justify-content: center; margin-bottom: 20px; }
+.pitch {
+  display: grid;
+  background-color: #4ade80;
+  border: 6px solid #ffffff;
+  outline: 4px solid var(--dark);
+  border-radius: 8px;
+  box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+  gap: 2px;
+}
+.cell {
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 50px; height: 50px;
+  display: flex; justify-content: center; align-items: center;
+  font-size: 2rem; border-radius: 4px;
+}
+.cell.goal { background-color: rgba(255, 255, 255, 0.5); border: 2px dashed #ffffff; }
+
+/* The Playbook (Code Sequence) */
+.playbook {
+  background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 12px;
+  padding: 10px; min-height: 60px; display: flex; align-items: center; justify-content: flex-start;
+  gap: 5px; overflow-x: auto; margin-bottom: 15px;
+}
+.cmd-icon {
+  background: white; border: 2px solid var(--dark); border-radius: 8px;
+  width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+  font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 3px 0 var(--dark);
+}
+.cmd-icon.active { background: var(--warning); border-color: #d97706; transform: scale(1.1); }
+
+/* Controls */
+.controls-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+.ctrl-btn { font-size: 2rem; background: white; border: 4px solid var(--dark); border-radius: 12px; padding: 10px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.ctrl-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+
+.action-row { display: flex; gap: 10px; }
+.btn-primary { flex: 2; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--secondary); color: white; border: 4px solid #1d4ed8; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #1d4ed8; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #1d4ed8; }
+.btn-danger { flex: 1; font-family: 'Fredoka One', cursive; font-size: 1.2rem; background: var(--danger); color: white; border: 4px solid #b91c1c; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #b91c1c; }
+.btn-danger:active { transform: translateY(6px); box-shadow: 0 0 0 #b91c1c; }
+
+.status-text { font-family: 'Fredoka One'; font-size: 1.2rem; color: var(--dark); margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>The Playmaker</h1>
+  <div class="subtitle">Football Coding ⚽</div>
+</header>
+
+<div id="gameScreen" class="screen active">
+  <div class="worksheet-card">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <div style="font-family:'Fredoka One'; font-size:1.5rem;">Match <span id="levelDisplay">1</span>/15</div>
+      <div class="status-text" id="statusMsg">Draw up the play!</div>
+    </div>
+
+    <div class="pitch-container">
+      <div class="pitch" id="pitchBoard"></div>
+    </div>
+
+    <div style="text-align: left; font-weight: 800; color: #64748b; margin-bottom: 5px;">Your Playbook (Code):</div>
+    <div class="playbook" id="playbookBar"></div>
+
+    <div class="controls-grid">
+      <button class="ctrl-btn" onclick="addCommand('U')">⬆️</button>
+      <button class="ctrl-btn" onclick="addCommand('D')">⬇️</button>
+      <button class="ctrl-btn" onclick="addCommand('L')">⬅️</button>
+      <button class="ctrl-btn" onclick="addCommand('R')">➡️</button>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-danger" onclick="clearPlay()">Clear</button>
+      <button class="btn-primary" onclick="runPlay()">Blow Whistle! 🏃‍♂️</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Tournament Won! 🏆</h2>
+    <div style="font-size: 5rem; margin: 10px 0;">🥇</div>
+    <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;">You are a Master Tactician! (+50 XP)</div>
+    <button class="btn-primary" onclick="window.location.href='index.html'">Back to Dashboard</button>
+  </div>
+</div>
+
+<script src="sounds.js"></script>
+
+<script>
+// --- LEVELS (The Football Drills) ---
+const LEVELS = [
+  // Levels 1-5: The Warmup
+  { size: 4, start: {x:1, y:3}, goal: {x:1, y:0}, defs: [] }, 
+  { size: 4, start: {x:0, y:3}, goal: {x:3, y:0}, defs: [{x:1,y:3},{x:2,y:3}] }, 
+  { size: 5, start: {x:2, y:4}, goal: {x:2, y:0}, defs: [{x:2,y:2}] }, 
+  { size: 5, start: {x:0, y:4}, goal: {x:4, y:0}, defs: [{x:1,y:4},{x:1,y:3},{x:3,y:1},{x:3,y:0}] }, 
+  { size: 5, start: {x:4, y:4}, goal: {x:0, y:0}, defs: [{x:4,y:2},{x:3,y:2},{x:2,y:2},{x:0,y:2},{x:1,y:2}] },
+  
+  // Levels 6-10: The Midfield
+  { size: 6, start: {x:2, y:5}, goal: {x:2, y:0}, defs: [{x:1,y:3},{x:2,y:3},{x:3,y:3},{x:2,y:1}] },
+  { size: 6, start: {x:0, y:5}, goal: {x:5, y:0}, defs: [{x:1,y:5},{x:1,y:4},{x:3,y:2},{x:3,y:1},{x:4,y:4},{x:2,y:1}] },
+  { size: 5, start: {x:0, y:2}, goal: {x:4, y:2}, defs: [{x:2,y:1},{x:2,y:2},{x:2,y:3}] },
+  { size: 6, start: {x:5, y:5}, goal: {x:0, y:0}, defs: [{x:5,y:4},{x:4,y:4},{x:4,y:5},{x:1,y:1},{x:1,y:0},{x:0,y:1}] },
+  { size: 6, start: {x:0, y:5}, goal: {x:5, y:0}, defs: [{x:2,y:5},{x:2,y:4},{x:2,y:3},{x:2,y:2},{x:4,y:0},{x:4,y:1},{x:4,y:2},{x:4,y:3}] },
+
+  // Levels 11-15: World Cup Final
+  { size: 7, start: {x:3, y:6}, goal: {x:3, y:0}, defs: [{x:2,y:5},{x:3,y:5},{x:4,y:5},{x:1,y:3},{x:2,y:3},{x:4,y:3},{x:5,y:3},{x:2,y:1},{x:3,y:1},{x:4,y:1}] },
+  { size: 7, start: {x:0, y:6}, goal: {x:6, y:0}, defs: [{x:1,y:6},{x:1,y:5},{x:1,y:4},{x:3,y:4},{x:3,y:3},{x:3,y:2},{x:5,y:2},{x:5,y:1},{x:5,y:0}] },
+  { size: 6, start: {x:0, y:0}, goal: {x:5, y:5}, defs: [{x:1,y:0},{x:1,y:1},{x:1,y:2},{x:4,y:5},{x:4,y:4},{x:4,y:3}] },
+  { size: 7, start: {x:3, y:3}, goal: {x:0, y:0}, defs: [{x:2,y:3},{x:3,y:2},{x:2,y:2},{x:1,y:1}] },
+  { size: 8, start: {x:4, y:7}, goal: {x:4, y:0}, defs: [{x:0,y:5},{x:1,y:5},{x:2,y:5},{x:3,y:5},{x:4,y:5},{x:5,y:5},{x:6,y:5},{x:7,y:3},{x:6,y:3},{x:5,y:3},{x:4,y:3},{x:3,y:3},{x:2,y:3},{x:1,y:3},{x:4,y:1}] }
+];
+
+let currentLevelIdx = 0;
+let userCode = [];
+let isPlaying = false;
+let playerPos = {x:0, y:0};
+
+const board = document.getElementById('pitchBoard');
+const playbook = document.getElementById('playbookBar');
+const statusMsg = document.getElementById('statusMsg');
+
+function initLevel() {
+  const lvl = LEVELS[currentLevelIdx];
+  document.getElementById('levelDisplay').innerText = currentLevelIdx + 1;
+  playerPos = { x: lvl.start.x, y: lvl.start.y };
+  userCode = [];
+  isPlaying = false;
+  statusMsg.innerText = "Draw up the play!";
+  statusMsg.style.color = "var(--dark)";
+  
+  board.style.gridTemplateColumns = `repeat(${lvl.size}, 1fr)`;
+  renderPitch();
+  renderPlaybook();
+}
+
+function renderPitch() {
+  const lvl = LEVELS[currentLevelIdx];
+  board.innerHTML = '';
+
+  for (let y = 0; y < lvl.size; y++) {
+    for (let x = 0; x < lvl.size; x++) {
+      let cell = document.createElement('div');
+      cell.className = 'cell';
+      
+      // Determine what is in this cell
+      let isGoal = (x === lvl.goal.x && y === lvl.goal.y);
+      let isPlayer = (x === playerPos.x && y === playerPos.y);
+      let isDef = lvl.defs.some(d => d.x === x && d.y === y);
+
+      if (isGoal) cell.classList.add('goal');
+
+      if (isPlayer) {
+        cell.innerHTML = '🏃‍♂️'; // Player with ball
+      } else if (isGoal) {
+        cell.innerHTML = '🥅'; // Goal net
+      } else if (isDef) {
+        cell.innerHTML = '🛑'; // Defender
+      }
+
+      board.appendChild(cell);
+    }
+  }
+}
+
+function renderPlaybook() {
+  playbook.innerHTML = '';
+  userCode.forEach((cmd, i) => {
+    let icon = document.createElement('div');
+    icon.className = 'cmd-icon';
+    icon.id = `cmd-${i}`;
+    if(cmd === 'U') icon.innerText = '⬆️';
+    if(cmd === 'D') icon.innerText = '⬇️';
+    if(cmd === 'L') icon.innerText = '⬅️';
+    if(cmd === 'R') icon.innerText = '➡️';
+    playbook.appendChild(icon);
+  });
+}
+
+function addCommand(cmd) {
+  if(typeof playSound === 'function') playSound('click');
+  if (userCode.length < 15 && !isPlaying) {
+    userCode.push(cmd);
+    renderPlaybook();
+    // Auto-scroll playbook to right
+    playbook.scrollLeft = playbook.scrollWidth;
+  }
+}
+
+function clearPlay() {
+  if (isPlaying) return;
+  if(typeof playSound === 'function') playSound('click');
+  const lvl = LEVELS[currentLevelIdx];
+  playerPos = { x: lvl.start.x, y: lvl.start.y };
+  userCode = [];
+  statusMsg.innerText = "Playbook cleared.";
+  renderPitch();
+  renderPlaybook();
+}
+
+function runPlay() {
+  if (isPlaying || userCode.length === 0) return;
+  isPlaying = true;
+  statusMsg.innerText = "Executing play...";
+  statusMsg.style.color = "var(--secondary)";
+  
+  // Reset player position to start before running
+  const lvl = LEVELS[currentLevelIdx];
+  playerPos = { x: lvl.start.x, y: lvl.start.y };
+  renderPitch();
+
+  let step = 0;
+  let interval = setInterval(() => {
+    // Remove active highlight from previous
+    document.querySelectorAll('.cmd-icon').forEach(el => el.classList.remove('active'));
+    
+    if (step < userCode.length) {
+      // Highlight current command
+      let activeIcon = document.getElementById(`cmd-${step}`);
+      if(activeIcon) {
+        activeIcon.classList.add('active');
+        activeIcon.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+
+      // Move Player
+      let cmd = userCode[step];
+      if (cmd === 'U') playerPos.y--;
+      if (cmd === 'D') playerPos.y++;
+      if (cmd === 'L') playerPos.x--;
+      if (cmd === 'R') playerPos.x++;
+
+      // Check Collisions
+      let cellType = checkCollision(playerPos.x, playerPos.y);
+
+      if (cellType === 'wall' || cellType === 'defender') {
+        if(typeof playSound === 'function') playSound('wrong');
+        clearInterval(interval);
+        statusMsg.innerText = cellType === 'defender' ? "TACKLED! Try again." : "Out of bounds!";
+        statusMsg.style.color = "var(--danger)";
+        isPlaying = false;
+        renderPitch();
+      } else if (cellType === 'goal') {
+        if(typeof playSound === 'function') playSound('win');
+        clearInterval(interval);
+        statusMsg.innerText = "GOOOAAALLLL! ⚽";
+        statusMsg.style.color = "var(--primary)";
+        renderPitch();
+        
+        setTimeout(() => {
+          currentLevelIdx++;
+          let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+          localStorage.setItem('vedhTotalXP', currentXP + 5); // +5 XP per match
+          
+          if (currentLevelIdx >= LEVELS.length) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('endScreen').classList.add('active');
+          } else {
+            initLevel();
+          }
+        }, 2000);
+      } else {
+        if(typeof playSound === 'function') playSound('click');
+        renderPitch();
+        step++;
+      }
+    } else {
+      // Ran out of code but didn't hit goal
+      clearInterval(interval);
+      if(typeof playSound === 'function') playSound('wrong');
+      statusMsg.innerText = "Play failed! Didn't reach the goal.";
+      statusMsg.style.color = "var(--danger)";
+      isPlaying = false;
+    }
+  }, 500); // Speed of the player running
+}
+
+function checkCollision(x, y) {
+  const lvl = LEVELS[currentLevelIdx];
+  if (x < 0 || x >= lvl.size || y < 0 || y >= lvl.size) return 'wall';
+  if (lvl.defs.some(d => d.x === x && d.y === y)) return 'defender';
+  if (x === lvl.goal.x && y === lvl.goal.y) return 'goal';
+  return 'grass';
+}
+
+// Start Game
+initLevel();
+</script>
+</body>
+</html>
+
