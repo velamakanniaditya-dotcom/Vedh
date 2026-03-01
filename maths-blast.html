@@ -3,37 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maths Blast! 🚀 - Super Worksheets</title>
+<title>Word Wizard 🧙‍♂️ - Super Worksheets</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
-   WORKSHEET THEME
+   WORKSHEET THEME - ENGLISH/WORDS
 ══════════════════════════════════════════ */
 :root {
-  --primary: #4ade80; --secondary: #38bdf8;
-  --danger: #fb7185; --warning: #fbbf24;
-  --purple: #a855f7; --dark: #334155;
-  --paper: #ffffff; --grid: #e2e8f0;
+  --primary: #a855f7; /* Purple */
+  --secondary: #ec4899; /* Pink */
+  --danger: #ef4444; 
+  --warning: #fbbf24; 
+  --blue: #3b82f6;
+  --dark: #1e293b; 
+  --paper: #ffffff;
+  --grid: #f3e8ff; /* Light purple grid */
 }
+
 * { margin:0; padding:0; box-sizing:border-box; }
 
 body {
   font-family: 'Nunito', sans-serif;
-  background-color: #f8fafc;
+  background-color: #faf5ff;
   background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: 30px 30px; color: var(--dark);
   min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
 }
 
 .home-btn {
-  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--secondary);
-  color: var(--secondary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
-  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--secondary); z-index: 100;
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
 }
-.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--secondary); }
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
 
 header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
-h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--secondary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
 .subtitle { font-size: 1.2rem; font-weight: 800; color: #64748b; margin-top: 5px; }
 
 .screen { display: none; width: 100%; max-width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -42,7 +47,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 
 .worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(51, 65, 85, 0.1); text-align: center; position: relative; }
 
-/* MINI BADGE BOARD (UPDATED!) */
+/* MINI BADGE BOARD */
 .mini-badge-board { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 16px; padding: 15px; }
 .badge-board-title { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; color: #94a3b8; margin-bottom: 5px; }
 .mini-badge { font-size: 2.2rem; transition: all 0.3s ease; }
@@ -65,54 +70,39 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 
 /* Game Area */
 .top-bar { display: flex; justify-content: space-between; align-items: center; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
-.hint-btn { background: #fef08a; border: 3px solid #ca8a04; color: #ca8a04; border-radius: 50px; padding: 5px 15px; font-size: 1rem; cursor: pointer; display: none; }
-.hint-btn.show { display: block; }
 
 .timer-container { width: 100%; height: 20px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 20px; position: relative; }
 .timer-fill { height: 100%; background: var(--primary); width: 100%; transition: width 0.3s linear, background-color 0.3s; }
 .time-plus { position: absolute; right: 10px; top: -5px; color: var(--primary); font-weight: 900; font-size: 1.2rem; opacity: 0; }
 .time-plus.show { animation: floatUpFade 1s ease-out forwards; }
-@keyframes floatUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
-
-/* Learning / Hint Board */
-.hint-board { background: #f1f5f9; border: 3px dashed var(--secondary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 1.2rem; font-weight: 800; color: var(--dark); display: none; text-align: left; }
-.hint-board.active { display: block; animation: popIn 0.3s ease; }
-.hint-step { margin-bottom: 8px; }
-.hint-dots { letter-spacing: 5px; color: var(--secondary); font-size: 1.5rem; line-height: 1.2;}
 
 /* Dynamic Problem Layout */
-.math-problem { font-family: 'Fredoka One', cursive; font-size: 4rem; line-height: 1.1; margin-bottom: 20px; color: var(--dark); }
-.vertical-math { display: inline-block; text-align: right; }
-.vertical-math .top-num { display: block; padding-right: 10px; }
-.vertical-math .bottom-row { display: flex; align-items: center; justify-content: flex-end; border-bottom: 6px solid var(--dark); padding-bottom: 10px; padding-right: 10px; gap: 15px;}
-.vertical-math .operator { color: var(--secondary); font-size: 3rem; }
-
-.horizontal-math { display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 3.5rem; }
-.shape-display { font-size: 6rem; margin: 20px 0; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); }
+.word-problem { font-family: 'Fredoka One', cursive; font-size: 2.5rem; line-height: 1.3; margin-bottom: 20px; color: var(--dark); }
+.hint-text { font-family: 'Nunito', sans-serif; font-size: 1.2rem; color: var(--secondary); font-weight: 800; margin-bottom: 10px; }
 
 /* Options Grid */
 .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.opt-btn { font-family: 'Fredoka One', cursive; font-size: 2rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.6rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 5px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
 .opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
-.opt-btn.correct { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 6px 0 #16a34a; }
+.opt-btn.correct { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 6px 0 #be185d; }
 .opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #e11d48; }
 
-.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #16a34a; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #16a34a; }
-.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #16a34a; }
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #7e22ce; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #7e22ce; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #7e22ce; }
 
 .feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
 .feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes starPop { 0% { opacity: 1; transform: scale(0.5) rotate(-20deg); } 50% { transform: scale(1.2) rotate(10deg); } 100% { opacity: 0; transform: scale(1) translateY(-30px); } }
 
 /* ══════════════════════════════════════════
    TEST SHEET STYLES
 ══════════════════════════════════════════ */
 .test-header { display: flex; justify-content: space-between; font-family: 'Fredoka One'; font-size: 1.3rem; border-bottom: 3px dashed #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
-.q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.6rem; font-family: 'Fredoka One'; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
-.q-math { display: flex; align-items: center; gap: 10px; width: 60%; }
-.q-input-wrap { position: relative; width: 35%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.5rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; }
+.q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.3rem; font-family: 'Fredoka One'; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
+.q-word { display: flex; align-items: center; gap: 10px; width: 65%; line-height: 1.2; }
+.q-input-wrap { position: relative; width: 30%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; cursor: pointer; }
 .q-input:focus { border-color: var(--primary); }
-select.q-input { appearance: none; cursor: pointer; }
 
 .q-row.correct .q-input { background: #d1fae5; border-color: #10b981; color: #10b981; }
 .q-row.wrong .q-input { background: #fee2e2; border-color: var(--danger); color: var(--danger); }
@@ -124,9 +114,10 @@ select.q-input { appearance: none; cursor: pointer; }
 
 @media(max-width: 500px) {
   .cat-grid { grid-template-columns: 1fr; }
-  .opt-btn { font-size: 1.5rem; }
-  .q-row { font-size: 1.2rem; }
-  .q-input { font-size: 1.2rem; }
+  .opt-btn { font-size: 1.2rem; }
+  .q-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .q-word { width: 100%; }
+  .q-input-wrap { width: 100%; }
 }
 </style>
 </head>
@@ -135,8 +126,8 @@ select.q-input { appearance: none; cursor: pointer; }
 <a href="index.html" class="home-btn">🏠 Home</a>
 
 <header>
-  <h1>Maths Blast!</h1>
-  <div class="subtitle">Select a Worksheet 📝</div>
+  <h1>Word Wizard</h1>
+  <div class="subtitle">Spelling & Grammar ✍️</div>
 </header>
 
 <div id="categoryScreen" class="screen active">
@@ -148,12 +139,18 @@ select.q-input { appearance: none; cursor: pointer; }
 
     <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">What are we learning today?</h2>
     <div class="cat-grid">
-      <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('add')"><span class="cat-icon">➕</span> Addition</button>
-      <button class="cat-btn" style="border-color: var(--danger); color: var(--danger);" onclick="selectCategory('sub')"><span class="cat-icon">➖</span> Subtraction</button>
-      <button class="cat-btn" style="border-color: var(--secondary); color: var(--secondary);" onclick="selectCategory('mul')"><span class="cat-icon">✖️</span> Multiplication</button>
-      <button class="cat-btn" style="border-color: var(--purple); color: var(--purple);" onclick="selectCategory('div')"><span class="cat-icon">➗</span> Division</button>
-      <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('comp')"><span class="cat-icon">⚖️</span> Greater / Less</button>
-      <button class="cat-btn" style="border-color: #ec4899; color: #ec4899;" onclick="selectCategory('shape')"><span class="cat-icon">🔺</span> Shapes</button>
+      <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('spelling')">
+        <span class="cat-icon">📝</span> Spelling
+      </button>
+      <button class="cat-btn" style="border-color: var(--secondary); color: var(--secondary);" onclick="selectCategory('phonics')">
+        <span class="cat-icon">🗣️</span> Phonics
+      </button>
+      <button class="cat-btn" style="border-color: var(--blue); color: var(--blue);" onclick="selectCategory('grammar')">
+        <span class="cat-icon">🧩</span> Grammar
+      </button>
+      <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('sentences')">
+        <span class="cat-icon">✍️</span> Sentences
+      </button>
     </div>
   </div>
 </div>
@@ -167,7 +164,7 @@ select.q-input { appearance: none; cursor: pointer; }
       <div class="mode-icon">🌟</div>
       <div>
         <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Practice Mode</h3>
-        <p style="font-weight: 600; color: #64748b;">No timer! With built-in hints.</p>
+        <p style="font-weight: 600; color: #64748b;">No timer! Take your time to read.</p>
       </div>
     </button>
 
@@ -179,7 +176,7 @@ select.q-input { appearance: none; cursor: pointer; }
       </div>
     </button>
 
-    <button class="mode-btn" style="border-color: #3b82f6; box-shadow: 0 6px 0 #3b82f6;" onclick="startGame('test')">
+    <button class="mode-btn" style="border-color: var(--blue); box-shadow: 0 6px 0 var(--blue);" onclick="startGame('test')">
       <div class="mode-icon">📝</div>
       <div>
         <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Test Mode</h3>
@@ -194,7 +191,6 @@ select.q-input { appearance: none; cursor: pointer; }
     <div class="feedback-star" id="fStar">⭐</div>
     <div class="top-bar">
       <div>Score: <span id="scoreDisplay">0</span></div>
-      <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Help Me!</button>
       <div id="modeDisplay" style="color: var(--warning);">🌟 Practice</div>
     </div>
     
@@ -203,9 +199,7 @@ select.q-input { appearance: none; cursor: pointer; }
       <div class="time-plus" id="timePlus">+5s</div>
     </div>
 
-    <div class="hint-board" id="hintBoard"></div>
-
-    <div id="problemArea" class="math-problem"></div>
+    <div id="problemArea" class="word-problem"></div>
     <div class="options-grid" id="optionsContainer"></div>
   </div>
 </div>
@@ -215,7 +209,7 @@ select.q-input { appearance: none; cursor: pointer; }
     <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('modeScreen')">🔙 Quit Test</button>
     
     <div class="test-header">
-      <span id="testTitle">Maths Test</span>
+      <span id="testTitle">English Test</span>
       <span>Name: Vedh</span>
     </div>
     
@@ -255,46 +249,81 @@ select.q-input { appearance: none; cursor: pointer; }
 <script src="sounds.js"></script>
 
 <script>
-// --- STICKER / BADGE LOGIC ---
-const MATH_STICKERS = ['🪐', '🚀', '🛸', '👾', '🤖', '🦸‍♂️', '🦖', '🏎️', '🚒', '🚁', '⚡', '🏆'];
+// --- STICKER / BADGE LOGIC (WORD WIZARD THEME!) ---
+const WORD_STICKERS = ['📚', '✍️', '🦉', '🎓', '🏅', '🥇', '🌟', '🎨', '🎭', '🎪', '🏰', '👑'];
 
 function getUnlockedStickers() {
-  return parseInt(localStorage.getItem('vedhMathsStickers')) || 0;
+  return parseInt(localStorage.getItem('vedhWordStickers')) || 0;
 }
 
 function unlockSticker() {
   let currentUnlocked = getUnlockedStickers();
-  if (currentUnlocked < MATH_STICKERS.length) {
-    localStorage.setItem('vedhMathsStickers', currentUnlocked + 1);
+  if (currentUnlocked < WORD_STICKERS.length) {
+    localStorage.setItem('vedhWordStickers', currentUnlocked + 1);
     if(typeof playSound === 'function') playSound('win');
-    return MATH_STICKERS[currentUnlocked];
+    return WORD_STICKERS[currentUnlocked];
   }
   return null; 
 }
 
 function refreshTopBadges() {
   const container = document.getElementById('miniBadgeBoard');
-  // Clear everything except the title
   container.innerHTML = '<div class="badge-board-title">Collect all 12 Badges! 🏆</div>';
   
   let unlockedCount = getUnlockedStickers();
   
-  MATH_STICKERS.forEach((sticker, i) => {
+  WORD_STICKERS.forEach((sticker, i) => {
     let badge = document.createElement('div');
     badge.innerText = sticker;
     
-    // If he has earned it, make it colorful and popped. If not, grey and locked!
     if (i < unlockedCount) {
       badge.className = 'mini-badge unlocked';
     } else {
       badge.className = 'mini-badge locked';
     }
-    
     container.appendChild(badge);
   });
 }
 
-// --- GAME STATE ---
+
+// --- MASSIVE ENGLISH DICTIONARY ---
+const WORD_DATA = {
+  spelling: [
+    { q: "C _ T (Meow)", a: "A", opts: ["A", "E", "I", "O"] },
+    { q: "D _ G (Bark)", a: "O", opts: ["O", "A", "U", "E"] },
+    { q: "S _ N (Hot)", a: "U", opts: ["U", "I", "A", "E"] },
+    { q: "B _ G (Insect)", a: "U", opts: ["U", "A", "O", "I"] },
+    { q: "F _ SH (Swims)", a: "I", opts: ["I", "E", "A", "O"] },
+    { q: "T R _ E (Leaves)", a: "E", opts: ["E", "A", "O", "I"] },
+    { q: "A P P L _ (Fruit)", a: "E", opts: ["E", "A", "O", "Y"] },
+    { q: "H _ U S E (Home)", a: "O", opts: ["O", "A", "E", "U"] },
+    { q: "H A P P _ (Smile)", a: "Y", opts: ["Y", "E", "I", "A"] },
+    { q: "B _ R D (Flies)", a: "I", opts: ["I", "E", "U", "A"] }
+  ],
+  phonics: [
+    { q: "Which word starts with 'CH'?", a: "Chair", opts: ["Chair", "Shoe", "Tree", "Boat"] },
+    { q: "Which word starts with 'SH'?", a: "Shark", opts: ["Shark", "Cheese", "Phone", "Train"] },
+    { q: "Which word starts with 'TH'?", a: "Thumb", opts: ["Thumb", "Sock", "Chair", "Ring"] },
+    { q: "Which word ends with 'ING'?", a: "Running", opts: ["Running", "Jumped", "Walks", "Play"] },
+    { q: "Which word rhymes with CAT?", a: "Hat", opts: ["Hat", "Dog", "Car", "Sun"] },
+    { q: "Which word rhymes with TREE?", a: "Bee", opts: ["Bee", "Cow", "Star", "Moon"] }
+  ],
+  grammar: [
+    { q: "Which one is a Noun (A Thing)?", a: "Apple", opts: ["Apple", "Run", "Quickly", "Blue"] },
+    { q: "Which one is a Verb (Action)?", a: "Jump", opts: ["Jump", "Table", "Happy", "Dog"] },
+    { q: "Which one is an Adjective (Describing)?", a: "Tall", opts: ["Tall", "Car", "Eat", "Boy"] },
+    { q: "What goes at the end of a sentence?", a: "Full Stop (.)", opts: ["Full Stop (.)", "Comma (,)", "Capital Letter", "Space"] },
+    { q: "Which word needs a Capital Letter?", a: "London", opts: ["London", "house", "tree", "dog"] }
+  ],
+  sentences: [
+    { q: "The dog ___ over the fence.", a: "jumped", opts: ["jumped", "jumps", "jumping", "jump"] },
+    { q: "I ___ an apple for lunch.", a: "ate", opts: ["ate", "eat", "eating", "eats"] },
+    { q: "The sun is very ___ today.", a: "hot", opts: ["hot", "cold", "blue", "fast"] },
+    { q: "She ___ reading a good book.", a: "is", opts: ["is", "are", "am", "be"] },
+    { q: "___ you like to play football?", a: "Do", opts: ["Do", "Are", "Is", "Has"] }
+  ]
+};
+
 let currentCategory = '';
 let currentMode = '';
 let score = 0;
@@ -302,18 +331,10 @@ let timeLeft = 0;
 let timeTotal = 0;
 let timerInterval;
 let correctAnswer = null;
-let currentQuestionData = {}; 
 let testQuestionsData = []; 
 
 const SECONDS_BLAST_START = 20; 
 const BONUS_TIME = 5; 
-
-const SHAPES = [
-  { e: '🔺', n: 'Triangle' }, { e: '🟦', n: 'Square' },
-  { e: '⏺️', n: 'Circle' }, { e: '⭐', n: 'Star' },
-  { e: '❤️', n: 'Heart' }, { e: '♦️', n: 'Diamond' },
-  { e: '🟩', n: 'Rectangle' } 
-];
 
 const screens = {
   categoryScreen: document.getElementById('categoryScreen'),
@@ -362,12 +383,6 @@ function startGame(mode) {
     timerInterval = setInterval(countdown, 1000);
   }
 
-  if(mode === 'relaxed' && ['add', 'sub', 'mul'].includes(currentCategory)) {
-    document.getElementById('hintBtn').classList.add('show');
-  } else {
-    document.getElementById('hintBtn').classList.remove('show');
-  }
-
   updateTimerUI();
   generateQuestion();
   switchScreen('gameScreen');
@@ -382,59 +397,39 @@ function generateTest() {
   document.getElementById('testResultArea').style.display = 'none';
   document.getElementById('testStickerAlert').classList.remove('show'); 
   
-  let titleMap = { 'add': 'Addition', 'sub': 'Subtraction', 'mul': 'Multiplication', 'div': 'Division', 'comp': 'Greater/Less', 'shape': 'Shapes' };
+  let titleMap = { 'spelling': 'Spelling', 'phonics': 'Phonics', 'grammar': 'Grammar', 'sentences': 'Sentences' };
   document.getElementById('testTitle').innerText = titleMap[currentCategory] + " Test";
   
   const container = document.getElementById('testQuestionsContainer');
   container.innerHTML = '';
 
-  for (let i = 0; i < 10; i++) {
-    let questionHTML = ''; let inputHTML = ''; let ans = '';
+  let sourceData = [...WORD_DATA[currentCategory], ...WORD_DATA[currentCategory]].sort(() => Math.random() - 0.5).slice(0, 10);
 
-    if (currentCategory === 'add' || currentCategory === 'sub') {
-      let n1 = Math.floor(Math.random() * 20) + 1;
-      let n2 = Math.floor(Math.random() * 20) + 1;
-      let op = currentCategory === 'add' ? '+' : '-';
-      if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1];
-      ans = currentCategory === 'add' ? n1 + n2 : n1 - n2;
-      questionHTML = `${n1} <span style="color:var(--primary);">${op}</span> ${n2} <span style="color:#94a3b8;">=</span>`;
-      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
-
-    } else if (currentCategory === 'mul') {
-      let n1 = Math.floor(Math.random() * 10) + 1;
-      let n2 = Math.floor(Math.random() * 10) + 1;
-      ans = n1 * n2;
-      questionHTML = `${n1} <span style="color:var(--primary);">×</span> ${n2} <span style="color:#94a3b8;">=</span>`;
-      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
-
-    } else if (currentCategory === 'div') {
-      let a = Math.floor(Math.random() * 10) + 1;
-      let n2 = Math.floor(Math.random() * 10) + 1;
-      let n1 = a * n2; ans = a;
-      questionHTML = `${n1} <span style="color:var(--purple);">÷</span> ${n2} <span style="color:#94a3b8;">=</span>`;
-      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
-
-    } else if (currentCategory === 'comp') {
-      let n1 = Math.floor(Math.random() * 50) + 1;
-      let n2 = Math.floor(Math.random() * 50) + 1;
-      if(Math.random() > 0.8) n2 = n1; 
-      if (n1 > n2) ans = '>'; else if (n1 < n2) ans = '<'; else ans = '=';
-      questionHTML = `${n1} <span style="color:#d97706;">[ ? ]</span> ${n2}`;
-      inputHTML = `<select class="q-input" id="t-input-${i}"><option value="">?</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option></select>`;
-
-    } else if (currentCategory === 'shape') {
-      let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-      ans = shape.n;
-      questionHTML = `<span style="font-size:3rem; line-height:1;">${shape.e}</span>`;
-      let opts = SHAPES.map(s => `<option value="${s.n}">${s.n}</option>`).join('');
-      inputHTML = `<select class="q-input" id="t-input-${i}"><option value="">?</option>${opts}</select>`;
-    }
-
+  sourceData.forEach((item, i) => {
+    let ans = item.a;
     testQuestionsData.push(ans);
-    let row = document.createElement('div'); row.className = 'q-row'; row.id = `qrow-${i}`;
-    row.innerHTML = `<div class="q-math"><span style="font-size:1.2rem; color:#94a3b8; margin-right:10px;">${i + 1}.</span>${questionHTML}</div><div class="q-input-wrap">${inputHTML}<span class="correction" id="corr-${i}">✓ ${ans}</span></div>`;
+    
+    let shuffledOpts = [...item.opts].sort(() => Math.random() - 0.5);
+    let optsHTML = shuffledOpts.map(o => `<option value="${o}">${o}</option>`).join('');
+
+    let row = document.createElement('div');
+    row.className = 'q-row';
+    row.id = `qrow-${i}`;
+    row.innerHTML = `
+      <div class="q-word">
+        <span style="font-size:1.2rem; color:#94a3b8; margin-right:10px;">${i + 1}.</span>
+        ${item.q}
+      </div>
+      <div class="q-input-wrap">
+        <select class="q-input" id="t-input-${i}">
+          <option value="">Select...</option>
+          ${optsHTML}
+        </select>
+        <span class="correction" id="corr-${i}">✓ ${ans}</span>
+      </div>
+    `;
     container.appendChild(row);
-  }
+  });
 }
 
 function gradeTest() {
@@ -443,11 +438,16 @@ function gradeTest() {
   testQuestionsData.forEach((ans, i) => {
     let inputEl = document.getElementById(`t-input-${i}`);
     let rowEl = document.getElementById(`qrow-${i}`);
-    let userVal = inputEl.value.toString().trim();
-    let correctVal = ans.toString().trim();
+    let userVal = inputEl.value;
+
     inputEl.disabled = true;
-    if (userVal === correctVal) { rowEl.classList.add('correct'); testScore++; } 
-    else { rowEl.classList.add('wrong'); }
+
+    if (userVal === ans) {
+      rowEl.classList.add('correct');
+      testScore++;
+    } else {
+      rowEl.classList.add('wrong');
+    }
   });
 
   document.getElementById('submitTestBtn').style.display = 'none';
@@ -496,91 +496,31 @@ function updateTimerUI() {
 }
 
 function generateQuestion() {
-  document.getElementById('hintBoard').classList.remove('active'); 
   document.getElementById('problemArea').innerHTML = '';
-  let options = [];
   
-  let maxNum = score < 5 ? 10 : (score < 15 ? 20 : 50);
+  let dataSet = WORD_DATA[currentCategory];
+  let item = dataSet[Math.floor(Math.random() * dataSet.length)];
+  
+  correctAnswer = item.a;
 
-  if (currentCategory === 'add' || currentCategory === 'sub') {
-    let n1 = Math.floor(Math.random() * maxNum) + 1;
-    let n2 = Math.floor(Math.random() * maxNum) + 1;
-    let op = currentCategory === 'add' ? '+' : '-';
-    if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1]; 
-    correctAnswer = currentCategory === 'add' ? n1 + n2 : n1 - n2;
-    currentQuestionData = { n1, n2, op, ans: correctAnswer };
-    document.getElementById('problemArea').innerHTML = `<div class="vertical-math"><span class="top-num">${n1}</span><div class="bottom-row"><span class="operator">${op}</span> <span>${n2}</span></div></div>`;
-    options = generateNumberOptions(correctAnswer);
-  } else if (currentCategory === 'mul') {
-    let mMax = score < 5 ? 5 : 10; 
-    let n1 = Math.floor(Math.random() * mMax) + 1;
-    let n2 = Math.floor(Math.random() * 5) + 1; 
-    correctAnswer = n1 * n2;
-    currentQuestionData = { n1, n2, op: 'mul', ans: correctAnswer };
-    document.getElementById('problemArea').innerHTML = `<div class="vertical-math"><span class="top-num">${n1}</span><div class="bottom-row"><span class="operator">×</span> <span>${n2}</span></div></div>`;
-    options = generateNumberOptions(correctAnswer);
-  } else if (currentCategory === 'div') {
-    let ans = Math.floor(Math.random() * 10) + 1;
-    let n2 = Math.floor(Math.random() * 10) + 1;
-    let n1 = ans * n2; correctAnswer = ans;
-    document.getElementById('problemArea').innerHTML = `<div class="horizontal-math">${n1} <span style="color:var(--purple);">÷</span> ${n2}</div>`;
-    options = generateNumberOptions(correctAnswer);
-  } else if (currentCategory === 'comp') {
-    let n1 = Math.floor(Math.random() * maxNum) + 1;
-    let n2 = Math.floor(Math.random() * maxNum) + 1;
-    if(Math.random() > 0.8) n2 = n1; 
-    document.getElementById('problemArea').innerHTML = `<div class="horizontal-math">${n1} <span style="color:#d97706;">[ ? ]</span> ${n2}</div>`;
-    if (n1 > n2) correctAnswer = '>'; else if (n1 < n2) correctAnswer = '<'; else correctAnswer = '=';
-    options = ['>', '<', '='];
-  } else if (currentCategory === 'shape') {
-    let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
-    correctAnswer = shape.n;
-    document.getElementById('problemArea').innerHTML = `<div class="shape-display">${shape.e}</div>`;
-    options = [correctAnswer];
-    while(options.length < 4) {
-      let randShape = SHAPES[Math.floor(Math.random() * SHAPES.length)].n;
-      if(!options.includes(randShape)) options.push(randShape);
-    }
-  }
-  renderOptions(options);
-}
+  let hint = "";
+  if(currentCategory === 'spelling') hint = "Missing Letter!";
+  if(currentCategory === 'phonics') hint = "Sound it out!";
+  if(currentCategory === 'grammar') hint = "Word Rules!";
+  if(currentCategory === 'sentences') hint = "Fill the blank!";
 
-function showHint() {
-  const hb = document.getElementById('hintBoard');
-  const d = currentQuestionData;
-  hb.innerHTML = '';
-  if(d.op === '+') {
-    let tens1 = Math.floor(d.n1 / 10) * 10; let ones1 = d.n1 % 10;
-    let tens2 = Math.floor(d.n2 / 10) * 10; let ones2 = d.n2 % 10;
-    hb.innerHTML = `<div style="color:var(--secondary); margin-bottom:5px;">Let's break it down!</div><div class="hint-step">1. Add the Tens: <span style="color:#0ea5e9;">${tens1} + ${tens2} = ${tens1 + tens2}</span></div><div class="hint-step">2. Add the Ones: <span style="color:#f59e0b;">${ones1} + ${ones2} = ${ones1 + ones2}</span></div><div class="hint-step">3. Put them together: <span style="color:#10b981;">${tens1 + tens2} + ${ones1 + ones2} = ${d.ans}</span></div>`;
-  } else if (d.op === '-') {
-    let dots = '';
-    for(let i=0; i<d.n1; i++) { if(i < d.n1 - d.n2) dots += '🔵 '; else dots += '❌ '; }
-    hb.innerHTML = `<div style="color:var(--danger); margin-bottom:5px;">Count what is left!</div><div class="hint-dots" style="font-size: 1.2rem;">${dots}</div><div style="margin-top:10px;">You had ${d.n1}, and crossed out ${d.n2}.</div>`;
-  } else if (d.op === 'mul') {
-    let dots = '';
-    for(let r=0; r<d.n1; r++) { for(let c=0; c<d.n2; c++) { dots += '🟣 '; } dots += '<br>'; }
-    hb.innerHTML = `<div style="color:var(--purple); margin-bottom:5px;">${d.n1} groups of ${d.n2}:</div><div class="hint-dots" style="line-height:1.5;">${dots}</div><div style="margin-top:5px; font-size:1rem;">Count the dots to find the total!</div>`;
-  }
-  hb.classList.add('active');
-}
-
-function generateNumberOptions(correct) {
-  let opts = [correct];
-  while (opts.length < 4) {
-    let offset = Math.floor(Math.random() * 5) + 1;
-    let wrong = Math.random() > 0.5 ? correct + offset : correct - offset;
-    if (wrong >= 0 && !opts.includes(wrong)) opts.push(wrong);
-  }
-  return opts;
+  document.getElementById('problemArea').innerHTML = `
+    <div class="hint-text">${hint}</div>
+    <div>${item.q}</div>
+  `;
+  
+  renderOptions([...item.opts]);
 }
 
 function renderOptions(options) {
   options.sort(() => Math.random() - 0.5);
   let optsEl = document.getElementById('optionsContainer');
   optsEl.innerHTML = '';
-  if(currentCategory === 'comp') optsEl.style.gridTemplateColumns = '1fr 1fr 1fr';
-  else optsEl.style.gridTemplateColumns = '1fr 1fr';
 
   options.forEach(opt => {
     let btn = document.createElement('button');
@@ -592,7 +532,7 @@ function renderOptions(options) {
 
 function checkAnswer(selected, btn) {
   document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
-  if (selected == correctAnswer) {
+  if (selected === correctAnswer) {
      if(typeof playSound === 'function') playSound('correct');
     btn.classList.add('correct');
     score++;
@@ -612,13 +552,8 @@ function checkAnswer(selected, btn) {
   } else {
      if(typeof playSound === 'function') playSound('wrong');
     btn.classList.add('wrong');
-    document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText == correctAnswer) b.classList.add('correct'); });
-    
-    if(currentMode === 'relaxed' && ['add', 'sub', 'mul'].includes(currentCategory)) {
-        showHint(); setTimeout(generateQuestion, 4000); 
-    } else {
-        setTimeout(generateQuestion, 1200);
-    }
+    document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText === correctAnswer) b.classList.add('correct'); });
+    setTimeout(generateQuestion, 1500);
   }
 }
 
@@ -640,7 +575,7 @@ function endGame() {
   localStorage.setItem('vedhTotalXP', currentXP + score);
   let msg = "Keep Practicing! 👍";
   if (score > 10) msg = "Great Job! 🌟";
-  if (score > 20) msg = "Maths Superstar! 🏆";
+  if (score > 20) msg = "Word Superstar! 🏆";
   document.getElementById('endMessage').innerText = msg;
   switchScreen('endScreen');
 }
