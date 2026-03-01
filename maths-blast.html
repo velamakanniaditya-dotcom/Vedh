@@ -113,11 +113,22 @@ select.q-input { appearance: none; cursor: pointer; }
 .correction { font-size: 1rem; color: #10b981; display: none; font-weight: 800; }
 .q-row.wrong .correction { display: block; animation: popIn 0.3s; }
 
+/* ══════════════════════════════════════════
+   STICKER BOOK STYLES
+══════════════════════════════════════════ */
+.sticker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+.sticker-slot { background: #f1f5f9; border: 3px dashed #cbd5e1; border-radius: 16px; height: 100px; display: flex; justify-content: center; align-items: center; font-size: 3.5rem; position: relative; }
+.sticker-slot.locked { filter: grayscale(100%); opacity: 0.3; }
+.sticker-slot.locked::after { content: "?"; position: absolute; font-family: 'Fredoka One'; font-size: 2rem; color: var(--dark); }
+.sticker-alert { background: #fef08a; border: 4px solid #ca8a04; border-radius: 16px; padding: 15px; margin-top: 20px; display: none; animation: popIn 0.5s ease; }
+.sticker-alert.show { display: block; }
+
 @media(max-width: 500px) {
   .cat-grid { grid-template-columns: 1fr; }
   .opt-btn { font-size: 1.5rem; }
   .q-row { font-size: 1.2rem; }
   .q-input { font-size: 1.2rem; }
+  .sticker-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
@@ -132,27 +143,27 @@ select.q-input { appearance: none; cursor: pointer; }
 
 <div id="categoryScreen" class="screen active">
   <div class="worksheet-card">
+    <button class="btn-primary" style="background:var(--warning); border-color:#d97706; box-shadow: 0 6px 0 #d97706; margin-bottom: 20px; font-size: 1.3rem;" onclick="openStickerBook()">🏆 View My Sticker Book</button>
     <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">What are we learning today?</h2>
     <div class="cat-grid">
-      <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('add')">
-        <span class="cat-icon">➕</span> Addition
-      </button>
-      <button class="cat-btn" style="border-color: var(--danger); color: var(--danger);" onclick="selectCategory('sub')">
-        <span class="cat-icon">➖</span> Subtraction
-      </button>
-      <button class="cat-btn" style="border-color: var(--secondary); color: var(--secondary);" onclick="selectCategory('mul')">
-        <span class="cat-icon">✖️</span> Multiplication
-      </button>
-      <button class="cat-btn" style="border-color: var(--purple); color: var(--purple);" onclick="selectCategory('div')">
-        <span class="cat-icon">➗</span> Division
-      </button>
-      <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('comp')">
-        <span class="cat-icon">⚖️</span> Greater / Less
-      </button>
-      <button class="cat-btn" style="border-color: #ec4899; color: #ec4899;" onclick="selectCategory('shape')">
-        <span class="cat-icon">🔺</span> Shapes
-      </button>
+      <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('add')"><span class="cat-icon">➕</span> Addition</button>
+      <button class="cat-btn" style="border-color: var(--danger); color: var(--danger);" onclick="selectCategory('sub')"><span class="cat-icon">➖</span> Subtraction</button>
+      <button class="cat-btn" style="border-color: var(--secondary); color: var(--secondary);" onclick="selectCategory('mul')"><span class="cat-icon">✖️</span> Multiplication</button>
+      <button class="cat-btn" style="border-color: var(--purple); color: var(--purple);" onclick="selectCategory('div')"><span class="cat-icon">➗</span> Division</button>
+      <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('comp')"><span class="cat-icon">⚖️</span> Greater / Less</button>
+      <button class="cat-btn" style="border-color: #ec4899; color: #ec4899;" onclick="selectCategory('shape')"><span class="cat-icon">🔺</span> Shapes</button>
     </div>
+  </div>
+</div>
+
+<div id="stickerScreen" class="screen">
+  <div class="worksheet-card">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('categoryScreen')">🔙 Back to Math</button>
+    <h2 style="font-family:'Fredoka One'; font-size: 2.2rem; color: var(--warning);">Maths Sticker Book</h2>
+    <p style="font-weight: 800; color: #64748b;">Get 8/10 on Tests or score 10+ in Practice to unlock stickers!</p>
+    
+    <div class="sticker-grid" id="stickerContainer">
+      </div>
   </div>
 </div>
 
@@ -224,7 +235,13 @@ select.q-input { appearance: none; cursor: pointer; }
     <div id="testResultArea" style="display:none; margin-top:30px;">
       <h2 style="font-family:'Fredoka One'; font-size: 2.5rem;">Score: <span id="testScoreDisplay" style="color:var(--primary);">0/10</span></h2>
       <p id="testResultMsg" style="font-weight: 800; font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Review your answers above!</p>
-      <button class="btn-primary" onclick="switchScreen('categoryScreen')">Take Another Test</button>
+      
+      <div id="testStickerAlert" class="sticker-alert">
+        <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW STICKER UNLOCKED!</h3>
+        <div id="testUnlockedEmoji" style="font-size: 4rem;"></div>
+      </div>
+
+      <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('categoryScreen')">Back to Menu</button>
     </div>
   </div>
 </div>
@@ -234,14 +251,57 @@ select.q-input { appearance: none; cursor: pointer; }
     <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Time's Up!</h2>
     <div style="font-size: 5rem; margin: 10px 0; color: var(--secondary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
     <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great effort!</div>
-    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Choose Another Topic 📚</button>
+    
+    <div id="gameStickerAlert" class="sticker-alert">
+      <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW STICKER UNLOCKED!</h3>
+      <div id="gameUnlockedEmoji" style="font-size: 4rem;"></div>
+    </div>
+
+    <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('categoryScreen')">Choose Another Topic 📚</button>
   </div>
 </div>
 
 <script src="sounds.js"></script>
 
 <script>
-// Game State
+// --- STICKER BOOK LOGIC ---
+const MATH_STICKERS = ['🪐', '🚀', '🛸', '👾', '🤖', '🦸‍♂️', '🦖', '🏎️', '🚒', '🚁', '⚡', '🏆'];
+
+function getUnlockedStickers() {
+  return parseInt(localStorage.getItem('vedhMathsStickers')) || 0;
+}
+
+function unlockSticker() {
+  let currentUnlocked = getUnlockedStickers();
+  if (currentUnlocked < MATH_STICKERS.length) {
+    localStorage.setItem('vedhMathsStickers', currentUnlocked + 1);
+    if(typeof playSound === 'function') playSound('win');
+    return MATH_STICKERS[currentUnlocked]; // Return the emoji they just got
+  }
+  return null; // Already have all stickers
+}
+
+function openStickerBook() {
+  const container = document.getElementById('stickerContainer');
+  container.innerHTML = '';
+  let unlockedCount = getUnlockedStickers();
+
+  MATH_STICKERS.forEach((emoji, index) => {
+    let slot = document.createElement('div');
+    slot.className = 'sticker-slot';
+    if (index < unlockedCount) {
+      slot.innerText = emoji; // Unlocked
+    } else {
+      slot.classList.add('locked');
+      slot.innerText = emoji; // Hidden by CSS grayscale/opacity
+    }
+    container.appendChild(slot);
+  });
+  switchScreen('stickerScreen');
+}
+
+
+// --- GAME STATE ---
 let currentCategory = '';
 let currentMode = '';
 let score = 0;
@@ -249,8 +309,8 @@ let timeLeft = 0;
 let timeTotal = 0;
 let timerInterval;
 let correctAnswer = null;
-let currentQuestionData = {}; // Stores data for the Hint Board
-let testQuestionsData = []; // Store test answers
+let currentQuestionData = {}; 
+let testQuestionsData = []; 
 
 const SECONDS_BLAST_START = 20; 
 const BONUS_TIME = 5; 
@@ -267,7 +327,8 @@ const screens = {
   modeScreen: document.getElementById('modeScreen'),
   gameScreen: document.getElementById('gameScreen'),
   testScreen: document.getElementById('testScreen'),
-  endScreen: document.getElementById('endScreen')
+  endScreen: document.getElementById('endScreen'),
+  stickerScreen: document.getElementById('stickerScreen')
 };
 
 function switchScreen(screenName) {
@@ -285,7 +346,6 @@ function startGame(mode) {
   currentMode = mode;
   score = 0;
   
-  // RESTORED: Test Mode trigger
   if (mode === 'test') {
     generateTest();
     switchScreen('testScreen');
@@ -296,7 +356,7 @@ function startGame(mode) {
   
   if (mode === 'relaxed') {
     document.getElementById('modeDisplay').innerHTML = '🌟 Practice';
-    document.getElementById('timerBarWrap').style.display = 'none'; // Hide timer in practice
+    document.getElementById('timerBarWrap').style.display = 'none'; 
   } else {
     document.getElementById('modeDisplay').innerHTML = '🚀 Blast';
     document.getElementById('timerBarWrap').style.display = 'block';
@@ -306,7 +366,6 @@ function startGame(mode) {
     timerInterval = setInterval(countdown, 1000);
   }
 
-  // Show Hint button only for Add, Sub, Mul in Practice mode
   if(mode === 'relaxed' && ['add', 'sub', 'mul'].includes(currentCategory)) {
     document.getElementById('hintBtn').classList.add('show');
   } else {
@@ -319,12 +378,13 @@ function startGame(mode) {
 }
 
 // ══════════════════════════════════════════════
-// RESTORED: TEST MODE LOGIC
+// TEST MODE LOGIC
 // ══════════════════════════════════════════════
 function generateTest() {
   testQuestionsData = [];
   document.getElementById('submitTestBtn').style.display = 'block';
   document.getElementById('testResultArea').style.display = 'none';
+  document.getElementById('testStickerAlert').classList.remove('show'); // Hide sticker alert
   
   let titleMap = { 'add': 'Addition', 'sub': 'Subtraction', 'mul': 'Multiplication', 'div': 'Division', 'comp': 'Greater/Less', 'shape': 'Shapes' };
   document.getElementById('testTitle').innerText = titleMap[currentCategory] + " Test";
@@ -333,9 +393,7 @@ function generateTest() {
   container.innerHTML = '';
 
   for (let i = 0; i < 10; i++) {
-    let questionHTML = '';
-    let inputHTML = '';
-    let ans = '';
+    let questionHTML = ''; let inputHTML = ''; let ans = '';
 
     if (currentCategory === 'add' || currentCategory === 'sub') {
       let n1 = Math.floor(Math.random() * 20) + 1;
@@ -356,8 +414,7 @@ function generateTest() {
     } else if (currentCategory === 'div') {
       let a = Math.floor(Math.random() * 10) + 1;
       let n2 = Math.floor(Math.random() * 10) + 1;
-      let n1 = a * n2; 
-      ans = a;
+      let n1 = a * n2; ans = a;
       questionHTML = `${n1} <span style="color:var(--purple);">÷</span> ${n2} <span style="color:#94a3b8;">=</span>`;
       inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
 
@@ -367,36 +424,19 @@ function generateTest() {
       if(Math.random() > 0.8) n2 = n1; 
       if (n1 > n2) ans = '>'; else if (n1 < n2) ans = '<'; else ans = '=';
       questionHTML = `${n1} <span style="color:#d97706;">[ ? ]</span> ${n2}`;
-      
-      inputHTML = `
-        <select class="q-input" id="t-input-${i}">
-          <option value="">?</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option>
-        </select>`;
+      inputHTML = `<select class="q-input" id="t-input-${i}"><option value="">?</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option></select>`;
 
     } else if (currentCategory === 'shape') {
       let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
       ans = shape.n;
       questionHTML = `<span style="font-size:3rem; line-height:1;">${shape.e}</span>`;
-      
       let opts = SHAPES.map(s => `<option value="${s.n}">${s.n}</option>`).join('');
       inputHTML = `<select class="q-input" id="t-input-${i}"><option value="">?</option>${opts}</select>`;
     }
 
     testQuestionsData.push(ans);
-
-    let row = document.createElement('div');
-    row.className = 'q-row';
-    row.id = `qrow-${i}`;
-    row.innerHTML = `
-      <div class="q-math">
-        <span style="font-size:1.2rem; color:#94a3b8; margin-right:10px;">${i + 1}.</span>
-        ${questionHTML}
-      </div>
-      <div class="q-input-wrap">
-        ${inputHTML}
-        <span class="correction" id="corr-${i}">✓ ${ans}</span>
-      </div>
-    `;
+    let row = document.createElement('div'); row.className = 'q-row'; row.id = `qrow-${i}`;
+    row.innerHTML = `<div class="q-math"><span style="font-size:1.2rem; color:#94a3b8; margin-right:10px;">${i + 1}.</span>${questionHTML}</div><div class="q-input-wrap">${inputHTML}<span class="correction" id="corr-${i}">✓ ${ans}</span></div>`;
     container.appendChild(row);
   }
 }
@@ -409,15 +449,9 @@ function gradeTest() {
     let rowEl = document.getElementById(`qrow-${i}`);
     let userVal = inputEl.value.toString().trim();
     let correctVal = ans.toString().trim();
-
     inputEl.disabled = true;
-
-    if (userVal === correctVal) {
-      rowEl.classList.add('correct');
-      testScore++;
-    } else {
-      rowEl.classList.add('wrong');
-    }
+    if (userVal === correctVal) { rowEl.classList.add('correct'); testScore++; } 
+    else { rowEl.classList.add('wrong'); }
   });
 
   document.getElementById('submitTestBtn').style.display = 'none';
@@ -435,9 +469,17 @@ function gradeTest() {
     document.getElementById('testResultMsg').innerText = "Keep practicing! Review your answers. 💪";
   }
 
+  // STICKER CHECK (Score 8 or more unlocks a sticker!)
+  if (testScore >= 8) {
+    let newSticker = unlockSticker();
+    if (newSticker) {
+      document.getElementById('testUnlockedEmoji').innerText = newSticker;
+      document.getElementById('testStickerAlert').classList.add('show');
+    }
+  }
+
   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
   localStorage.setItem('vedhTotalXP', currentXP + (testScore * 2)); 
-
   window.scrollTo(0, 0);
 }
 
@@ -470,39 +512,23 @@ function generateQuestion() {
     let op = currentCategory === 'add' ? '+' : '-';
     if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1]; 
     correctAnswer = currentCategory === 'add' ? n1 + n2 : n1 - n2;
-    
     currentQuestionData = { n1, n2, op, ans: correctAnswer };
-
-    document.getElementById('problemArea').innerHTML = `
-      <div class="vertical-math">
-        <span class="top-num">${n1}</span>
-        <div class="bottom-row"><span class="operator">${op}</span> <span>${n2}</span></div>
-      </div>`;
+    document.getElementById('problemArea').innerHTML = `<div class="vertical-math"><span class="top-num">${n1}</span><div class="bottom-row"><span class="operator">${op}</span> <span>${n2}</span></div></div>`;
     options = generateNumberOptions(correctAnswer);
-
   } else if (currentCategory === 'mul') {
     let mMax = score < 5 ? 5 : 10; 
     let n1 = Math.floor(Math.random() * mMax) + 1;
     let n2 = Math.floor(Math.random() * 5) + 1; 
     correctAnswer = n1 * n2;
-    
     currentQuestionData = { n1, n2, op: 'mul', ans: correctAnswer };
-
-    document.getElementById('problemArea').innerHTML = `
-      <div class="vertical-math">
-        <span class="top-num">${n1}</span>
-        <div class="bottom-row"><span class="operator">×</span> <span>${n2}</span></div>
-      </div>`;
+    document.getElementById('problemArea').innerHTML = `<div class="vertical-math"><span class="top-num">${n1}</span><div class="bottom-row"><span class="operator">×</span> <span>${n2}</span></div></div>`;
     options = generateNumberOptions(correctAnswer);
-
   } else if (currentCategory === 'div') {
     let ans = Math.floor(Math.random() * 10) + 1;
     let n2 = Math.floor(Math.random() * 10) + 1;
-    let n1 = ans * n2; 
-    correctAnswer = ans;
+    let n1 = ans * n2; correctAnswer = ans;
     document.getElementById('problemArea').innerHTML = `<div class="horizontal-math">${n1} <span style="color:var(--purple);">÷</span> ${n2}</div>`;
     options = generateNumberOptions(correctAnswer);
-
   } else if (currentCategory === 'comp') {
     let n1 = Math.floor(Math.random() * maxNum) + 1;
     let n2 = Math.floor(Math.random() * maxNum) + 1;
@@ -510,7 +536,6 @@ function generateQuestion() {
     document.getElementById('problemArea').innerHTML = `<div class="horizontal-math">${n1} <span style="color:#d97706;">[ ? ]</span> ${n2}</div>`;
     if (n1 > n2) correctAnswer = '>'; else if (n1 < n2) correctAnswer = '<'; else correctAnswer = '=';
     options = ['>', '<', '='];
-
   } else if (currentCategory === 'shape') {
     let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
     correctAnswer = shape.n;
@@ -528,40 +553,19 @@ function showHint() {
   const hb = document.getElementById('hintBoard');
   const d = currentQuestionData;
   hb.innerHTML = '';
-  
   if(d.op === '+') {
     let tens1 = Math.floor(d.n1 / 10) * 10; let ones1 = d.n1 % 10;
     let tens2 = Math.floor(d.n2 / 10) * 10; let ones2 = d.n2 % 10;
-    hb.innerHTML = `
-      <div style="color:var(--secondary); margin-bottom:5px;">Let's break it down!</div>
-      <div class="hint-step">1. Add the Tens: <span style="color:#0ea5e9;">${tens1} + ${tens2} = ${tens1 + tens2}</span></div>
-      <div class="hint-step">2. Add the Ones: <span style="color:#f59e0b;">${ones1} + ${ones2} = ${ones1 + ones2}</span></div>
-      <div class="hint-step">3. Put them together: <span style="color:#10b981;">${tens1 + tens2} + ${ones1 + ones2} = ${d.ans}</span></div>
-    `;
+    hb.innerHTML = `<div style="color:var(--secondary); margin-bottom:5px;">Let's break it down!</div><div class="hint-step">1. Add the Tens: <span style="color:#0ea5e9;">${tens1} + ${tens2} = ${tens1 + tens2}</span></div><div class="hint-step">2. Add the Ones: <span style="color:#f59e0b;">${ones1} + ${ones2} = ${ones1 + ones2}</span></div><div class="hint-step">3. Put them together: <span style="color:#10b981;">${tens1 + tens2} + ${ones1 + ones2} = ${d.ans}</span></div>`;
   } else if (d.op === '-') {
     let dots = '';
-    for(let i=0; i<d.n1; i++) {
-      if(i < d.n1 - d.n2) dots += '🔵 '; 
-      else dots += '❌ '; 
-    }
-    hb.innerHTML = `
-      <div style="color:var(--danger); margin-bottom:5px;">Count what is left!</div>
-      <div class="hint-dots" style="font-size: 1.2rem;">${dots}</div>
-      <div style="margin-top:10px;">You had ${d.n1}, and crossed out ${d.n2}.</div>
-    `;
+    for(let i=0; i<d.n1; i++) { if(i < d.n1 - d.n2) dots += '🔵 '; else dots += '❌ '; }
+    hb.innerHTML = `<div style="color:var(--danger); margin-bottom:5px;">Count what is left!</div><div class="hint-dots" style="font-size: 1.2rem;">${dots}</div><div style="margin-top:10px;">You had ${d.n1}, and crossed out ${d.n2}.</div>`;
   } else if (d.op === 'mul') {
     let dots = '';
-    for(let r=0; r<d.n1; r++) {
-      for(let c=0; c<d.n2; c++) { dots += '🟣 '; }
-      dots += '<br>';
-    }
-    hb.innerHTML = `
-      <div style="color:var(--purple); margin-bottom:5px;">${d.n1} groups of ${d.n2}:</div>
-      <div class="hint-dots" style="line-height:1.5;">${dots}</div>
-      <div style="margin-top:5px; font-size:1rem;">Count the dots to find the total!</div>
-    `;
+    for(let r=0; r<d.n1; r++) { for(let c=0; c<d.n2; c++) { dots += '🟣 '; } dots += '<br>'; }
+    hb.innerHTML = `<div style="color:var(--purple); margin-bottom:5px;">${d.n1} groups of ${d.n2}:</div><div class="hint-dots" style="line-height:1.5;">${dots}</div><div style="margin-top:5px; font-size:1rem;">Count the dots to find the total!</div>`;
   }
-  
   hb.classList.add('active');
 }
 
@@ -584,8 +588,7 @@ function renderOptions(options) {
 
   options.forEach(opt => {
     let btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.innerText = opt;
+    btn.className = 'opt-btn'; btn.innerText = opt;
     btn.onclick = () => checkAnswer(opt, btn);
     optsEl.appendChild(btn);
   });
@@ -600,30 +603,23 @@ function checkAnswer(selected, btn) {
     document.getElementById('scoreDisplay').innerText = score;
     
     let star = document.getElementById('fStar');
-    star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 20 + 'px';
-    star.style.top = btn.offsetTop - 30 + 'px';
+    star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 20 + 'px'; star.style.top = btn.offsetTop - 30 + 'px';
     star.classList.remove('pop'); void star.offsetWidth; star.classList.add('pop');
     
     if (currentMode === 'blast') {
-      timeLeft += BONUS_TIME;
-      if(timeLeft > timeTotal) timeTotal = timeLeft; 
-      
+      timeLeft += BONUS_TIME; if(timeLeft > timeTotal) timeTotal = timeLeft; 
       let plus = document.getElementById('timePlus');
       plus.classList.remove('show'); void plus.offsetWidth; plus.classList.add('show');
-      
       updateTimerUI();
     }
     setTimeout(generateQuestion, 800);
   } else {
      if(typeof playSound === 'function') playSound('wrong');
     btn.classList.add('wrong');
-    document.querySelectorAll('.opt-btn').forEach(b => {
-      if (b.innerText == correctAnswer) b.classList.add('correct');
-    });
+    document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText == correctAnswer) b.classList.add('correct'); });
     
     if(currentMode === 'relaxed' && ['add', 'sub', 'mul'].includes(currentCategory)) {
-        showHint();
-        setTimeout(generateQuestion, 4000); 
+        showHint(); setTimeout(generateQuestion, 4000); 
     } else {
         setTimeout(generateQuestion, 1200);
     }
@@ -634,6 +630,17 @@ function endGame() {
   if(typeof playSound === 'function') playSound('win');
   clearInterval(timerInterval);
   document.getElementById('finalScore').innerText = score;
+  document.getElementById('gameStickerAlert').classList.remove('show'); // Hide sticker alert
+  
+  // STICKER CHECK (Score 10 or more unlocks a sticker!)
+  if (score >= 10) {
+    let newSticker = unlockSticker();
+    if (newSticker) {
+      document.getElementById('gameUnlockedEmoji').innerText = newSticker;
+      document.getElementById('gameStickerAlert').classList.add('show');
+    }
+  }
+
   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
   localStorage.setItem('vedhTotalXP', currentXP + score);
   let msg = "Keep Practicing! 👍";
