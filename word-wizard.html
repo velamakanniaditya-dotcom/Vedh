@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Word Wizard 🪄 - Super Worksheets</title>
+<title>Word Wizard 🧙‍♂️ - Super Worksheets</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
-   WORKSHEET THEME - LITERACY
+   WORKSHEET THEME - ENGLISH/WORDS
 ══════════════════════════════════════════ */
 :root {
-  --primary: #a855f7; /* Magic Purple */
-  --secondary: #f43f5e; /* Spell Pink */
+  --primary: #a855f7; /* Purple */
+  --secondary: #ec4899; /* Pink */
   --danger: #ef4444; 
   --warning: #fbbf24; 
   --blue: #3b82f6;
@@ -25,9 +25,9 @@
 body {
   font-family: 'Nunito', sans-serif;
   background-color: #faf5ff;
-  background-image: linear-gradient(var(--grid) 2px, transparent 2px), linear-gradient(90deg, transparent 40px, #fca5a5 40px, #fca5a5 43px, transparent 43px);
-  background-size: 100% 40px, 100% 100%; background-position: 0 38px, 0 0;
-  color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 30px 30px; color: var(--dark);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
 }
 
 .home-btn {
@@ -38,50 +38,54 @@ body {
 .home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
 
 header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
-h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
-.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #64748b; margin-top: 5px; }
 
 .screen { display: none; width: 100%; max-width: 600px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .screen.active { display: block; }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(30, 41, 59, 0.1); text-align: center; position: relative; }
+.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(51, 65, 85, 0.1); text-align: center; position: relative; }
+
+/* MINI BADGE BOARD */
+.mini-badge-board { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 16px; padding: 15px; }
+.badge-board-title { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; color: #94a3b8; margin-bottom: 5px; }
+.mini-badge { font-size: 2.2rem; transition: all 0.3s ease; }
+.mini-badge.unlocked { filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15)); animation: popIn 0.3s ease; }
+.mini-badge.locked { filter: grayscale(100%) contrast(0.2); opacity: 0.3; }
 
 /* Category Grid */
-.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
 .cat-btn {
   background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 15px 10px;
   cursor: pointer; font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--dark);
   box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; display: flex; flex-direction: column; align-items: center; gap: 5px;
 }
 .cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
-.cat-icon { font-size: 2.5rem; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
+.cat-icon { font-size: 2.5rem; }
 
 /* Modes */
 .mode-btn { width: 100%; display: flex; align-items: center; gap: 15px; background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); }
 .mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
 
 /* Game Area */
-.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
-.timer-container { width: 100%; height: 20px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 25px; position: relative; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+
+.timer-container { width: 100%; height: 20px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 20px; position: relative; }
 .timer-fill { height: 100%; background: var(--primary); width: 100%; transition: width 0.3s linear, background-color 0.3s; }
 .time-plus { position: absolute; right: 10px; top: -5px; color: var(--primary); font-weight: 900; font-size: 1.2rem; opacity: 0; }
 .time-plus.show { animation: floatUpFade 1s ease-out forwards; }
-@keyframes floatUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
 
 /* Dynamic Problem Layout */
-.flashcard { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px; min-height: 180px; }
-.card-emoji { font-size: 6rem; line-height: 1; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.15)); }
-.word-display { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--dark); margin-top: 10px; letter-spacing: 2px; }
-.sentence-display { font-size: 1.6rem; font-weight: 900; color: var(--dark); line-height: 1.4; }
-.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--secondary); margin-bottom: 10px; text-transform: uppercase; }
+.word-problem { font-family: 'Fredoka One', cursive; font-size: 2.5rem; line-height: 1.3; margin-bottom: 20px; color: var(--dark); }
+.hint-text { font-family: 'Nunito', sans-serif; font-size: 1.2rem; color: var(--secondary); font-weight: 800; margin-bottom: 10px; }
 
 /* Options Grid */
 .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.6rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 10px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.6rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 5px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
 .opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
-.opt-btn.correct { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 6px 0 #7e22ce; }
-.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #b91c1c; }
+.opt-btn.correct { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 6px 0 #be185d; }
+.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #e11d48; }
 
 .btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #7e22ce; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #7e22ce; }
 .btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #7e22ce; }
@@ -94,24 +98,26 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--primar
    TEST SHEET STYLES
 ══════════════════════════════════════════ */
 .test-header { display: flex; justify-content: space-between; font-family: 'Fredoka One'; font-size: 1.3rem; border-bottom: 3px dashed #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
-.q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.4rem; font-family: 'Nunito', sans-serif; font-weight: 900; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
-.q-content { display: flex; align-items: center; gap: 10px; width: 60%; line-height: 1.2; }
-.q-input-wrap { position: relative; width: 35%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.2rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; text-transform: uppercase; }
+.q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.3rem; font-family: 'Fredoka One'; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
+.q-word { display: flex; align-items: center; gap: 10px; width: 65%; line-height: 1.2; }
+.q-input-wrap { position: relative; width: 30%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; cursor: pointer; }
 .q-input:focus { border-color: var(--primary); }
-select.q-input { appearance: none; cursor: pointer; }
 
-/* Grading Styles */
 .q-row.correct .q-input { background: #d1fae5; border-color: #10b981; color: #10b981; }
 .q-row.wrong .q-input { background: #fee2e2; border-color: var(--danger); color: var(--danger); }
-.correction { font-size: 1rem; color: #10b981; display: none; font-weight: 800; text-transform: uppercase; }
+.correction { font-size: 1rem; color: #10b981; display: none; font-weight: 800; }
 .q-row.wrong .correction { display: block; animation: popIn 0.3s; }
+
+.sticker-alert { background: #fef08a; border: 4px solid #ca8a04; border-radius: 16px; padding: 15px; margin-top: 20px; display: none; animation: popIn 0.5s ease; }
+.sticker-alert.show { display: block; }
 
 @media(max-width: 500px) {
   .cat-grid { grid-template-columns: 1fr; }
-  .opt-btn { font-size: 1.3rem; padding: 12px 5px; }
-  .q-row { font-size: 1.1rem; }
-  .q-input { font-size: 1rem; }
+  .opt-btn { font-size: 1.2rem; }
+  .q-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .q-word { width: 100%; }
+  .q-input-wrap { width: 100%; }
 }
 </style>
 </head>
@@ -121,27 +127,29 @@ select.q-input { appearance: none; cursor: pointer; }
 
 <header>
   <h1>Word Wizard</h1>
-  <div class="subtitle">Spelling & Grammar 🪄</div>
+  <div class="subtitle">Spelling & Grammar ✍️</div>
 </header>
 
 <div id="categoryScreen" class="screen active">
   <div class="worksheet-card">
+    
+    <div class="mini-badge-board" id="miniBadgeBoard">
+      <div class="badge-board-title">Collect all 12 Badges! 🏆</div>
+      </div>
+
     <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">What are we learning today?</h2>
     <div class="cat-grid">
-      <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('spell')">
-        <span class="cat-icon">🔤</span> Spell It!
+      <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('spelling')">
+        <span class="cat-icon">📝</span> Spelling
       </button>
       <button class="cat-btn" style="border-color: var(--secondary); color: var(--secondary);" onclick="selectCategory('phonics')">
-        <span class="cat-icon">🧩</span> Phonics (Missing Letters)
-      </button>
-      <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('sentence')">
-        <span class="cat-icon">✍️</span> Fill the Sentence
+        <span class="cat-icon">🗣️</span> Phonics
       </button>
       <button class="cat-btn" style="border-color: var(--blue); color: var(--blue);" onclick="selectCategory('grammar')">
-        <span class="cat-icon">🏃🏽‍♂️</span> Action or Thing?
+        <span class="cat-icon">🧩</span> Grammar
       </button>
-      <button class="cat-btn" style="border-color: #ec4899; color: #ec4899; grid-column: 1 / -1;" onclick="selectCategory('jumble')">
-        <span class="cat-icon">🌪️</span> Unjumble the Word
+      <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('sentences')">
+        <span class="cat-icon">✍️</span> Sentences
       </button>
     </div>
   </div>
@@ -155,12 +163,12 @@ select.q-input { appearance: none; cursor: pointer; }
     <button class="mode-btn" style="border-color: var(--primary); box-shadow: 0 6px 0 var(--primary);" onclick="startGame('relaxed')">
       <div class="mode-icon">🌟</div>
       <div>
-        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Relaxed Mode</h3>
-        <p style="font-weight: 600; color: #64748b;">Timer resets every question!</p>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Practice Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">No timer! Take your time to read.</p>
       </div>
     </button>
 
-    <button class="mode-btn" style="border-color: var(--secondary); box-shadow: 0 6px 0 var(--secondary);" onclick="startGame('blast')">
+    <button class="mode-btn" style="border-color: var(--warning); box-shadow: 0 6px 0 var(--warning);" onclick="startGame('blast')">
       <div class="mode-icon">🚀</div>
       <div>
         <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Blast Mode</h3>
@@ -168,7 +176,7 @@ select.q-input { appearance: none; cursor: pointer; }
       </div>
     </button>
 
-    <button class="mode-btn" style="border-color: #3b82f6; box-shadow: 0 6px 0 #3b82f6;" onclick="startGame('test')">
+    <button class="mode-btn" style="border-color: var(--blue); box-shadow: 0 6px 0 var(--blue);" onclick="startGame('test')">
       <div class="mode-icon">📝</div>
       <div>
         <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Test Mode</h3>
@@ -181,21 +189,18 @@ select.q-input { appearance: none; cursor: pointer; }
 <div id="gameScreen" class="screen">
   <div class="worksheet-card" style="position:relative;">
     <div class="feedback-star" id="fStar">⭐</div>
-    
     <div class="top-bar">
       <div>Score: <span id="scoreDisplay">0</span></div>
-      <div id="modeDisplay" style="color: var(--primary);">🌟 Relaxed</div>
+      <div id="modeDisplay" style="color: var(--warning);">🌟 Practice</div>
     </div>
-
-    <div class="timer-container">
+    
+    <div class="timer-container" id="timerBarWrap">
       <div class="timer-fill" id="timerFill"></div>
       <div class="time-plus" id="timePlus">+5s</div>
     </div>
 
-    <div id="problemArea" class="flashcard"></div>
-
-    <div class="options-grid" id="optionsContainer">
-      </div>
+    <div id="problemArea" class="word-problem"></div>
+    <div class="options-grid" id="optionsContainer"></div>
   </div>
 </div>
 
@@ -204,7 +209,7 @@ select.q-input { appearance: none; cursor: pointer; }
     <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('modeScreen')">🔙 Quit Test</button>
     
     <div class="test-header">
-      <span id="testTitle">Word Wizard Test</span>
+      <span id="testTitle">English Test</span>
       <span>Name: Vedh</span>
     </div>
     
@@ -215,7 +220,13 @@ select.q-input { appearance: none; cursor: pointer; }
     <div id="testResultArea" style="display:none; margin-top:30px;">
       <h2 style="font-family:'Fredoka One'; font-size: 2.5rem;">Score: <span id="testScoreDisplay" style="color:var(--primary);">0/10</span></h2>
       <p id="testResultMsg" style="font-weight: 800; font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Review your answers above!</p>
-      <button class="btn-primary" onclick="switchScreen('categoryScreen')">Take Another Test</button>
+      
+      <div id="testStickerAlert" class="sticker-alert">
+        <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW BADGE UNLOCKED!</h3>
+        <div id="testUnlockedEmoji" style="font-size: 4rem;"></div>
+      </div>
+
+      <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('categoryScreen')">Back to Menu</button>
     </div>
   </div>
 </div>
@@ -225,76 +236,94 @@ select.q-input { appearance: none; cursor: pointer; }
     <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Time's Up!</h2>
     <div style="font-size: 5rem; margin: 10px 0; color: var(--secondary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
     <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great effort!</div>
-    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Choose Another Skill 📚</button>
+    
+    <div id="gameStickerAlert" class="sticker-alert">
+      <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW BADGE UNLOCKED!</h3>
+      <div id="gameUnlockedEmoji" style="font-size: 4rem;"></div>
+    </div>
+
+    <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('categoryScreen')">Back to Menu 📚</button>
   </div>
 </div>
 
 <script src="sounds.js"></script>
 
 <script>
-// ══════════════════════════════════════════════
-// MASSIVE DICTIONARY UPGRADE
-// ══════════════════════════════════════════════
-const DICT = [
-  { w: "APPLE", e: "🍎" }, { w: "CAT", e: "🐱" }, { w: "DOG", e: "🐶" }, { w: "BIRD", e: "🐦" },
-  { w: "FISH", e: "🐟" }, { w: "SUN", e: "☀️" }, { w: "MOON", e: "🌙" }, { w: "STAR", e: "⭐" },
-  { w: "TREE", e: "🌳" }, { w: "TRAIN", e: "🚂" }, { w: "HOUSE", e: "🏠" }, { w: "BOOK", e: "📖" },
-  { w: "FROG", e: "🐸" }, { w: "LION", e: "🦁" }, { w: "CLOCK", e: "⏰" }, { w: "FIRE", e: "🔥" },
-  { w: "TIGER", e: "🐯" }, { w: "MOUSE", e: "🐭" }, { w: "SNAKE", e: "🐍" }, { w: "BEAR", e: "🐻" },
-  { w: "PANDA", e: "🐼" }, { w: "ZEBRA", e: "🦓" }, { w: "SHARK", e: "🦈" }, { w: "WHALE", e: "🐋" },
-  { w: "SNAIL", e: "🐌" }, { w: "BUTTERFLY", e: "🦋" }, { w: "SPIDER", e: "🕷️" }, { w: "ROBOT", e: "🤖" },
-  { w: "ROCKET", e: "🚀" }, { w: "GUITAR", e: "🎸" }, { w: "CAMERA", e: "📷" }, { w: "PHONE", e: "📱" },
-  { w: "CHAIR", e: "🪑" }, { w: "BED", e: "🛏️" }, { w: "CAR", e: "🚗" }, { w: "SHIRT", e: "👕" }, 
-  { w: "SHOES", e: "👞" }, { w: "WATER", e: "💧" }, { w: "CLOUD", e: "☁️" }, { w: "SNOW", e: "❄️" }, 
-  { w: "EARTH", e: "🌍" }
-];
+// --- STICKER / BADGE LOGIC (WORD WIZARD THEME!) ---
+const WORD_STICKERS = ['📚', '✍️', '🦉', '🎓', '🏅', '🥇', '🌟', '🎨', '🎭', '🎪', '🏰', '👑'];
 
-const PHONICS = [
-  { s: "CH", w: "_ _ E E S E", e: "🧀", opts: ["CH", "SH", "TH", "PH"] },
-  { s: "SH", w: "_ _ E E P", e: "🐑", opts: ["SH", "CH", "TH", "WH"] },
-  { s: "TH", w: "_ _ U M B", e: "👍", opts: ["TH", "CH", "SH", "TR"] },
-  { s: "WH", w: "_ _ A L E", e: "🐋", opts: ["WH", "CH", "SH", "TH"] },
-  { s: "TR", w: "_ _ E E", e: "🌳", opts: ["TR", "CR", "DR", "BR"] },
-  { s: "BR", w: "_ _ E A D", e: "🍞", opts: ["BR", "CR", "DR", "FR"] },
-  { s: "CR", w: "_ _ A B", e: "🦀", opts: ["CR", "BR", "TR", "DR"] },
-  { s: "DR", w: "_ _ U M", e: "🥁", opts: ["DR", "TR", "CR", "BR"] },
-  { s: "FL", w: "_ _ O W E R", e: "🌻", opts: ["FL", "SL", "PL", "GL"] },
-  { s: "GL", w: "_ _ A S S", e: "🥛", opts: ["GL", "FL", "PL", "SL"] },
-  { s: "PL", w: "_ _ A N T", e: "🪴", opts: ["PL", "FL", "GL", "SL"] },
-  { s: "SN", w: "_ _ A K E", e: "🐍", opts: ["SN", "SM", "SP", "ST"] },
-  { s: "SP", w: "_ _ O O N", e: "🥄", opts: ["SP", "ST", "SN", "SM"] },
-  { s: "ST", w: "_ _ A R", e: "⭐", opts: ["ST", "SP", "SN", "SM"] }
-];
+function getUnlockedStickers() {
+  return parseInt(localStorage.getItem('vedhWordStickers')) || 0;
+}
 
-const SENTENCES = [
-  { s: "The dog ___ loudly.", ans: "barks", opts: ["barks", "meows", "flies", "moos"] },
-  { s: "I use a ___ to write.", ans: "pencil", opts: ["pencil", "spoon", "shoe", "car"] },
-  { s: "The sun is hot and ___.", ans: "bright", opts: ["bright", "cold", "blue", "dark"] },
-  { s: "Birds fly in the ___.", ans: "sky", opts: ["sky", "water", "ground", "cave"] },
-  { s: "Apples grow on ___.", ans: "trees", opts: ["trees", "dogs", "clouds", "fish"] },
-  { s: "The cat ___ milk.", ans: "drinks", opts: ["drinks", "eats", "reads", "plays"] },
-  { s: "I sleep in my ___.", ans: "bed", opts: ["bed", "kitchen", "garden", "bath"] },
-  { s: "A fish swims in the ___.", ans: "water", opts: ["water", "sky", "grass", "space"] },
-  { s: "We use our eyes to ___.", ans: "see", opts: ["see", "hear", "smell", "taste"] },
-  { s: "The sky is very ___ today.", ans: "blue", opts: ["blue", "green", "red", "yellow"] },
-  { s: "I wear a ___ on my head.", ans: "hat", opts: ["hat", "sock", "shoe", "glove"] },
-  { s: "Monkeys love to eat ___.", ans: "bananas", opts: ["bananas", "rocks", "leaves", "wood"] }
-];
+function unlockSticker() {
+  let currentUnlocked = getUnlockedStickers();
+  if (currentUnlocked < WORD_STICKERS.length) {
+    localStorage.setItem('vedhWordStickers', currentUnlocked + 1);
+    if(typeof playSound === 'function') playSound('win');
+    return WORD_STICKERS[currentUnlocked];
+  }
+  return null; 
+}
 
-const GRAMMAR = [
-  { w: "JUMP", type: "Action (Verb)" }, { w: "APPLE", type: "Thing (Noun)" },
-  { w: "RUN", type: "Action (Verb)" }, { w: "HOUSE", type: "Thing (Noun)" },
-  { w: "SLEEP", type: "Action (Verb)" }, { w: "DOG", type: "Thing (Noun)" },
-  { w: "SWIM", type: "Action (Verb)" }, { w: "CAR", type: "Thing (Noun)" },
-  { w: "READ", type: "Action (Verb)" }, { w: "BOOK", type: "Thing (Noun)" },
-  { w: "EAT", type: "Action (Verb)" }, { w: "PIZZA", type: "Thing (Noun)" },
-  { w: "PLAY", type: "Action (Verb)" }, { w: "BALL", type: "Thing (Noun)" },
-  { w: "SING", type: "Action (Verb)" }, { w: "BIRD", type: "Thing (Noun)" },
-  { w: "FLY", type: "Action (Verb)" }, { w: "KITE", type: "Thing (Noun)" },
-  { w: "WRITE", type: "Action (Verb)" }, { w: "PENCIL", type: "Thing (Noun)" }
-];
+function refreshTopBadges() {
+  const container = document.getElementById('miniBadgeBoard');
+  container.innerHTML = '<div class="badge-board-title">Collect all 12 Badges! 🏆</div>';
+  
+  let unlockedCount = getUnlockedStickers();
+  
+  WORD_STICKERS.forEach((sticker, i) => {
+    let badge = document.createElement('div');
+    badge.innerText = sticker;
+    
+    if (i < unlockedCount) {
+      badge.className = 'mini-badge unlocked';
+    } else {
+      badge.className = 'mini-badge locked';
+    }
+    container.appendChild(badge);
+  });
+}
 
-// --- GAME STATE ---
+
+// --- MASSIVE ENGLISH DICTIONARY ---
+const WORD_DATA = {
+  spelling: [
+    { q: "C _ T (Meow)", a: "A", opts: ["A", "E", "I", "O"] },
+    { q: "D _ G (Bark)", a: "O", opts: ["O", "A", "U", "E"] },
+    { q: "S _ N (Hot)", a: "U", opts: ["U", "I", "A", "E"] },
+    { q: "B _ G (Insect)", a: "U", opts: ["U", "A", "O", "I"] },
+    { q: "F _ SH (Swims)", a: "I", opts: ["I", "E", "A", "O"] },
+    { q: "T R _ E (Leaves)", a: "E", opts: ["E", "A", "O", "I"] },
+    { q: "A P P L _ (Fruit)", a: "E", opts: ["E", "A", "O", "Y"] },
+    { q: "H _ U S E (Home)", a: "O", opts: ["O", "A", "E", "U"] },
+    { q: "H A P P _ (Smile)", a: "Y", opts: ["Y", "E", "I", "A"] },
+    { q: "B _ R D (Flies)", a: "I", opts: ["I", "E", "U", "A"] }
+  ],
+  phonics: [
+    { q: "Which word starts with 'CH'?", a: "Chair", opts: ["Chair", "Shoe", "Tree", "Boat"] },
+    { q: "Which word starts with 'SH'?", a: "Shark", opts: ["Shark", "Cheese", "Phone", "Train"] },
+    { q: "Which word starts with 'TH'?", a: "Thumb", opts: ["Thumb", "Sock", "Chair", "Ring"] },
+    { q: "Which word ends with 'ING'?", a: "Running", opts: ["Running", "Jumped", "Walks", "Play"] },
+    { q: "Which word rhymes with CAT?", a: "Hat", opts: ["Hat", "Dog", "Car", "Sun"] },
+    { q: "Which word rhymes with TREE?", a: "Bee", opts: ["Bee", "Cow", "Star", "Moon"] }
+  ],
+  grammar: [
+    { q: "Which one is a Noun (A Thing)?", a: "Apple", opts: ["Apple", "Run", "Quickly", "Blue"] },
+    { q: "Which one is a Verb (Action)?", a: "Jump", opts: ["Jump", "Table", "Happy", "Dog"] },
+    { q: "Which one is an Adjective (Describing)?", a: "Tall", opts: ["Tall", "Car", "Eat", "Boy"] },
+    { q: "What goes at the end of a sentence?", a: "Full Stop (.)", opts: ["Full Stop (.)", "Comma (,)", "Capital Letter", "Space"] },
+    { q: "Which word needs a Capital Letter?", a: "London", opts: ["London", "house", "tree", "dog"] }
+  ],
+  sentences: [
+    { q: "The dog ___ over the fence.", a: "jumped", opts: ["jumped", "jumps", "jumping", "jump"] },
+    { q: "I ___ an apple for lunch.", a: "ate", opts: ["ate", "eat", "eating", "eats"] },
+    { q: "The sun is very ___ today.", a: "hot", opts: ["hot", "cold", "blue", "fast"] },
+    { q: "She ___ reading a good book.", a: "is", opts: ["is", "are", "am", "be"] },
+    { q: "___ you like to play football?", a: "Do", opts: ["Do", "Are", "Is", "Has"] }
+  ]
+};
+
 let currentCategory = '';
 let currentMode = '';
 let score = 0;
@@ -304,7 +333,6 @@ let timerInterval;
 let correctAnswer = null;
 let testQuestionsData = []; 
 
-const SECONDS_RELAXED = 20; 
 const SECONDS_BLAST_START = 20; 
 const BONUS_TIME = 5; 
 
@@ -316,20 +344,14 @@ const screens = {
   endScreen: document.getElementById('endScreen')
 };
 
-const els = {
-  problem: document.getElementById('problemArea'),
-  opts: document.getElementById('optionsContainer'),
-  score: document.getElementById('scoreDisplay'),
-  timer: document.getElementById('timerFill'),
-  plus: document.getElementById('timePlus'),
-  mode: document.getElementById('modeDisplay'),
-  star: document.getElementById('fStar')
-};
-
 function switchScreen(screenName) {
   Object.values(screens).forEach(s => s.classList.remove('active'));
   screens[screenName].classList.add('active');
   clearInterval(timerInterval);
+  
+  if(screenName === 'categoryScreen') {
+    refreshTopBadges();
+  }
 }
 
 function selectCategory(cat) {
@@ -340,7 +362,6 @@ function selectCategory(cat) {
 function startGame(mode) {
   currentMode = mode;
   score = 0;
-  els.score.innerText = score;
   
   if (mode === 'test') {
     generateTest();
@@ -348,22 +369,23 @@ function startGame(mode) {
     return;
   }
 
+  document.getElementById('scoreDisplay').innerText = score;
+  
   if (mode === 'relaxed') {
-    els.mode.innerHTML = '🌟 Relaxed';
-    timeTotal = SECONDS_RELAXED;
-    timeLeft = SECONDS_RELAXED;
+    document.getElementById('modeDisplay').innerHTML = '🌟 Practice';
+    document.getElementById('timerBarWrap').style.display = 'none'; 
   } else {
-    els.mode.innerHTML = '🚀 Blast';
+    document.getElementById('modeDisplay').innerHTML = '🚀 Blast';
+    document.getElementById('timerBarWrap').style.display = 'block';
     timeTotal = SECONDS_BLAST_START;
     timeLeft = SECONDS_BLAST_START;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(countdown, 1000);
   }
 
   updateTimerUI();
   generateQuestion();
   switchScreen('gameScreen');
-
-  clearInterval(timerInterval);
-  timerInterval = setInterval(countdown, 1000);
 }
 
 // ══════════════════════════════════════════════
@@ -373,72 +395,41 @@ function generateTest() {
   testQuestionsData = [];
   document.getElementById('submitTestBtn').style.display = 'block';
   document.getElementById('testResultArea').style.display = 'none';
+  document.getElementById('testStickerAlert').classList.remove('show'); 
   
-  let titleMap = { 'spell': 'Spelling', 'phonics': 'Phonics', 'sentence': 'Sentences', 'grammar': 'Grammar', 'jumble': 'Unjumble' };
+  let titleMap = { 'spelling': 'Spelling', 'phonics': 'Phonics', 'grammar': 'Grammar', 'sentences': 'Sentences' };
   document.getElementById('testTitle').innerText = titleMap[currentCategory] + " Test";
   
   const container = document.getElementById('testQuestionsContainer');
   container.innerHTML = '';
 
-  for (let i = 0; i < 10; i++) {
-    let questionHTML = '';
-    let inputHTML = '';
-    let ans = '';
+  let sourceData = [...WORD_DATA[currentCategory], ...WORD_DATA[currentCategory]].sort(() => Math.random() - 0.5).slice(0, 10);
 
-    if (currentCategory === 'spell') {
-      let item = DICT[Math.floor(Math.random() * DICT.length)];
-      ans = item.w;
-      questionHTML = `<span style="font-size:2.5rem; line-height:1;">${item.e}</span> <span>Spell this:</span>`;
-      inputHTML = `<input type="text" class="q-input" id="t-input-${i}" placeholder="Type here..." autocapitalize="off" autocomplete="off">`;
-
-    } else if (currentCategory === 'jumble') {
-      let item = DICT[Math.floor(Math.random() * DICT.length)];
-      ans = item.w;
-      let jumbled = item.w.split('').sort(() => Math.random() - 0.5).join('');
-      questionHTML = `Unjumble: <span style="color:var(--primary); letter-spacing: 2px;">${jumbled}</span>`;
-      inputHTML = `<input type="text" class="q-input" id="t-input-${i}" placeholder="Type word..." autocapitalize="off" autocomplete="off">`;
-
-    } else if (currentCategory === 'phonics') {
-      let item = PHONICS[Math.floor(Math.random() * PHONICS.length)];
-      ans = item.s;
-      questionHTML = `<span style="font-size:2rem; line-height:1;">${item.e}</span> <span style="letter-spacing:2px; font-family:'Fredoka One';">[ ? ] ${item.w.replace('_ _ ', '')}</span>`;
-      let opts = item.opts.map(o => `<option value="${o}">${o}</option>`).join('');
-      inputHTML = `<select class="q-input" id="t-input-${i}"><option value="">?</option>${opts}</select>`;
-
-    } else if (currentCategory === 'grammar') {
-      let item = GRAMMAR[Math.floor(Math.random() * GRAMMAR.length)];
-      ans = item.type;
-      questionHTML = `Is <span style="color:var(--blue); font-family:'Fredoka One';">"${item.w}"</span> an Action or Thing?`;
-      inputHTML = `
-        <select class="q-input" id="t-input-${i}" style="font-size:1rem;">
-          <option value="">Choose...</option><option value="Action (Verb)">Action (Verb)</option><option value="Thing (Noun)">Thing (Noun)</option>
-        </select>`;
-
-    } else if (currentCategory === 'sentence') {
-      let item = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];
-      ans = item.ans;
-      questionHTML = `<span style="font-size:1.1rem; line-height:1.2;">${item.s.replace('___', '<span style="color:var(--danger);">___</span>')}</span>`;
-      let opts = item.opts.map(o => `<option value="${o}">${o}</option>`).join('');
-      inputHTML = `<select class="q-input" id="t-input-${i}" style="font-size:1rem;"><option value="">?</option>${opts}</select>`;
-    }
-
+  sourceData.forEach((item, i) => {
+    let ans = item.a;
     testQuestionsData.push(ans);
+    
+    let shuffledOpts = [...item.opts].sort(() => Math.random() - 0.5);
+    let optsHTML = shuffledOpts.map(o => `<option value="${o}">${o}</option>`).join('');
 
     let row = document.createElement('div');
     row.className = 'q-row';
     row.id = `qrow-${i}`;
     row.innerHTML = `
-      <div class="q-content">
+      <div class="q-word">
         <span style="font-size:1.2rem; color:#94a3b8; margin-right:10px;">${i + 1}.</span>
-        ${questionHTML}
+        ${item.q}
       </div>
       <div class="q-input-wrap">
-        ${inputHTML}
+        <select class="q-input" id="t-input-${i}">
+          <option value="">Select...</option>
+          ${optsHTML}
+        </select>
         <span class="correction" id="corr-${i}">✓ ${ans}</span>
       </div>
     `;
     container.appendChild(row);
-  }
+  });
 }
 
 function gradeTest() {
@@ -447,14 +438,11 @@ function gradeTest() {
   testQuestionsData.forEach((ans, i) => {
     let inputEl = document.getElementById(`t-input-${i}`);
     let rowEl = document.getElementById(`qrow-${i}`);
-    
-    // Convert both to uppercase to prevent case-sensitive errors
-    let userVal = inputEl.value.toString().trim().toUpperCase();
-    let correctVal = ans.toString().trim().toUpperCase();
+    let userVal = inputEl.value;
 
     inputEl.disabled = true;
 
-    if (userVal === correctVal) {
+    if (userVal === ans) {
       rowEl.classList.add('correct');
       testScore++;
     } else {
@@ -477,15 +465,22 @@ function gradeTest() {
     document.getElementById('testResultMsg').innerText = "Keep practicing! Review your answers. 💪";
   }
 
-  // Add XP
+  // STICKER CHECK
+  if (testScore >= 8) {
+    let newSticker = unlockSticker();
+    if (newSticker) {
+      document.getElementById('testUnlockedEmoji').innerText = newSticker;
+      document.getElementById('testStickerAlert').classList.add('show');
+    }
+  }
+
   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
   localStorage.setItem('vedhTotalXP', currentXP + (testScore * 2)); 
-
   window.scrollTo(0, 0);
 }
 
 // ══════════════════════════════════════════════
-// REGULAR GAME LOGIC (Relaxed / Blast)
+// GAMEPLAY LOGIC (Practice & Blast)
 // ══════════════════════════════════════════════
 function countdown() {
   timeLeft--;
@@ -494,101 +489,71 @@ function countdown() {
 }
 
 function updateTimerUI() {
+  if (currentMode === 'relaxed') return;
   let percentage = (timeLeft / timeTotal) * 100;
   if (percentage > 100) percentage = 100; if (percentage < 0) percentage = 0;
-  els.timer.style.width = percentage + '%';
-  if (timeLeft <= 5) els.timer.classList.add('low'); else els.timer.classList.remove('low');
-}
-
-function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
-
-function getWrongWords(correctWord) {
-  let opts = [correctWord];
-  while(opts.length < 4) {
-    let rnd = DICT[Math.floor(Math.random() * DICT.length)].w;
-    if(!opts.includes(rnd)) opts.push(rnd);
-  }
-  return opts;
+  document.getElementById('timerFill').style.width = percentage + '%';
 }
 
 function generateQuestion() {
-  if (currentMode === 'relaxed') { timeLeft = SECONDS_RELAXED; timeTotal = SECONDS_RELAXED; updateTimerUI(); }
-  els.problem.innerHTML = '';
-  let options = [];
+  document.getElementById('problemArea').innerHTML = '';
+  
+  let dataSet = WORD_DATA[currentCategory];
+  let item = dataSet[Math.floor(Math.random() * dataSet.length)];
+  
+  correctAnswer = item.a;
 
-  if (currentCategory === 'spell') {
-    let item = DICT[Math.floor(Math.random() * DICT.length)];
-    correctAnswer = item.w;
-    els.problem.innerHTML = `<div class="hint-text">What is this?</div><div class="card-emoji">${item.e}</div>`;
-    options = getWrongWords(correctAnswer);
+  let hint = "";
+  if(currentCategory === 'spelling') hint = "Missing Letter!";
+  if(currentCategory === 'phonics') hint = "Sound it out!";
+  if(currentCategory === 'grammar') hint = "Word Rules!";
+  if(currentCategory === 'sentences') hint = "Fill the blank!";
 
-  } else if (currentCategory === 'phonics') {
-    let item = PHONICS[Math.floor(Math.random() * PHONICS.length)];
-    correctAnswer = item.s;
-    els.problem.innerHTML = `<div class="card-emoji" style="font-size:4rem;">${item.e}</div><div class="word-display">${item.w}</div>`;
-    options = [...item.opts];
-
-  } else if (currentCategory === 'sentence') {
-    let item = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];
-    correctAnswer = item.ans;
-    els.problem.innerHTML = `<div class="hint-text">Fill the blank</div><div class="sentence-display">${item.s}</div>`;
-    options = [...item.opts];
-
-  } else if (currentCategory === 'grammar') {
-    let item = GRAMMAR[Math.floor(Math.random() * GRAMMAR.length)];
-    correctAnswer = item.type;
-    els.problem.innerHTML = `<div class="hint-text">Action or Thing?</div><div class="word-display" style="color:var(--blue);">${item.w}</div>`;
-    options = ["Action (Verb)", "Thing (Noun)"];
-
-  } else if (currentCategory === 'jumble') {
-    let item = DICT[Math.floor(Math.random() * DICT.length)];
-    correctAnswer = item.w;
-    let jumbled = item.w.split('').sort(() => Math.random() - 0.5).join('');
-    els.problem.innerHTML = `<div class="hint-text">Unjumble the word!</div><div class="word-display" style="color:var(--danger);">${jumbled}</div>`;
-    options = getWrongWords(correctAnswer);
-  }
-
-  renderOptions(options);
+  document.getElementById('problemArea').innerHTML = `
+    <div class="hint-text">${hint}</div>
+    <div>${item.q}</div>
+  `;
+  
+  renderOptions([...item.opts]);
 }
 
 function renderOptions(options) {
-  if(currentCategory !== 'grammar') shuffle(options);
-  els.opts.innerHTML = '';
-  if(currentCategory === 'sentence') els.opts.style.gridTemplateColumns = '1fr';
-  else els.opts.style.gridTemplateColumns = '1fr 1fr';
+  options.sort(() => Math.random() - 0.5);
+  let optsEl = document.getElementById('optionsContainer');
+  optsEl.innerHTML = '';
 
   options.forEach(opt => {
     let btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.innerText = opt;
+    btn.className = 'opt-btn'; btn.innerText = opt;
     btn.onclick = () => checkAnswer(opt, btn);
-    els.opts.appendChild(btn);
+    optsEl.appendChild(btn);
   });
 }
 
 function checkAnswer(selected, btn) {
   document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
-
   if (selected === correctAnswer) {
-    if(typeof playSound === 'function') playSound('correct');
+     if(typeof playSound === 'function') playSound('correct');
     btn.classList.add('correct');
-    score++; els.score.innerText = score;
+    score++;
+    document.getElementById('scoreDisplay').innerText = score;
     
-    els.star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 20 + 'px';
-    els.star.style.top = btn.offsetTop - 30 + 'px';
-    els.star.classList.remove('pop'); void els.star.offsetWidth; els.star.classList.add('pop');
-
+    let star = document.getElementById('fStar');
+    star.style.left = btn.offsetLeft + (btn.offsetWidth/2) - 20 + 'px'; star.style.top = btn.offsetTop - 30 + 'px';
+    star.classList.remove('pop'); void star.offsetWidth; star.classList.add('pop');
+    
     if (currentMode === 'blast') {
       timeLeft += BONUS_TIME; if(timeLeft > timeTotal) timeTotal = timeLeft; 
-      els.plus.classList.remove('show'); void els.plus.offsetWidth; els.plus.classList.add('show');
+      let plus = document.getElementById('timePlus');
+      plus.classList.remove('show'); void plus.offsetWidth; plus.classList.add('show');
       updateTimerUI();
     }
-    setTimeout(generateQuestion, 600);
+    setTimeout(generateQuestion, 800);
   } else {
-    if(typeof playSound === 'function') playSound('wrong');
+     if(typeof playSound === 'function') playSound('wrong');
     btn.classList.add('wrong');
     document.querySelectorAll('.opt-btn').forEach(b => { if (b.innerText === correctAnswer) b.classList.add('correct'); });
-    setTimeout(generateQuestion, 1200); 
+    setTimeout(generateQuestion, 1500);
   }
 }
 
@@ -596,15 +561,27 @@ function endGame() {
   if(typeof playSound === 'function') playSound('win');
   clearInterval(timerInterval);
   document.getElementById('finalScore').innerText = score;
+  document.getElementById('gameStickerAlert').classList.remove('show'); 
+  
+  if (score >= 10) {
+    let newSticker = unlockSticker();
+    if (newSticker) {
+      document.getElementById('gameUnlockedEmoji').innerText = newSticker;
+      document.getElementById('gameStickerAlert').classList.add('show');
+    }
+  }
+
   let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
   localStorage.setItem('vedhTotalXP', currentXP + score);
-  
-  let msg = "Keep Practising! 👍";
+  let msg = "Keep Practicing! 👍";
   if (score > 10) msg = "Great Job! 🌟";
-  if (score > 20) msg = "Spelling Bee Champion! 🏆";
+  if (score > 20) msg = "Word Superstar! 🏆";
   document.getElementById('endMessage').innerText = msg;
   switchScreen('endScreen');
 }
+
+// Initialize badges on first load
+refreshTopBadges();
 </script>
 </body>
 </html>
