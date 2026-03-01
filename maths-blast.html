@@ -63,6 +63,9 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 
 .timer-container { width: 100%; height: 20px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 20px; position: relative; }
 .timer-fill { height: 100%; background: var(--primary); width: 100%; transition: width 0.3s linear, background-color 0.3s; }
+.time-plus { position: absolute; right: 10px; top: -5px; color: var(--primary); font-weight: 900; font-size: 1.2rem; opacity: 0; }
+.time-plus.show { animation: floatUpFade 1s ease-out forwards; }
+@keyframes floatUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
 
 /* Learning / Hint Board */
 .hint-board { background: #f1f5f9; border: 3px dashed var(--secondary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 1.2rem; font-weight: 800; color: var(--dark); display: none; text-align: left; }
@@ -88,11 +91,34 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 .opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #e11d48; }
 
 .btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #16a34a; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #16a34a; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #16a34a; }
 
 .feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
 .feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-@keyframes starPop { 0% { opacity: 1; transform: scale(0.5) rotate(-20deg); } 50% { transform: scale(1.2) rotate(10deg); } 100% { opacity: 0; transform: scale(1) translateY(-30px); } }
 
+/* ══════════════════════════════════════════
+   TEST SHEET STYLES
+══════════════════════════════════════════ */
+.test-header { display: flex; justify-content: space-between; font-family: 'Fredoka One'; font-size: 1.3rem; border-bottom: 3px dashed #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
+.q-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.6rem; font-family: 'Fredoka One'; padding: 15px 0; border-bottom: 2px solid #f1f5f9; text-align: left; }
+.q-math { display: flex; align-items: center; gap: 10px; width: 60%; }
+.q-input-wrap { position: relative; width: 35%; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.q-input { width: 100%; font-family: 'Fredoka One'; font-size: 1.5rem; padding: 8px; border: 3px solid var(--dark); border-radius: 12px; text-align: center; outline: none; background: white; }
+.q-input:focus { border-color: var(--primary); }
+select.q-input { appearance: none; cursor: pointer; }
+
+/* Grading Styles */
+.q-row.correct .q-input { background: #d1fae5; border-color: #10b981; color: #10b981; }
+.q-row.wrong .q-input { background: #fee2e2; border-color: var(--danger); color: var(--danger); }
+.correction { font-size: 1rem; color: #10b981; display: none; font-weight: 800; }
+.q-row.wrong .correction { display: block; animation: popIn 0.3s; }
+
+@media(max-width: 500px) {
+  .cat-grid { grid-template-columns: 1fr; }
+  .opt-btn { font-size: 1.5rem; }
+  .q-row { font-size: 1.2rem; }
+  .q-input { font-size: 1.2rem; }
+}
 </style>
 </head>
 <body>
@@ -101,7 +127,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 
 <header>
   <h1>Maths Blast!</h1>
-  <div class="subtitle">Learn & Practice 📝</div>
+  <div class="subtitle">Select a Worksheet 📝</div>
 </header>
 
 <div id="categoryScreen" class="screen active">
@@ -139,7 +165,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
       <div class="mode-icon">🌟</div>
       <div>
         <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Practice Mode</h3>
-        <p style="font-weight: 600; color: #64748b;">No timer! Take your time and learn.</p>
+        <p style="font-weight: 600; color: #64748b;">No timer! With built-in hints.</p>
       </div>
     </button>
 
@@ -148,6 +174,14 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
       <div>
         <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Blast Mode</h3>
         <p style="font-weight: 600; color: #64748b;">Survival! Get +5s for correct answers.</p>
+      </div>
+    </button>
+
+    <button class="mode-btn" style="border-color: #3b82f6; box-shadow: 0 6px 0 #3b82f6;" onclick="startGame('test')">
+      <div class="mode-icon">📝</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Test Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">10 Questions. Grade at the end!</p>
       </div>
     </button>
   </div>
@@ -164,12 +198,34 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
     
     <div class="timer-container" id="timerBarWrap">
       <div class="timer-fill" id="timerFill"></div>
+      <div class="time-plus" id="timePlus">+5s</div>
     </div>
 
     <div class="hint-board" id="hintBoard"></div>
 
     <div id="problemArea" class="math-problem"></div>
     <div class="options-grid" id="optionsContainer"></div>
+  </div>
+</div>
+
+<div id="testScreen" class="screen">
+  <div class="worksheet-card" style="padding: 20px;">
+    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('modeScreen')">🔙 Quit Test</button>
+    
+    <div class="test-header">
+      <span id="testTitle">Maths Test</span>
+      <span>Name: Vedh</span>
+    </div>
+    
+    <div id="testQuestionsContainer"></div>
+
+    <button class="btn-primary" id="submitTestBtn" style="margin-top: 30px;" onclick="gradeTest()">Submit Test 📋</button>
+
+    <div id="testResultArea" style="display:none; margin-top:30px;">
+      <h2 style="font-family:'Fredoka One'; font-size: 2.5rem;">Score: <span id="testScoreDisplay" style="color:var(--primary);">0/10</span></h2>
+      <p id="testResultMsg" style="font-weight: 800; font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Review your answers above!</p>
+      <button class="btn-primary" onclick="switchScreen('categoryScreen')">Take Another Test</button>
+    </div>
   </div>
 </div>
 
@@ -194,6 +250,7 @@ let timeTotal = 0;
 let timerInterval;
 let correctAnswer = null;
 let currentQuestionData = {}; // Stores data for the Hint Board
+let testQuestionsData = []; // Store test answers
 
 const SECONDS_BLAST_START = 20; 
 const BONUS_TIME = 5; 
@@ -209,6 +266,7 @@ const screens = {
   categoryScreen: document.getElementById('categoryScreen'),
   modeScreen: document.getElementById('modeScreen'),
   gameScreen: document.getElementById('gameScreen'),
+  testScreen: document.getElementById('testScreen'),
   endScreen: document.getElementById('endScreen')
 };
 
@@ -226,13 +284,21 @@ function selectCategory(cat) {
 function startGame(mode) {
   currentMode = mode;
   score = 0;
+  
+  // RESTORED: Test Mode trigger
+  if (mode === 'test') {
+    generateTest();
+    switchScreen('testScreen');
+    return;
+  }
+
   document.getElementById('scoreDisplay').innerText = score;
   
   if (mode === 'relaxed') {
     document.getElementById('modeDisplay').innerHTML = '🌟 Practice';
     document.getElementById('timerBarWrap').style.display = 'none'; // Hide timer in practice
   } else {
-    document.getElementById('modeDisplay').innerHTML = '';
+    document.getElementById('modeDisplay').innerHTML = '🚀 Blast';
     document.getElementById('timerBarWrap').style.display = 'block';
     timeTotal = SECONDS_BLAST_START;
     timeLeft = SECONDS_BLAST_START;
@@ -252,6 +318,132 @@ function startGame(mode) {
   switchScreen('gameScreen');
 }
 
+// ══════════════════════════════════════════════
+// RESTORED: TEST MODE LOGIC
+// ══════════════════════════════════════════════
+function generateTest() {
+  testQuestionsData = [];
+  document.getElementById('submitTestBtn').style.display = 'block';
+  document.getElementById('testResultArea').style.display = 'none';
+  
+  let titleMap = { 'add': 'Addition', 'sub': 'Subtraction', 'mul': 'Multiplication', 'div': 'Division', 'comp': 'Greater/Less', 'shape': 'Shapes' };
+  document.getElementById('testTitle').innerText = titleMap[currentCategory] + " Test";
+  
+  const container = document.getElementById('testQuestionsContainer');
+  container.innerHTML = '';
+
+  for (let i = 0; i < 10; i++) {
+    let questionHTML = '';
+    let inputHTML = '';
+    let ans = '';
+
+    if (currentCategory === 'add' || currentCategory === 'sub') {
+      let n1 = Math.floor(Math.random() * 20) + 1;
+      let n2 = Math.floor(Math.random() * 20) + 1;
+      let op = currentCategory === 'add' ? '+' : '-';
+      if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1];
+      ans = currentCategory === 'add' ? n1 + n2 : n1 - n2;
+      questionHTML = `${n1} <span style="color:var(--primary);">${op}</span> ${n2} <span style="color:#94a3b8;">=</span>`;
+      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
+
+    } else if (currentCategory === 'mul') {
+      let n1 = Math.floor(Math.random() * 10) + 1;
+      let n2 = Math.floor(Math.random() * 10) + 1;
+      ans = n1 * n2;
+      questionHTML = `${n1} <span style="color:var(--primary);">×</span> ${n2} <span style="color:#94a3b8;">=</span>`;
+      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
+
+    } else if (currentCategory === 'div') {
+      let a = Math.floor(Math.random() * 10) + 1;
+      let n2 = Math.floor(Math.random() * 10) + 1;
+      let n1 = a * n2; 
+      ans = a;
+      questionHTML = `${n1} <span style="color:var(--purple);">÷</span> ${n2} <span style="color:#94a3b8;">=</span>`;
+      inputHTML = `<input type="number" class="q-input" id="t-input-${i}" placeholder="?">`;
+
+    } else if (currentCategory === 'comp') {
+      let n1 = Math.floor(Math.random() * 50) + 1;
+      let n2 = Math.floor(Math.random() * 50) + 1;
+      if(Math.random() > 0.8) n2 = n1; 
+      if (n1 > n2) ans = '>'; else if (n1 < n2) ans = '<'; else ans = '=';
+      questionHTML = `${n1} <span style="color:#d97706;">[ ? ]</span> ${n2}`;
+      
+      inputHTML = `
+        <select class="q-input" id="t-input-${i}">
+          <option value="">?</option><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option>
+        </select>`;
+
+    } else if (currentCategory === 'shape') {
+      let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+      ans = shape.n;
+      questionHTML = `<span style="font-size:3rem; line-height:1;">${shape.e}</span>`;
+      
+      let opts = SHAPES.map(s => `<option value="${s.n}">${s.n}</option>`).join('');
+      inputHTML = `<select class="q-input" id="t-input-${i}"><option value="">?</option>${opts}</select>`;
+    }
+
+    testQuestionsData.push(ans);
+
+    let row = document.createElement('div');
+    row.className = 'q-row';
+    row.id = `qrow-${i}`;
+    row.innerHTML = `
+      <div class="q-math">
+        <span style="font-size:1.2rem; color:#94a3b8; margin-right:10px;">${i + 1}.</span>
+        ${questionHTML}
+      </div>
+      <div class="q-input-wrap">
+        ${inputHTML}
+        <span class="correction" id="corr-${i}">✓ ${ans}</span>
+      </div>
+    `;
+    container.appendChild(row);
+  }
+}
+
+function gradeTest() {
+  let testScore = 0;
+  
+  testQuestionsData.forEach((ans, i) => {
+    let inputEl = document.getElementById(`t-input-${i}`);
+    let rowEl = document.getElementById(`qrow-${i}`);
+    let userVal = inputEl.value.toString().trim();
+    let correctVal = ans.toString().trim();
+
+    inputEl.disabled = true;
+
+    if (userVal === correctVal) {
+      rowEl.classList.add('correct');
+      testScore++;
+    } else {
+      rowEl.classList.add('wrong');
+    }
+  });
+
+  document.getElementById('submitTestBtn').style.display = 'none';
+  document.getElementById('testResultArea').style.display = 'block';
+  document.getElementById('testScoreDisplay').innerText = `${testScore}/10`;
+  
+  if (testScore === 10) {
+    if(typeof playSound === 'function') playSound('win');
+    document.getElementById('testResultMsg').innerText = "Perfect Score! Amazing! 🌟";
+  } else if (testScore >= 7) {
+    if(typeof playSound === 'function') playSound('correct');
+    document.getElementById('testResultMsg').innerText = "Great job! Review your mistakes. 👍";
+  } else {
+    if(typeof playSound === 'function') playSound('wrong');
+    document.getElementById('testResultMsg').innerText = "Keep practicing! Review your answers. 💪";
+  }
+
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + (testScore * 2)); 
+
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════════
+// GAMEPLAY LOGIC (Practice & Blast)
+// ══════════════════════════════════════════════
 function countdown() {
   timeLeft--;
   updateTimerUI();
@@ -266,7 +458,7 @@ function updateTimerUI() {
 }
 
 function generateQuestion() {
-  document.getElementById('hintBoard').classList.remove('active'); // Hide hint for new question
+  document.getElementById('hintBoard').classList.remove('active'); 
   document.getElementById('problemArea').innerHTML = '';
   let options = [];
   
@@ -279,7 +471,7 @@ function generateQuestion() {
     if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1]; 
     correctAnswer = currentCategory === 'add' ? n1 + n2 : n1 - n2;
     
-    currentQuestionData = { n1, n2, op, ans: correctAnswer }; // Save for hint
+    currentQuestionData = { n1, n2, op, ans: correctAnswer };
 
     document.getElementById('problemArea').innerHTML = `
       <div class="vertical-math">
@@ -291,7 +483,7 @@ function generateQuestion() {
   } else if (currentCategory === 'mul') {
     let mMax = score < 5 ? 5 : 10; 
     let n1 = Math.floor(Math.random() * mMax) + 1;
-    let n2 = Math.floor(Math.random() * 5) + 1; // Keep n2 small for dot drawing
+    let n2 = Math.floor(Math.random() * 5) + 1; 
     correctAnswer = n1 * n2;
     
     currentQuestionData = { n1, n2, op: 'mul', ans: correctAnswer };
@@ -338,7 +530,6 @@ function showHint() {
   hb.innerHTML = '';
   
   if(d.op === '+') {
-    // Partitioning method
     let tens1 = Math.floor(d.n1 / 10) * 10; let ones1 = d.n1 % 10;
     let tens2 = Math.floor(d.n2 / 10) * 10; let ones2 = d.n2 % 10;
     hb.innerHTML = `
@@ -348,11 +539,10 @@ function showHint() {
       <div class="hint-step">3. Put them together: <span style="color:#10b981;">${tens1 + tens2} + ${ones1 + ones2} = ${d.ans}</span></div>
     `;
   } else if (d.op === '-') {
-    // Drawing dots and crossing out
     let dots = '';
     for(let i=0; i<d.n1; i++) {
-      if(i < d.n1 - d.n2) dots += '🔵 '; // Remaining
-      else dots += '❌ '; // Taken away
+      if(i < d.n1 - d.n2) dots += '🔵 '; 
+      else dots += '❌ '; 
     }
     hb.innerHTML = `
       <div style="color:var(--danger); margin-bottom:5px;">Count what is left!</div>
@@ -360,7 +550,6 @@ function showHint() {
       <div style="margin-top:10px;">You had ${d.n1}, and crossed out ${d.n2}.</div>
     `;
   } else if (d.op === 'mul') {
-    // Array drawing
     let dots = '';
     for(let r=0; r<d.n1; r++) {
       for(let c=0; c<d.n2; c++) { dots += '🟣 '; }
@@ -418,6 +607,10 @@ function checkAnswer(selected, btn) {
     if (currentMode === 'blast') {
       timeLeft += BONUS_TIME;
       if(timeLeft > timeTotal) timeTotal = timeLeft; 
+      
+      let plus = document.getElementById('timePlus');
+      plus.classList.remove('show'); void plus.offsetWidth; plus.classList.add('show');
+      
       updateTimerUI();
     }
     setTimeout(generateQuestion, 800);
@@ -428,10 +621,9 @@ function checkAnswer(selected, btn) {
       if (b.innerText == correctAnswer) b.classList.add('correct');
     });
     
-    // Auto-show hint if they get it wrong in practice mode!
     if(currentMode === 'relaxed' && ['add', 'sub', 'mul'].includes(currentCategory)) {
         showHint();
-        setTimeout(generateQuestion, 4000); // Give them longer to read the hint
+        setTimeout(generateQuestion, 4000); 
     } else {
         setTimeout(generateQuestion, 1200);
     }
