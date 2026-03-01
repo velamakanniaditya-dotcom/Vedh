@@ -42,8 +42,12 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 
 .worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(51, 65, 85, 0.1); text-align: center; position: relative; }
 
+/* MINI BADGE BOARD (New!) */
+.mini-badge-board { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 16px; padding: 12px; min-height: 65px; align-items: center; }
+.mini-badge { font-size: 2.2rem; animation: popIn 0.3s ease; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
+
 /* Category Grid */
-.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
 .cat-btn {
   background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 15px 10px;
   cursor: pointer; font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--dark);
@@ -107,19 +111,11 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 .q-input:focus { border-color: var(--primary); }
 select.q-input { appearance: none; cursor: pointer; }
 
-/* Grading Styles */
 .q-row.correct .q-input { background: #d1fae5; border-color: #10b981; color: #10b981; }
 .q-row.wrong .q-input { background: #fee2e2; border-color: var(--danger); color: var(--danger); }
 .correction { font-size: 1rem; color: #10b981; display: none; font-weight: 800; }
 .q-row.wrong .correction { display: block; animation: popIn 0.3s; }
 
-/* ══════════════════════════════════════════
-   STICKER BOOK STYLES
-══════════════════════════════════════════ */
-.sticker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
-.sticker-slot { background: #f1f5f9; border: 3px dashed #cbd5e1; border-radius: 16px; height: 100px; display: flex; justify-content: center; align-items: center; font-size: 3.5rem; position: relative; }
-.sticker-slot.locked { filter: grayscale(100%); opacity: 0.3; }
-.sticker-slot.locked::after { content: "?"; position: absolute; font-family: 'Fredoka One'; font-size: 2rem; color: var(--dark); }
 .sticker-alert { background: #fef08a; border: 4px solid #ca8a04; border-radius: 16px; padding: 15px; margin-top: 20px; display: none; animation: popIn 0.5s ease; }
 .sticker-alert.show { display: block; }
 
@@ -128,7 +124,6 @@ select.q-input { appearance: none; cursor: pointer; }
   .opt-btn { font-size: 1.5rem; }
   .q-row { font-size: 1.2rem; }
   .q-input { font-size: 1.2rem; }
-  .sticker-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
@@ -143,7 +138,10 @@ select.q-input { appearance: none; cursor: pointer; }
 
 <div id="categoryScreen" class="screen active">
   <div class="worksheet-card">
-    <button class="btn-primary" style="background:var(--warning); border-color:#d97706; box-shadow: 0 6px 0 #d97706; margin-bottom: 20px; font-size: 1.3rem;" onclick="openStickerBook()">🏆 View My Sticker Book</button>
+    
+    <div class="mini-badge-board" id="miniBadgeBoard">
+      </div>
+
     <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark);">What are we learning today?</h2>
     <div class="cat-grid">
       <button class="cat-btn" style="border-color: var(--primary); color: var(--primary);" onclick="selectCategory('add')"><span class="cat-icon">➕</span> Addition</button>
@@ -153,17 +151,6 @@ select.q-input { appearance: none; cursor: pointer; }
       <button class="cat-btn" style="border-color: var(--warning); color: #d97706;" onclick="selectCategory('comp')"><span class="cat-icon">⚖️</span> Greater / Less</button>
       <button class="cat-btn" style="border-color: #ec4899; color: #ec4899;" onclick="selectCategory('shape')"><span class="cat-icon">🔺</span> Shapes</button>
     </div>
-  </div>
-</div>
-
-<div id="stickerScreen" class="screen">
-  <div class="worksheet-card">
-    <button style="background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer; margin-bottom:15px; text-decoration:underline;" onclick="switchScreen('categoryScreen')">🔙 Back to Math</button>
-    <h2 style="font-family:'Fredoka One'; font-size: 2.2rem; color: var(--warning);">Maths Sticker Book</h2>
-    <p style="font-weight: 800; color: #64748b;">Get 8/10 on Tests or score 10+ in Practice to unlock stickers!</p>
-    
-    <div class="sticker-grid" id="stickerContainer">
-      </div>
   </div>
 </div>
 
@@ -237,7 +224,7 @@ select.q-input { appearance: none; cursor: pointer; }
       <p id="testResultMsg" style="font-weight: 800; font-size: 1.2rem; color: #64748b; margin-bottom: 20px;">Review your answers above!</p>
       
       <div id="testStickerAlert" class="sticker-alert">
-        <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW STICKER UNLOCKED!</h3>
+        <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW BADGE UNLOCKED!</h3>
         <div id="testUnlockedEmoji" style="font-size: 4rem;"></div>
       </div>
 
@@ -253,18 +240,18 @@ select.q-input { appearance: none; cursor: pointer; }
     <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="endMessage">Great effort!</div>
     
     <div id="gameStickerAlert" class="sticker-alert">
-      <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW STICKER UNLOCKED!</h3>
+      <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW BADGE UNLOCKED!</h3>
       <div id="gameUnlockedEmoji" style="font-size: 4rem;"></div>
     </div>
 
-    <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('categoryScreen')">Choose Another Topic 📚</button>
+    <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('categoryScreen')">Back to Menu 📚</button>
   </div>
 </div>
 
 <script src="sounds.js"></script>
 
 <script>
-// --- STICKER BOOK LOGIC ---
+// --- STICKER / BADGE LOGIC ---
 const MATH_STICKERS = ['🪐', '🚀', '🛸', '👾', '🤖', '🦸‍♂️', '🦖', '🏎️', '🚒', '🚁', '⚡', '🏆'];
 
 function getUnlockedStickers() {
@@ -276,30 +263,28 @@ function unlockSticker() {
   if (currentUnlocked < MATH_STICKERS.length) {
     localStorage.setItem('vedhMathsStickers', currentUnlocked + 1);
     if(typeof playSound === 'function') playSound('win');
-    return MATH_STICKERS[currentUnlocked]; // Return the emoji they just got
+    return MATH_STICKERS[currentUnlocked];
   }
-  return null; // Already have all stickers
+  return null; 
 }
 
-function openStickerBook() {
-  const container = document.getElementById('stickerContainer');
+function refreshTopBadges() {
+  const container = document.getElementById('miniBadgeBoard');
   container.innerHTML = '';
   let unlockedCount = getUnlockedStickers();
-
-  MATH_STICKERS.forEach((emoji, index) => {
-    let slot = document.createElement('div');
-    slot.className = 'sticker-slot';
-    if (index < unlockedCount) {
-      slot.innerText = emoji; // Unlocked
-    } else {
-      slot.classList.add('locked');
-      slot.innerText = emoji; // Hidden by CSS grayscale/opacity
-    }
-    container.appendChild(slot);
-  });
-  switchScreen('stickerScreen');
+  
+  if (unlockedCount === 0) {
+    container.innerHTML = '<span style="color:#94a3b8; font-weight:800; font-size:1rem; text-align:center;">Score 8/10 on Tests to earn badges! 🏆</span>';
+    return;
+  }
+  
+  for(let i = 0; i < unlockedCount; i++) {
+    let badge = document.createElement('div');
+    badge.className = 'mini-badge';
+    badge.innerText = MATH_STICKERS[i];
+    container.appendChild(badge);
+  }
 }
-
 
 // --- GAME STATE ---
 let currentCategory = '';
@@ -327,14 +312,18 @@ const screens = {
   modeScreen: document.getElementById('modeScreen'),
   gameScreen: document.getElementById('gameScreen'),
   testScreen: document.getElementById('testScreen'),
-  endScreen: document.getElementById('endScreen'),
-  stickerScreen: document.getElementById('stickerScreen')
+  endScreen: document.getElementById('endScreen')
 };
 
 function switchScreen(screenName) {
   Object.values(screens).forEach(s => s.classList.remove('active'));
   screens[screenName].classList.add('active');
   clearInterval(timerInterval);
+  
+  // Refresh badges whenever we return to the main menu!
+  if(screenName === 'categoryScreen') {
+    refreshTopBadges();
+  }
 }
 
 function selectCategory(cat) {
@@ -384,7 +373,7 @@ function generateTest() {
   testQuestionsData = [];
   document.getElementById('submitTestBtn').style.display = 'block';
   document.getElementById('testResultArea').style.display = 'none';
-  document.getElementById('testStickerAlert').classList.remove('show'); // Hide sticker alert
+  document.getElementById('testStickerAlert').classList.remove('show'); 
   
   let titleMap = { 'add': 'Addition', 'sub': 'Subtraction', 'mul': 'Multiplication', 'div': 'Division', 'comp': 'Greater/Less', 'shape': 'Shapes' };
   document.getElementById('testTitle').innerText = titleMap[currentCategory] + " Test";
@@ -630,9 +619,8 @@ function endGame() {
   if(typeof playSound === 'function') playSound('win');
   clearInterval(timerInterval);
   document.getElementById('finalScore').innerText = score;
-  document.getElementById('gameStickerAlert').classList.remove('show'); // Hide sticker alert
+  document.getElementById('gameStickerAlert').classList.remove('show'); 
   
-  // STICKER CHECK (Score 10 or more unlocks a sticker!)
   if (score >= 10) {
     let newSticker = unlockSticker();
     if (newSticker) {
@@ -649,6 +637,9 @@ function endGame() {
   document.getElementById('endMessage').innerText = msg;
   switchScreen('endScreen');
 }
+
+// Initialize badges on first load
+refreshTopBadges();
 </script>
 </body>
 </html>
