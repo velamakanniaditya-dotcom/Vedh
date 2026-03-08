@@ -1,123 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tales 📖 - Super Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   STORYBOOK THEME
+══════════════════════════════════════════ */
+:root {
+  --primary: #f43f5e; /* Rose Red */
+  --secondary: #8b5cf6; /* Magic Purple */
+  --danger: #ef4444; 
+  --warning: #fbbf24; 
+  --dark: #1e293b; 
+  --paper: #fffbeb; /* Warm paper color */
+  --grid: #fce7f3; /* Light pink grid */
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #fff1f2;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 30px 30px; color: var(--dark);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--secondary);
+  color: var(--secondary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--secondary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--secondary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #64748b; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 650px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+.worksheet-card { background: white; border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(51, 65, 85, 0.1); text-align: center; position: relative; }
+
+/* MINI BADGE BOARD */
+.mini-badge-board { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; background: #faf5ff; border: 3px dashed #d8b4fe; border-radius: 16px; padding: 15px; }
+.badge-board-title { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; color: #a855f7; margin-bottom: 5px; }
+.mini-badge { font-size: 2.2rem; transition: all 0.3s ease; }
+.mini-badge.unlocked { filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15)); animation: popIn 0.3s ease; }
+.mini-badge.locked { filter: grayscale(100%) contrast(0.2); opacity: 0.3; }
+
+/* Modes / Stories */
+.mode-btn { width: 100%; display: flex; align-items: center; gap: 15px; background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); transition: transform 0.1s; }
+.mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+
+/* Math Tales Layout */
+.top-bar { display: flex; justify-content: space-between; align-items: center; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+.tale-text { font-size: 1.4rem; line-height: 1.6; color: var(--dark); text-align: left; background: var(--paper); padding: 25px; border-radius: 16px; border: 3px dashed #fcd34d; margin-bottom: 25px; font-weight: 800; box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.2); }
+.tale-question { font-family: 'Fredoka One'; font-size: 1.6rem; color: var(--secondary); margin-bottom: 20px; }
+
+/* Options Grid */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 2rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 5px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.opt-btn.correct { background: #10b981; color: white; border-color: #10b981; box-shadow: 0 6px 0 #059669; }
+.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #dc2626; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #be123c; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #be123c; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #be123c; }
+
+/* Alerts */
+.sticker-alert { background: #fef08a; border: 4px solid #ca8a04; border-radius: 16px; padding: 15px; margin-top: 20px; display: none; animation: popIn 0.5s ease; }
+.sticker-alert.show { display: block; }
+</style>
+</head>
+<body>
+
+<a href="maths-blast.html" class="home-btn">🔙 Maths Blast</a>
+
+<header>
+  <h1>Math Tales 📖</h1>
+  <div class="subtitle">Read, Solve, and Save the Day! ✨</div>
+</header>
+
+<div id="talesListScreen" class="screen active">
+  <div class="worksheet-card">
+    
+    <div class="mini-badge-board" id="miniBadgeBoard">
+      <div class="badge-board-title">Collect all 12 Fantasy Badges! 🏰</div>
+      </div>
+
+    <h2 style="font-family:'Fredoka One'; font-size: 2rem; color: var(--primary); margin-bottom: 20px;">Choose a Story!</h2>
+    
+    <div id="talesContainer" style="display:flex; flex-direction:column; gap:15px;">
+      </div>
+  </div>
+</div>
+
+<div id="taleReaderScreen" class="screen">
+  <div class="worksheet-card">
+    <div class="top-bar">
+      <span id="taleProgress" style="color: #64748b;">Page 1/3</span>
+      <button style="background:none; border:none; color:var(--danger); font-weight:bold; cursor:pointer; font-family:'Fredoka One';" onclick="switchScreen('talesListScreen')">Quit ✖</button>
+    </div>
+
+    <div class="tale-text" id="taleText">Once upon a time...</div>
+    <div class="tale-question" id="taleQuestion">What is the answer?</div>
+    
+    <div class="options-grid" id="taleOptions"></div>
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.8rem; color: var(--dark);" id="endTitle">Story Complete! 📖</h2>
+    <div style="font-size: 5rem; margin: 15px 0; color: var(--primary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">+15 XP</div>
+    <div style="font-size: 1.3rem; font-weight: 800; color: #64748b; margin-bottom: 25px;">You read beautifully and solved the puzzles!</div>
+    
+    <div id="gameStickerAlert" class="sticker-alert">
+      <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW STORY BADGE UNLOCKED!</h3>
+      <div id="gameUnlockedEmoji" style="font-size: 4.5rem; margin-top: 10px;"></div>
+    </div>
+
+    <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('talesListScreen')">Back to Library 📚</button>
+  </div>
+</div>
+
+<script src="sounds.js"></script>
+
+<script>
+// --- UNIQUE FANTASY BADGES FOR MATH TALES ---
+const TALE_STICKERS = ['🐉', '🦄', '🧙‍♂️', '🧚‍♀️', '🧝‍♂️', '🧜‍♀️', '🧞‍♂️', '🦸‍♂️', '🦹‍♂️', '🏰', '🗺️', '👑'];
+
+function getUnlockedStickers() { return parseInt(localStorage.getItem('vedhTaleStickers')) || 0; }
+function unlockSticker() {
+  let current = getUnlockedStickers();
+  if (current < TALE_STICKERS.length) {
+    localStorage.setItem('vedhTaleStickers', current + 1);
+    if(typeof playSound === 'function') playSound('win');
+    return TALE_STICKERS[current];
+  }
+  return null; 
+}
+
+function refreshTopBadges() {
+  const container = document.getElementById('miniBadgeBoard');
+  container.innerHTML = '<div class="badge-board-title">Collect all 12 Fantasy Badges! 🏰</div>';
+  let unlockedCount = getUnlockedStickers();
+  TALE_STICKERS.forEach((sticker, i) => {
+    let badge = document.createElement('div');
+    badge.innerText = sticker;
+    badge.className = i < unlockedCount ? 'mini-badge unlocked' : 'mini-badge locked';
+    container.appendChild(badge);
+  });
+}
+
+// ══════════════════════════════════════════════
+// THE MEGA-LIBRARY OF STORIES
+// ══════════════════════════════════════════════
 const STORIES = [
   {
-    title: "Ninja Vedh & The Stolen Scrolls 🥷",
+    title: "Ninja Vedh & The Scrolls 🥷",
+    icon: "🥷",
     pages: [
-      {
-        text: "Ninja Vedh is guarding the ancient library. There are 15 secret scrolls on the shelf. Suddenly, a sneaky shadow ninja swoops in and steals 4 of them!",
-        question: "How many secret scrolls are left on the shelf?",
-        ans: 11, opts: [10, 11, 12, 9]
-      },
-      {
-        text: "Vedh chases the shadow ninja into the bamboo forest. Along the way, he finds 6 more missing scrolls hidden under a rock. He adds them to the 11 he already has.",
-        question: "How many scrolls does Vedh have now?",
-        ans: 17, opts: [16, 17, 18, 15]
-      },
-      {
-        text: "Vedh returns to the temple. The Grandmaster tells him to lock 10 of his 17 scrolls safely inside the steel vault.",
-        question: "After locking 10 away, how many scrolls is Vedh still holding?",
-        ans: 7, opts: [6, 7, 8, 5]
-      }
+      { text: "Ninja Vedh is guarding the ancient library. There are 15 secret scrolls on the shelf. Suddenly, a sneaky shadow ninja swoops in and steals 4 of them!", question: "How many secret scrolls are left on the shelf?", ans: 11, opts: [10, 11, 12, 9] },
+      { text: "Vedh chases the shadow ninja into the bamboo forest. Along the way, he finds 6 more missing scrolls hidden under a rock. He adds them to the 11 he already has.", question: "How many scrolls does Vedh have now?", ans: 17, opts: [16, 17, 18, 15] },
+      { text: "Vedh returns to the temple. The Grandmaster tells him to lock 10 of his 17 scrolls safely inside the steel vault.", question: "After locking 10 away, how many scrolls is Vedh still holding?", ans: 7, opts: [6, 7, 8, 5] }
     ]
   },
   {
     title: "Dino Safari Explorer 🦖",
+    icon: "🦖",
     pages: [
-      {
-        text: "Ranger Vedh is driving his jeep through the Dinosaur Safari. He looks through his binoculars and sees 3 Triceratops eating leaves. Each Triceratops has exactly 3 sharp horns.",
-        question: "How many Triceratops horns does Vedh see in total?",
-        ans: 9, opts: [6, 9, 12, 8]
-      },
-      {
-        text: "Suddenly, a giant T-Rex stomps out of the trees! The T-Rex has 20 massive teeth. But when it bites a hard dinosaur bone, it accidentally chips 5 teeth.",
-        question: "How many perfect teeth does the T-Rex have left?",
-        ans: 15, opts: [10, 15, 14, 25]
-      },
-      {
-        text: "Vedh escapes the T-Rex and finds a nest with 12 dinosaur eggs. He needs to carefully carry them to the lab in 2 equal boxes.",
-        question: "If he divides 12 eggs equally into 2 boxes, how many eggs go in each box?",
-        ans: 6, opts: [6, 4, 8, 10]
-      }
+      { text: "Ranger Vedh is driving his jeep through the Dinosaur Safari. He looks through his binoculars and sees 3 Triceratops eating leaves. Each Triceratops has exactly 3 sharp horns.", question: "How many Triceratops horns does Vedh see in total?", ans: 9, opts: [6, 9, 12, 8] },
+      { text: "Suddenly, a giant T-Rex stomps out of the trees! The T-Rex has 20 massive teeth. But when it bites a hard dinosaur bone, it accidentally chips 5 teeth.", question: "How many perfect teeth does the T-Rex have left?", ans: 15, opts: [10, 15, 14, 25] },
+      { text: "Vedh escapes the T-Rex and finds a nest with 12 dinosaur eggs. He needs to carefully carry them to the lab in 2 equal boxes.", question: "If he divides 12 eggs equally into 2 boxes, how many eggs go in each box?", ans: 6, opts: [6, 4, 8, 10] }
     ]
   },
   {
     title: "Superhero City Rescue 🦸‍♂️",
+    icon: "🦸‍♂️",
     pages: [
-      {
-        text: "An evil villain has trapped 10 citizens on top of a building! Super Vedh flies up and rescues 4 people, then flies back and rescues 3 more.",
-        question: "Vedh has rescued 7 people. How many citizens are still trapped?",
-        ans: 3, opts: [2, 3, 4, 5]
-      },
-      {
-        text: "The villain gets angry and throws 5 empty cars off the roof! Super Vedh catches 2 cars in his left hand, and 2 cars in his right hand.",
-        question: "If the villain threw 5 cars, and Vedh caught 4, how many cars hit the ground?",
-        ans: 1, opts: [0, 1, 2, 3]
-      },
-      {
-        text: "The city is saved! Vedh needs to fly 10 miles back to his secret base. If he flies super-fast at 2 miles per minute, how long will it take him?",
-        question: "What is 10 divided by 2?",
-        ans: 5, opts: [4, 5, 8, 20]
-      }
+      { text: "An evil villain has trapped 10 citizens on top of a building! Super Vedh flies up and rescues 4 people, then flies back and rescues 3 more.", question: "Vedh has rescued 7 people. How many citizens are still trapped?", ans: 3, opts: [2, 3, 4, 5] },
+      { text: "The villain gets angry and throws 5 empty cars off the roof! Super Vedh catches 2 cars in his left hand, and 2 cars in his right hand.", question: "If the villain threw 5 cars, and Vedh caught 4, how many cars hit the ground?", ans: 1, opts: [0, 1, 2, 3] },
+      { text: "The city is saved! Vedh needs to fly 10 miles back to his secret base. If he flies super-fast at 2 miles per minute, how long will it take him?", question: "What is 10 divided by 2?", ans: 5, opts: [4, 5, 8, 20] }
     ]
   },
   {
     title: "The Wizard's Potion 🧙‍♂️",
+    icon: "🧙‍♂️",
     pages: [
-      {
-        text: "Wizard Vedh is brewing a potion of invisibility. The recipe calls for 8 slimy frog legs. But Vedh wants to make a smaller batch, so he only uses HALF of the frog legs.",
-        question: "What is half of 8?",
-        ans: 4, opts: [3, 4, 5, 2]
-      },
-      {
-        text: "Next, he drops in 4 drops of dragon spit and 7 drops of glowing moon-water. The cauldron starts to bubble and hiss!",
-        question: "What is 4 drops plus 7 drops?",
-        ans: 11, opts: [10, 11, 12, 13]
-      },
-      {
-        text: "The book says to stir the potion for exactly 11 seconds. But Wizard Vedh gets distracted by his pet owl and stirs it for 15 seconds instead!",
-        question: "How many EXTRA seconds did Vedh stir the potion?",
-        ans: 4, opts: [3, 4, 5, 6]
-      }
+      { text: "Wizard Vedh is brewing a potion of invisibility. The recipe calls for 8 slimy frog legs. But Vedh wants to make a smaller batch, so he only uses HALF of the frog legs.", question: "What is half of 8?", ans: 4, opts: [3, 4, 5, 2] },
+      { text: "Next, he drops in 4 drops of dragon spit and 7 drops of glowing moon-water. The cauldron starts to bubble and hiss!", question: "What is 4 drops plus 7 drops?", ans: 11, opts: [10, 11, 12, 13] },
+      { text: "The book says to stir the potion for exactly 11 seconds. But Wizard Vedh gets distracted by his pet owl and stirs it for 15 seconds instead!", question: "How many EXTRA seconds did Vedh stir the potion?", ans: 4, opts: [3, 4, 5, 6] }
     ]
   },
   {
     title: "Agent Vedh & The Vault 🕵️‍♂️",
+    icon: "🕵️‍♂️",
     pages: [
-      {
-        text: "Secret Agent Vedh sneaks into the spy base. To open the first laser door, he must crack the code. The screen says: 'I am the number that comes right after 19.'",
-        question: "What number opens the door?",
-        ans: 20, opts: [18, 20, 21, 19]
-      },
-      {
-        text: "Vedh sneaks past the lasers and finds a room with 4 computer servers. Each server has 5 blinking green lights on it.",
-        question: "If there are 4 servers with 5 lights each, how many lights are there in total? (Hint: 4 x 5)",
-        ans: 20, opts: [9, 15, 20, 25]
-      },
-      {
-        text: "Vedh downloads the secret files! The download takes 30 seconds. He waits 10 seconds. He checks his watch nervously.",
-        question: "If the download takes 30 seconds and 10 seconds have passed, how many seconds are left?",
-        ans: 20, opts: [10, 15, 20, 40]
-      }
+      { text: "Secret Agent Vedh sneaks into the spy base. To open the first laser door, he must crack the code. The screen says: 'I am the number that comes right after 19.'", question: "What number opens the door?", ans: 20, opts: [18, 20, 21, 19] },
+      { text: "Vedh sneaks past the lasers and finds a room with 4 computer servers. Each server has 5 blinking green lights on it.", question: "If there are 4 servers with 5 lights each, how many lights are there in total?", ans: 20, opts: [9, 15, 20, 25] },
+      { text: "Vedh downloads the secret files! The download takes 30 seconds. He waits 10 seconds and checks his watch nervously.", question: "If the download takes 30 seconds and 10 seconds have passed, how many seconds are left?", ans: 20, opts: [10, 15, 20, 40] }
     ]
   },
   {
     title: "The Great Robot Factory 🤖",
+    icon: "🤖",
     pages: [
-      {
-        text: "Engineer Vedh is building cleaning robots. He has 14 robotic arms. Each robot needs exactly 2 arms to work properly.",
-        question: "If he has 14 arms, how many robots can he build?",
-        ans: 7, opts: [6, 7, 8, 12]
-      },
-      {
-        text: "Vedh turns the robots on! He built 7 robots, but 2 of them run out of battery and fall asleep on the floor.",
-        question: "How many robots are still awake and cleaning?",
-        ans: 5, opts: [4, 5, 6, 9]
-      },
-      {
-        text: "The 5 awake robots are very fast! Each robot cleans 3 dirty rooms in the factory.",
-        question: "If 5 robots each clean 3 rooms, how many rooms get cleaned in total? (Hint: 5 x 3)",
-        ans: 15, opts: [8, 12, 15, 20]
-      }
+      { text: "Engineer Vedh is building cleaning robots. He has 14 robotic arms. Each robot needs exactly 2 arms to work properly.", question: "If he has 14 arms, how many robots can he build?", ans: 7, opts: [6, 7, 8, 12] },
+      { text: "Vedh turns the robots on! He built 7 robots, but 2 of them run out of battery and fall asleep on the floor.", question: "How many robots are still awake and cleaning?", ans: 5, opts: [4, 5, 6, 9] },
+      { text: "The 5 awake robots are very fast! Each robot cleans 3 dirty rooms in the factory.", question: "If 5 robots each clean 3 rooms, how many rooms get cleaned in total?", ans: 15, opts: [8, 12, 15, 20] }
     ]
   }
 ];
 
+const screens = {
+  talesListScreen: document.getElementById('talesListScreen'),
+  taleReaderScreen: document.getElementById('taleReaderScreen'),
+  endScreen: document.getElementById('endScreen')
+};
+
+function switchScreen(screenName) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[screenName].classList.add('active');
+  if(screenName === 'talesListScreen') refreshTopBadges();
+}
+
+let activeTaleIndex = 0;
+let activeTalePage = 0;
+
+function initApp() {
+  const container = document.getElementById('talesContainer');
+  container.innerHTML = '';
+  
+  STORIES.forEach((story, i) => {
+    let btn = document.createElement('button');
+    btn.className = 'mode-btn';
+    btn.style.borderColor = 'var(--secondary)';
+    btn.style.boxShadow = '0 6px 0 var(--secondary)';
+    btn.innerHTML = `
+      <div class="mode-icon" style="font-size: 2.8rem;">${story.icon}</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">${story.title}</h3>
+        <p style="font-weight: 600; color: #64748b;">Read the story & solve puzzles!</p>
+      </div>
+    `;
+    btn.onclick = () => startTale(i);
+    container.appendChild(btn);
+  });
+  
+  refreshTopBadges();
+}
+
+function startTale(index) {
+  activeTaleIndex = index;
+  activeTalePage = 0;
+  switchScreen('taleReaderScreen');
+  renderTalePage();
+}
+
+function renderTalePage() {
+  const story = STORIES[activeTaleIndex];
+  const pageData = story.pages[activeTalePage];
+  
+  document.getElementById('taleProgress').innerText = `Page ${activeTalePage + 1} of ${story.pages.length}`;
+  document.getElementById('taleText').innerText = pageData.text;
+  document.getElementById('taleQuestion').innerText = pageData.question;
+  
+  const optsContainer = document.getElementById('taleOptions');
+  optsContainer.innerHTML = '';
+  
+  let shuffledOpts = [...pageData.opts].sort(() => Math.random() - 0.5);
+  shuffledOpts.forEach(opt => {
+    let btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerText = opt;
+    btn.onclick = () => handleTaleAnswer(opt, pageData.ans, btn);
+    optsContainer.appendChild(btn);
+  });
+}
+
+function handleTaleAnswer(selected, correct, btnEl) {
+  const story = STORIES[activeTaleIndex];
+  document.querySelectorAll('#taleOptions .opt-btn').forEach(b => b.disabled = true);
+  
+  if (selected === correct) {
+    if(typeof playSound === 'function') playSound('correct');
+    btnEl.classList.add('correct');
+    
+    setTimeout(() => {
+      activeTalePage++;
+      if (activeTalePage >= story.pages.length) {
+        // Finish Story! Award 15 XP
+        if(typeof playSound === 'function') playSound('win');
+        let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+        localStorage.setItem('vedhTotalXP', currentXP + 15); 
+        
+        document.getElementById('gameStickerAlert').classList.remove('show');
+        let newSticker = unlockSticker();
+        if(newSticker) {
+          document.getElementById('gameUnlockedEmoji').innerText = newSticker;
+          document.getElementById('gameStickerAlert').classList.add('show');
+        }
+        
+        switchScreen('endScreen');
+      } else {
+        renderTalePage();
+      }
+    }, 1000);
+  } else {
+    if(typeof playSound === 'function') playSound('wrong');
+    btnEl.classList.add('wrong');
+    setTimeout(() => {
+      btnEl.classList.remove('wrong');
+      document.querySelectorAll('#taleOptions .opt-btn').forEach(b => b.disabled = false);
+    }, 1000);
+  }
+}
+
+// Start the app!
+initApp();
+</script>
+</body>
+</html>
