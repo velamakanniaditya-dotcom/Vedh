@@ -87,6 +87,11 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primar
 .btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--secondary); color: white; border: 4px solid #2563eb; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #2563eb; }
 .btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #2563eb; }
 
+/* Test Mode Styles */
+.test-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 10px 15px; border-radius: 12px; border: 2px solid #e2e8f0; font-family: 'Fredoka One'; font-size: 1.2rem; color: var(--dark); margin-bottom: 10px; }
+.test-select { font-family: 'Fredoka One'; font-size: 1.2rem; padding: 5px 10px; border-radius: 8px; border: 2px solid var(--dark); text-align: center; outline: none; cursor: pointer; }
+.test-select:focus { border-color: var(--secondary); }
+
 /* Feedback */
 .feedback-star { position: absolute; font-size: 4rem; opacity: 0; pointer-events: none; z-index: 10; }
 .feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
@@ -154,11 +159,20 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primar
         <p style="font-weight: 600; color: #64748b;">No timer! Take your time.</p>
       </div>
     </button>
+    
     <button class="mode-btn" style="border-color: var(--warning); box-shadow: 0 6px 0 var(--warning);" onclick="startGame('blast')">
       <div class="mode-icon" style="font-size: 2rem;">🚀</div>
       <div>
         <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Blast Mode</h3>
         <p style="font-weight: 600; color: #64748b;">Survival! Get +5s for correct answers.</p>
+      </div>
+    </button>
+
+    <button class="mode-btn" style="border-color: #a855f7; box-shadow: 0 6px 0 #a855f7;" onclick="startGame('test')">
+      <div class="mode-icon" style="font-size: 2rem;">📝</div>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size: 1.4rem; color: var(--dark);">Test Mode</h3>
+        <p style="font-weight: 600; color: #64748b;">10 Questions. Grade at the end!</p>
       </div>
     </button>
   </div>
@@ -176,6 +190,33 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primar
     </div>
     <div id="problemArea" class="math-problem"></div>
     <div class="options-grid" id="optionsContainer"></div>
+  </div>
+</div>
+
+<div id="testScreen" class="screen">
+  <div class="worksheet-card">
+    <div class="top-bar" style="border-bottom: 2px dashed #e2e8f0; padding-bottom: 10px;">
+      <span>Maths Test 📝</span>
+      <button style="background:none; border:none; color:var(--danger); font-weight:bold; cursor:pointer;" onclick="switchScreen('modeScreen')">Quit ✖</button>
+    </div>
+    <div id="testQuestionsContainer" style="margin-top: 15px; margin-bottom:20px; text-align:left;">
+      </div>
+    <button class="btn-primary" onclick="submitTest()">Submit Test 📋</button>
+  </div>
+</div>
+
+<div id="testResultScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.5rem; color: var(--dark);">Test Complete!</h2>
+    <div style="font-size: 5rem; margin: 10px 0; color: var(--secondary); font-family: 'Fredoka One'; line-height: 1;" id="testFinalScore">0/10</div>
+    <div style="font-size: 1.2rem; font-weight: 800; color: #64748b; margin-bottom: 25px;" id="testEndMessage">Keep Practicing!</div>
+    
+    <div id="testStickerAlert" class="sticker-alert">
+      <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW BADGE UNLOCKED!</h3>
+      <div id="testUnlockedEmoji" style="font-size: 4rem;"></div>
+    </div>
+
+    <button class="btn-primary" style="margin-top:20px;" onclick="switchScreen('categoryScreen')">Back to Topics 📚</button>
   </div>
 </div>
 
@@ -226,6 +267,8 @@ const screens = {
   categoryScreen: document.getElementById('categoryScreen'),
   modeScreen: document.getElementById('modeScreen'),
   gameScreen: document.getElementById('gameScreen'),
+  testScreen: document.getElementById('testScreen'),
+  testResultScreen: document.getElementById('testResultScreen'),
   endScreen: document.getElementById('endScreen')
 };
 
@@ -243,6 +286,7 @@ let timeLeft = 0;
 let timeTotal = 0;
 let timerInterval;
 let correctAnswer = null;
+let currentTestQuestions = [];
 
 const SECONDS_BLAST_START = 20; 
 const BONUS_TIME = 5; 
@@ -262,12 +306,19 @@ function selectCategory(cat) {
 function startGame(mode) {
   currentMode = mode;
   score = 0;
+  
+  if (mode === 'test') {
+    generateTest();
+    switchScreen('testScreen');
+    return;
+  }
+
   document.getElementById('scoreDisplay').innerText = score;
   
   if (mode === 'relaxed') {
     document.getElementById('modeDisplay').innerHTML = '🌟 Practice';
     document.getElementById('timerBarWrap').style.display = 'none'; 
-  } else {
+  } else if (mode === 'blast') {
     document.getElementById('modeDisplay').innerHTML = '🚀 Blast';
     document.getElementById('timerBarWrap').style.display = 'block';
     timeTotal = SECONDS_BLAST_START;
@@ -277,7 +328,9 @@ function startGame(mode) {
   }
 
   updateTimerUI();
-  generateQuestion();
+  
+  let qData = createProblemData(currentCategory, score);
+  renderProblemUI(qData);
   switchScreen('gameScreen');
 }
 
@@ -294,49 +347,48 @@ function updateTimerUI() {
   document.getElementById('timerFill').style.width = percentage + '%';
 }
 
-function generateQuestion() {
-  let maxNum = score < 5 ? 10 : (score < 15 ? 20 : 50);
+// Data generator for BOTH Game and Test modes
+function createProblemData(cat, currentScoreNum) {
+  let maxNum = currentScoreNum < 4 ? 10 : (currentScoreNum < 8 ? 20 : 50);
   let qText = ''; let ans = ''; let opts = [];
-  
-  document.getElementById('problemArea').innerHTML = '';
 
-  if (currentCategory === 'add' || currentCategory === 'sub') {
+  if (cat === 'add' || cat === 'sub') {
     let n1 = Math.floor(Math.random() * maxNum) + 1;
     let n2 = Math.floor(Math.random() * maxNum) + 1;
-    let op = currentCategory === 'add' ? '+' : '-';
-    if (currentCategory === 'sub' && n2 > n1) [n1, n2] = [n2, n1];
-    ans = currentCategory === 'add' ? n1 + n2 : n1 - n2;
-    qText = `${n1} ${op} ${n2} <span style="color:#94a3b8">=</span>`;
+    let op = cat === 'add' ? '+' : '-';
+    if (cat === 'sub' && n2 > n1) [n1, n2] = [n2, n1];
+    ans = cat === 'add' ? n1 + n2 : n1 - n2;
+    qText = `${n1} ${op} ${n2}`;
     opts = generateOptions(ans);
   } 
-  else if (currentCategory === 'mul') {
-    let mMax = score < 5 ? 5 : 10;
+  else if (cat === 'mul') {
+    let mMax = currentScoreNum < 4 ? 5 : 10;
     let n1 = Math.floor(Math.random() * mMax) + 1;
     let n2 = Math.floor(Math.random() * 5) + 1;
     ans = n1 * n2;
-    qText = `${n1} × ${n2} <span style="color:#94a3b8">=</span>`;
+    qText = `${n1} × ${n2}`;
     opts = generateOptions(ans);
   }
-  else if (currentCategory === 'div') {
+  else if (cat === 'div') {
     let a = Math.floor(Math.random() * 10) + 1;
     let n2 = Math.floor(Math.random() * 10) + 1;
     let n1 = a * n2;
     ans = a;
-    qText = `${n1} ÷ ${n2} <span style="color:#94a3b8">=</span>`;
+    qText = `${n1} ÷ ${n2}`;
     opts = generateOptions(ans);
   }
-  else if (currentCategory === 'comp') {
+  else if (cat === 'comp') {
     let n1 = Math.floor(Math.random() * maxNum) + 1;
     let n2 = Math.floor(Math.random() * maxNum) + 1;
     if (Math.random() > 0.8) n2 = n1;
     if (n1 > n2) ans = '>'; else if (n1 < n2) ans = '<'; else ans = '=';
-    qText = `${n1} <span style="color:#94a3b8">[ ? ]</span> ${n2}`;
+    qText = `${n1} [ ? ] ${n2}`;
     opts = ['>', '<', '='];
   }
-  else if (currentCategory === 'shape') {
+  else if (cat === 'shape') {
     let shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
     ans = shape.n;
-    qText = `<div class="shape-emoji">${shape.e}</div>`;
+    qText = shape.e; // Just pass the emoji
     opts = [ans];
     while(opts.length < 4) {
       let rand = SHAPES[Math.floor(Math.random() * SHAPES.length)].n;
@@ -344,13 +396,7 @@ function generateQuestion() {
     }
   }
 
-  correctAnswer = ans;
-  document.getElementById('problemArea').innerHTML = qText;
-  
-  if (currentCategory === 'comp') document.getElementById('optionsContainer').style.gridTemplateColumns = '1fr 1fr 1fr';
-  else document.getElementById('optionsContainer').style.gridTemplateColumns = '1fr 1fr';
-  
-  renderOptions(opts);
+  return { text: qText, answer: ans, options: opts };
 }
 
 function generateOptions(correct) {
@@ -363,11 +409,31 @@ function generateOptions(correct) {
   return opts;
 }
 
-function renderOptions(options) {
-  options.sort(() => Math.random() - 0.5);
+// ══════════════════════════════════════════════
+// GAME UI (PRACTICE / BLAST)
+// ══════════════════════════════════════════════
+function renderProblemUI(qData) {
+  correctAnswer = qData.answer;
+  
+  // Format for the big screen
+  let displayHTML = qData.text;
+  if (currentCategory === 'shape') {
+    displayHTML = `<div class="shape-emoji">${qData.text}</div>`;
+  } else if (currentCategory !== 'comp') {
+    displayHTML += ` <span style="color:#94a3b8">=</span>`;
+  }
+  
+  document.getElementById('problemArea').innerHTML = displayHTML;
+  
+  if (currentCategory === 'comp') document.getElementById('optionsContainer').style.gridTemplateColumns = '1fr 1fr 1fr';
+  else document.getElementById('optionsContainer').style.gridTemplateColumns = '1fr 1fr';
+  
   let optsEl = document.getElementById('optionsContainer');
   optsEl.innerHTML = '';
-  options.forEach(opt => {
+  
+  let shuffledOpts = [...qData.options].sort(() => Math.random() - 0.5);
+  
+  shuffledOpts.forEach(opt => {
     let btn = document.createElement('button');
     btn.className = 'opt-btn'; btn.innerText = opt;
     btn.onclick = () => checkAnswer(opt, btn);
@@ -391,12 +457,20 @@ function checkAnswer(selected, btn) {
       timeLeft += BONUS_TIME; if(timeLeft > timeTotal) timeTotal = timeLeft; 
       updateTimerUI();
     }
-    setTimeout(generateQuestion, 800);
+    
+    setTimeout(() => {
+      let nextData = createProblemData(currentCategory, score);
+      renderProblemUI(nextData);
+    }, 800);
   } else {
     if(typeof playSound === 'function') playSound('wrong');
     btn.classList.add('wrong');
     document.querySelectorAll('#optionsContainer .opt-btn').forEach(b => { if (b.innerText == correctAnswer) b.classList.add('correct'); });
-    setTimeout(generateQuestion, 1500);
+    
+    setTimeout(() => {
+      let nextData = createProblemData(currentCategory, score);
+      renderProblemUI(nextData);
+    }, 1500);
   }
 }
 
@@ -422,6 +496,71 @@ function endGame() {
   if (score > 20) msg = "Math Superstar! 🏆";
   document.getElementById('endMessage').innerText = msg;
   switchScreen('endScreen');
+}
+
+// ══════════════════════════════════════════════
+// TEST UI LOGIC 📝
+// ══════════════════════════════════════════════
+function generateTest() {
+  currentTestQuestions = [];
+  const container = document.getElementById('testQuestionsContainer');
+  container.innerHTML = '';
+
+  for (let i = 0; i < 10; i++) {
+    // Generate questions that get slightly harder
+    let qData = createProblemData(currentCategory, i); 
+    currentTestQuestions.push(qData);
+
+    let row = document.createElement('div');
+    row.className = 'test-row';
+    
+    let displayHtml = qData.text;
+    if (currentCategory === 'shape') displayHtml = `<span style="font-size:2rem;">${qData.text}</span>`;
+    if (currentCategory !== 'comp' && currentCategory !== 'shape') displayHtml += ' =';
+
+    let selectHtml = `<select id="testAns${i}" class="test-select"><option value="" disabled selected>?</option>`;
+    let shuffledOpts = [...qData.options].sort(() => Math.random() - 0.5);
+    shuffledOpts.forEach(opt => {
+      selectHtml += `<option value="${opt}">${opt}</option>`;
+    });
+    selectHtml += `</select>`;
+
+    row.innerHTML = `<span><span style="color:#94a3b8; margin-right:8px;">${i+1}.</span> ${displayHtml}</span> ${selectHtml}`;
+    container.appendChild(row);
+  }
+}
+
+function submitTest() {
+  let finalScore = 0;
+  for (let i = 0; i < 10; i++) {
+    let selected = document.getElementById(`testAns${i}`).value;
+    if (selected == currentTestQuestions[i].answer) {
+      finalScore++;
+    }
+  }
+
+  if(typeof playSound === 'function') playSound('win');
+  
+  document.getElementById('testFinalScore').innerText = finalScore + "/10";
+  document.getElementById('testStickerAlert').classList.remove('show'); 
+  
+  if (finalScore >= 8) {
+    let newSticker = unlockSticker();
+    if (newSticker) {
+      document.getElementById('testUnlockedEmoji').innerText = newSticker;
+      document.getElementById('testStickerAlert').classList.add('show');
+    }
+  }
+
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + finalScore);
+  
+  let msg = "Keep Practicing! 💪";
+  if (finalScore >= 7) msg = "Great Job! 👍";
+  if (finalScore === 10) msg = "Perfect Score! Amazing! 🌟";
+  document.getElementById('testEndMessage').innerText = msg;
+  
+  switchScreen('testResultScreen');
 }
 
 refreshTopBadges();
