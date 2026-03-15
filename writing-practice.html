@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing Practice ✏️ - Vedh's Kingdom</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #f59e0b;   /* Pencil Gold */
+  --secondary: #3b82f6; /* Ink Blue */
+  --danger: #f87171;
+  --green: #22c55e;
+  --dark: #1e293b;
+  --paper: #fffef0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #fffef0;
+  /* Lined paper */
+  background-image:
+    linear-gradient(#dbeafe 1px, transparent 1px);
+  background-size: 100% 44px;
+  color: var(--dark);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px;
+  background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px;
+  text-decoration: none; font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem; box-shadow: 0 4px 0 #d97706; z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #d97706; }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 620px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity:0; transform:scale(0.9) translateY(20px); } 100% { opacity:1; transform:scale(1) translateY(0); } }
+
+.card { background: white; border: 4px solid var(--dark); border-radius: 24px; padding: 28px; box-shadow: 0 10px 0 rgba(30,41,59,0.1); text-align: center; position: relative; }
+
+/* Category Grid */
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 18px; }
+.cat-btn {
+  background: white; border: 4px solid var(--dark); border-radius: 16px;
+  padding: 18px 10px; cursor: pointer; transition: all 0.1s;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  box-shadow: 0 6px 0 var(--dark); font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem; color: var(--dark);
+}
+.cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.cat-icon { font-size: 3rem; }
+
+.btn-back { background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer; margin-bottom: 14px; text-decoration: underline; font-size: 1rem; }
+.btn-primary {
+  width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+  background: var(--primary); color: white; border: 4px solid #d97706;
+  border-radius: 14px; padding: 13px; cursor: pointer;
+  box-shadow: 0 6px 0 #d97706; transition: all 0.1s;
+}
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #d97706; }
+.btn-secondary {
+  width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+  background: var(--secondary); color: white; border: 4px solid #1d4ed8;
+  border-radius: 14px; padding: 12px; cursor: pointer;
+  box-shadow: 0 6px 0 #1d4ed8; transition: all 0.1s; margin-top: 10px;
+}
+.btn-secondary:active { transform: translateY(6px); box-shadow: 0 0 0 #1d4ed8; }
+
+/* ── TRACE MODE ── */
+.letter-display {
+  font-family: 'Fredoka One', cursive;
+  font-size: 12rem;
+  color: #e2e8f0;
+  line-height: 1;
+  user-select: none;
+  margin: 10px 0;
+  text-shadow: 3px 3px 0 #cbd5e1;
+  position: relative;
+  z-index: 0;
+}
+.canvas-container { position: relative; display: inline-block; margin: 0 auto; }
+canvas {
+  position: absolute; top: 0; left: 0;
+  cursor: crosshair; border-radius: 12px;
+  touch-action: none;
+}
+.trace-hint { font-size: 1rem; color: #94a3b8; font-weight: 800; margin-bottom: 8px; }
+
+.letter-nav { display: flex; gap: 12px; margin: 12px 0; }
+.nav-btn { flex: 1; font-family: 'Fredoka One', cursive; font-size: 1.3rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 12px; padding: 11px; cursor: pointer; box-shadow: 0 5px 0 var(--dark); transition: all 0.1s; }
+.nav-btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--dark); }
+.clear-btn { font-family: 'Fredoka One', cursive; font-size: 1.2rem; background: #fee2e2; border: 3px solid var(--danger); color: var(--danger); border-radius: 12px; padding: 10px 20px; cursor: pointer; box-shadow: 0 4px 0 #dc2626; transition: all 0.1s; margin-top: 8px; width: 100%; }
+.clear-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #dc2626; }
+
+/* Letter alphabet tabs */
+.alpha-mode { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; justify-content: center; }
+.alpha-tab { font-family: 'Fredoka One', cursive; font-size: 1rem; padding: 8px 14px; border-radius: 10px; border: 3px solid var(--dark); cursor: pointer; background: white; box-shadow: 0 4px 0 var(--dark); transition: all 0.1s; }
+.alpha-tab:active { transform: translateY(4px); box-shadow: 0 0 0 var(--dark); }
+.alpha-tab.active { background: var(--primary); color: white; border-color: #d97706; box-shadow: 0 4px 0 #d97706; }
+
+/* ── SPELL IT (Type) MODE ── */
+.spell-prompt { font-size: 1.3rem; font-weight: 800; color: #475569; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.spell-image { font-size: 7rem; margin: 8px 0; animation: bounce 2s infinite ease-in-out; line-height: 1; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.spell-blanks { display: flex; gap: 8px; justify-content: center; margin: 14px 0; flex-wrap: wrap; }
+.spell-blank {
+  width: 48px; height: 56px; border: none; border-bottom: 4px solid var(--dark);
+  font-family: 'Fredoka One', cursive; font-size: 2rem; text-align: center;
+  background: transparent; color: var(--dark);
+  text-transform: uppercase; outline: none;
+}
+.spell-blank:focus { border-bottom-color: var(--secondary); }
+.spell-hint-btn { font-family: 'Fredoka One', cursive; font-size: 1.1rem; background: #eff6ff; border: 3px solid var(--secondary); color: var(--secondary); border-radius: 12px; padding: 8px 18px; cursor: pointer; margin: 8px 0; box-shadow: 0 4px 0 #1d4ed8; }
+.spell-hint-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #1d4ed8; }
+.spell-result { font-family: 'Fredoka One', cursive; font-size: 1.5rem; padding: 12px; border-radius: 14px; margin-top: 10px; display: none; }
+.spell-result.correct { background: #dcfce7; color: var(--green); border: 3px solid var(--green); }
+.spell-result.wrong   { background: #fee2e2; color: #dc2626; border: 3px solid var(--danger); }
+.check-btn { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.4rem; background: var(--green); color: white; border: 4px solid #16a34a; border-radius: 14px; padding: 12px; cursor: pointer; box-shadow: 0 6px 0 #16a34a; transition: all 0.1s; margin-top: 10px; }
+.check-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #16a34a; }
+
+/* ── SENTENCE COPY MODE ── */
+.sentence-model {
+  font-family: 'Fredoka One', cursive; font-size: 1.6rem;
+  color: var(--secondary); background: #eff6ff;
+  border: 3px solid var(--secondary); border-radius: 14px;
+  padding: 14px; margin-bottom: 14px; line-height: 1.5;
+}
+.sentence-input {
+  width: 100%; font-family: 'Nunito', sans-serif; font-size: 1.4rem;
+  font-weight: 800; border: 4px solid var(--dark); border-radius: 14px;
+  padding: 14px; resize: none; outline: none; background: var(--paper);
+  color: var(--dark); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+  line-height: 1.5;
+}
+.sentence-input:focus { border-color: var(--primary); }
+.stars-row { display: flex; justify-content: center; gap: 6px; margin: 10px 0; font-size: 2rem; }
+.copy-score-msg { font-family: 'Fredoka One', cursive; font-size: 1.4rem; margin: 8px 0; }
+
+/* Progress indicator */
+.progress-dots { display: flex; gap: 8px; justify-content: center; margin: 8px 0; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: #e2e8f0; border: 2px solid #cbd5e1; transition: all 0.3s; }
+.dot.done { background: var(--green); border-color: #16a34a; }
+.dot.current { background: var(--primary); border-color: #d97706; transform: scale(1.3); }
+
+@media(max-width: 500px) {
+  h1 { font-size: 2.4rem; }
+  .spell-blank { width: 38px; height: 48px; font-size: 1.6rem; }
+  .sentence-model { font-size: 1.3rem; }
+  .letter-display { font-size: 8rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Writing Practice</h1>
+  <div class="subtitle">Trace • Spell • Copy ✏️</div>
+</header>
+
+<!-- CATEGORY -->
+<div id="categoryScreen" class="screen active">
+  <div class="card">
+    <h2 style="font-family:'Fredoka One'; font-size:1.9rem; color:var(--dark);">What shall we practise? ✏️</h2>
+    <p style="color:#64748b; font-weight:700; margin-top:6px;">Choose a writing activity!</p>
+    <div class="cat-grid">
+      <button class="cat-btn" onclick="startTrace()" style="border-color:var(--primary);">
+        <span class="cat-icon">🖊️</span>
+        Trace Letters
+      </button>
+      <button class="cat-btn" onclick="startSpell()" style="border-color:var(--secondary);">
+        <span class="cat-icon">🔤</span>
+        Spell It!
+      </button>
+      <button class="cat-btn" onclick="startCopy()" style="border-color:var(--green); grid-column: span 2;">
+        <span class="cat-icon">📝</span>
+        Copy Sentences
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACE SCREEN -->
+<div id="traceScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back</button>
+    <h2 style="font-family:'Fredoka One'; font-size:1.7rem; color:var(--dark); margin-bottom:4px;">Trace the Letter!</h2>
+
+    <div class="alpha-mode">
+      <button class="alpha-tab active" id="tabUpper" onclick="setAlphaMode('upper')">A B C</button>
+      <button class="alpha-tab" id="tabLower" onclick="setAlphaMode('lower')">a b c</button>
+      <button class="alpha-tab" id="tabNum"   onclick="setAlphaMode('numbers')">1 2 3</button>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="trace-hint">Use your finger or mouse to trace over the letter!</div>
+      <div id="traceLetterDisplay" class="letter-display">A</div>
+      <canvas id="traceCanvas" width="200" height="200"></canvas>
+    </div>
+
+    <div class="letter-nav">
+      <button class="nav-btn" onclick="prevLetter()">← Prev</button>
+      <button class="nav-btn" onclick="nextLetter()">Next →</button>
+    </div>
+    <button class="clear-btn" onclick="clearCanvas()">🗑️ Clear &amp; Try Again</button>
+  </div>
+</div>
+
+<!-- SPELL IT SCREEN -->
+<div id="spellScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back</button>
+    <h2 style="font-family:'Fredoka One'; font-size:1.7rem; color:var(--dark); margin-bottom:8px;">Spell It! 🔤</h2>
+
+    <div class="progress-dots" id="spellDots"></div>
+
+    <div class="spell-prompt">What is this?</div>
+    <div class="spell-image" id="spellEmoji">🐱</div>
+    <div class="spell-blanks" id="spellBlanks"></div>
+    <button class="spell-hint-btn" onclick="showHint()">💡 Hint</button>
+    <div class="spell-result" id="spellResult"></div>
+    <button class="check-btn" onclick="checkSpelling()">Check ✔️</button>
+    <button class="btn-secondary" id="nextSpellBtn" onclick="nextSpellWord()" style="display:none;">Next Word →</button>
+  </div>
+</div>
+
+<!-- COPY SCREEN -->
+<div id="copyScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back</button>
+    <h2 style="font-family:'Fredoka One'; font-size:1.7rem; color:var(--dark); margin-bottom:8px;">Copy the Sentence! 📝</h2>
+
+    <div class="progress-dots" id="copyDots"></div>
+
+    <div class="sentence-model" id="copyModel">The cat sat on the mat.</div>
+    <p style="color:#94a3b8; font-weight:700; font-size:0.9rem; margin-bottom:8px;">Type the sentence below exactly as you see it:</p>
+    <textarea class="sentence-input" id="copyInput" rows="3" placeholder="Start typing here..."></textarea>
+
+    <div class="stars-row" id="copyStars"></div>
+    <div class="copy-score-msg" id="copyMsg"></div>
+    <button class="check-btn" onclick="checkCopy()">Check ✔️</button>
+    <button class="btn-secondary" id="nextCopyBtn" onclick="nextCopySentence()" style="display:none;">Next Sentence →</button>
+    <button class="btn-primary" style="margin-top:10px; display:none;" id="copyDoneBtn" onclick="switchScreen('categoryScreen')">All Done! 🎉</button>
+  </div>
+</div>
+
+<script src="sounds.js"></script>
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const UPPER = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const LOWER = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+const NUMBERS = ['1','2','3','4','5','6','7','8','9','10'];
+
+const SPELL_WORDS = [
+  { e:"🐱", w:"CAT" }, { e:"🐶", w:"DOG" }, { e:"☀️", w:"SUN" }, { e:"🌙", w:"MOON" },
+  { e:"⭐", w:"STAR" }, { e:"🌳", w:"TREE" }, { e:"🐟", w:"FISH" }, { e:"🍎", w:"APPLE" },
+  { e:"🏠", w:"HOUSE" }, { e:"📚", w:"BOOK" }, { e:"🌈", w:"RAIN" }, { e:"🦁", w:"LION" },
+  { e:"🐘", w:"ELEPHANT" }, { e:"🎂", w:"CAKE" }, { e:"🚗", w:"CAR" }, { e:"✈️", w:"PLANE" },
+  { e:"🎈", w:"BALL" }, { e:"🖊️", w:"PEN" }, { e:"🌺", w:"FLOWER" }, { e:"🦋", w:"BUTTERFLY" },
+  { e:"🐸", w:"FROG" }, { e:"🍌", w:"BANANA" }, { e:"🎵", w:"MUSIC" }, { e:"🌊", w:"WAVE" },
+  { e:"🦅", w:"EAGLE" }, { e:"🍕", w:"PIZZA" }, { e:"🌍", w:"EARTH" }, { e:"🐠", w:"CLOWN" }
+];
+
+const COPY_SENTENCES = [
+  "The cat sat on the mat.",
+  "A big red bus went fast.",
+  "The sun is hot and bright.",
+  "I can see a little bird.",
+  "My dog likes to run and jump.",
+  "We play in the park today.",
+  "The fish swam in the blue sea.",
+  "She had a cake on her plate.",
+  "I love to read a good book.",
+  "The stars shine in the dark sky.",
+  "A lion is a big wild cat.",
+  "I drink milk to grow strong.",
+  "He drew a house with a red roof.",
+  "The rain fell on the green grass.",
+  "My mum made soup for lunch."
+];
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+const scrs = {};
+['categoryScreen','traceScreen','spellScreen','copyScreen'].forEach(id => {
+  scrs[id] = document.getElementById(id);
+});
+
+function switchScreen(name) {
+  Object.values(scrs).forEach(s => s.classList.remove('active'));
+  scrs[name].classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// TRACE MODE
+// ══════════════════════════════════════════
+let alphaMode = 'upper';
+let alphaSet = UPPER;
+let alphaIndex = 0;
+let drawing = false;
+
+const canvas = document.getElementById('traceCanvas');
+const ctx = canvas.getContext('2d');
+const letterDisp = document.getElementById('traceLetterDisplay');
+
+function setAlphaMode(mode) {
+  alphaMode = mode;
+  alphaSet = mode === 'upper' ? UPPER : mode === 'lower' ? LOWER : NUMBERS;
+  alphaIndex = 0;
+  document.getElementById('tabUpper').classList.toggle('active', mode === 'upper');
+  document.getElementById('tabLower').classList.toggle('active', mode === 'lower');
+  document.getElementById('tabNum').classList.toggle('active', mode === 'numbers');
+  updateTraceDisplay();
+}
+
+function updateTraceDisplay() {
+  const letter = alphaSet[alphaIndex];
+  letterDisp.textContent = letter;
+  clearCanvas();
+  // Position canvas over letter
+  const rect = letterDisp.getBoundingClientRect();
+  const parentRect = letterDisp.parentElement.getBoundingClientRect();
+}
+
+function prevLetter() { if (alphaIndex > 0) { alphaIndex--; updateTraceDisplay(); } }
+function nextLetter() { if (alphaIndex < alphaSet.length - 1) { alphaIndex++; updateTraceDisplay(); } }
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// Set canvas size to match letter display
+function resizeCanvas() {
+  const rect = letterDisp.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  canvas.style.left = '0';
+  canvas.style.top = '0';
+  // Make the canvas a sibling overlay
+  letterDisp.style.display = 'inline-block';
+  letterDisp.style.position = 'relative';
+  canvas.style.position = 'absolute';
+  letterDisp.parentElement.style.position = 'relative';
+  letterDisp.parentElement.style.display = 'inline-block';
+  clearCanvas();
+}
+
+function getPos(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  if (e.touches) {
+    return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+  }
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+function startDraw(e) { e.preventDefault(); drawing = true; const p = getPos(e, canvas); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
+function draw(e) {
+  if (!drawing) return; e.preventDefault();
+  const p = getPos(e, canvas);
+  ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.strokeStyle = '#f59e0b';
+  ctx.lineTo(p.x, p.y); ctx.stroke();
+}
+function stopDraw(e) { drawing = false; ctx.closePath(); }
+
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDraw);
+canvas.addEventListener('mouseleave', stopDraw);
+canvas.addEventListener('touchstart', startDraw, { passive: false });
+canvas.addEventListener('touchmove', draw, { passive: false });
+canvas.addEventListener('touchend', stopDraw);
+
+function startTrace() {
+  switchScreen('traceScreen');
+  setTimeout(() => { resizeCanvas(); updateTraceDisplay(); }, 100);
+}
+
+// ══════════════════════════════════════════
+// SPELL IT MODE
+// ══════════════════════════════════════════
+let spellQueue = [];
+let spellIndex = 0;
+let currentSpellWord = '';
+
+function startSpell() {
+  spellQueue = [...SPELL_WORDS].sort(() => Math.random() - 0.5).slice(0, 10);
+  spellIndex = 0;
+  switchScreen('spellScreen');
+  loadSpellWord();
+}
+
+function buildDots(containerId, total, currentIdx) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < currentIdx ? ' done' : i === currentIdx ? ' current' : '');
+    c.appendChild(d);
+  }
+}
+
+function loadSpellWord() {
+  const item = spellQueue[spellIndex];
+  currentSpellWord = item.w;
+  document.getElementById('spellEmoji').textContent = item.e;
+
+  const blanks = document.getElementById('spellBlanks');
+  blanks.innerHTML = '';
+  [...currentSpellWord].forEach((_, i) => {
+    const inp = document.createElement('input');
+    inp.className = 'spell-blank';
+    inp.maxLength = 1;
+    inp.dataset.idx = i;
+    inp.type = 'text';
+    inp.autocomplete = 'off';
+    inp.addEventListener('input', e => {
+      const v = e.target.value.toUpperCase();
+      e.target.value = v;
+      if (v && i < currentSpellWord.length - 1) {
+        blanks.querySelectorAll('.spell-blank')[i + 1].focus();
+      }
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !e.target.value && i > 0) {
+        blanks.querySelectorAll('.spell-blank')[i - 1].focus();
+      }
+    });
+    blanks.appendChild(inp);
+  });
+
+  document.getElementById('spellResult').style.display = 'none';
+  document.getElementById('nextSpellBtn').style.display = 'none';
+  buildDots('spellDots', spellQueue.length, spellIndex);
+  blanks.querySelectorAll('.spell-blank')[0].focus();
+}
+
+function showHint() {
+  const blanks = document.querySelectorAll('.spell-blank');
+  // Show first unfilled blank
+  for (let i = 0; i < currentSpellWord.length; i++) {
+    if (!blanks[i].value) {
+      blanks[i].value = currentSpellWord[i];
+      if (i < currentSpellWord.length - 1) blanks[i + 1].focus();
+      break;
+    }
+  }
+}
+
+function checkSpelling() {
+  const blanks = [...document.querySelectorAll('.spell-blank')];
+  const typed = blanks.map(b => b.value.toUpperCase()).join('');
+  const result = document.getElementById('spellResult');
+  result.style.display = 'block';
+  if (typed === currentSpellWord) {
+    result.textContent = '🎉 Correct! Well done!';
+    result.className = 'spell-result correct';
+    if (typeof playSound !== 'undefined') playSound('correct');
+  } else {
+    result.textContent = `Not quite! The word is: ${currentSpellWord}`;
+    result.className = 'spell-result wrong';
+    // Fill in correct letters
+    blanks.forEach((b, i) => { b.value = currentSpellWord[i]; });
+    if (typeof playSound !== 'undefined') playSound('wrong');
+  }
+  // XP
+  let xp = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  if (typed === currentSpellWord) localStorage.setItem('vedhTotalXP', xp + 1);
+
+  if (spellIndex < spellQueue.length - 1) {
+    document.getElementById('nextSpellBtn').style.display = 'block';
+  } else {
+    result.textContent += ' 🏆 All words done!';
+    if (typeof playSound !== 'undefined') playSound('win');
+  }
+}
+
+function nextSpellWord() {
+  spellIndex++;
+  if (spellIndex < spellQueue.length) {
+    loadSpellWord();
+  } else {
+    switchScreen('categoryScreen');
+  }
+}
+
+// ══════════════════════════════════════════
+// COPY SENTENCES
+// ══════════════════════════════════════════
+let copyQueue = [];
+let copyIndex = 0;
+
+function startCopy() {
+  copyQueue = [...COPY_SENTENCES].sort(() => Math.random() - 0.5).slice(0, 8);
+  copyIndex = 0;
+  switchScreen('copyScreen');
+  loadCopySentence();
+}
+
+function loadCopySentence() {
+  document.getElementById('copyModel').textContent = copyQueue[copyIndex];
+  document.getElementById('copyInput').value = '';
+  document.getElementById('copyStars').innerHTML = '';
+  document.getElementById('copyMsg').textContent = '';
+  document.getElementById('nextCopyBtn').style.display = 'none';
+  document.getElementById('copyDoneBtn').style.display = 'none';
+  buildDots('copyDots', copyQueue.length, copyIndex);
+}
+
+function checkCopy() {
+  const model = copyQueue[copyIndex];
+  const typed = document.getElementById('copyInput').value.trim();
+
+  const starsEl = document.getElementById('copyStars');
+  const msgEl = document.getElementById('copyMsg');
+  starsEl.innerHTML = '';
+
+  if (typed === model) {
+    starsEl.innerHTML = '⭐⭐⭐';
+    msgEl.textContent = 'Perfect! Amazing writing! 🎉';
+    msgEl.style.color = '#16a34a';
+    if (typeof playSound !== 'undefined') playSound('win');
+    let xp = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+    localStorage.setItem('vedhTotalXP', xp + 3);
+  } else {
+    // Count matching characters
+    let matching = 0;
+    for (let i = 0; i < Math.min(typed.length, model.length); i++) {
+      if (typed[i] === model[i]) matching++;
+    }
+    const pct = Math.round((matching / model.length) * 100);
+
+    if (pct >= 80) {
+      starsEl.innerHTML = '⭐⭐';
+      msgEl.textContent = `Great try! ${pct}% correct. Keep going!`;
+      msgEl.style.color = '#d97706';
+      if (typeof playSound !== 'undefined') playSound('correct');
+    } else {
+      starsEl.innerHTML = '⭐';
+      msgEl.textContent = `Good effort! Try again or move on!`;
+      msgEl.style.color = '#f87171';
+    }
+    let xp = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+    localStorage.setItem('vedhTotalXP', xp + 1);
+  }
+
+  if (copyIndex < copyQueue.length - 1) {
+    document.getElementById('nextCopyBtn').style.display = 'block';
+  } else {
+    document.getElementById('copyDoneBtn').style.display = 'block';
+  }
+}
+
+function nextCopySentence() {
+  copyIndex++;
+  if (copyIndex < copyQueue.length) {
+    loadCopySentence();
+  } else {
+    switchScreen('categoryScreen');
+  }
+}
+</script>
+</body>
+</html>

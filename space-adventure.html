@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Adventure 🚀 - Vedh's Kingdom</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #818cf8; /* Indigo */
+  --secondary: #fbbf24; /* Star Gold */
+  --danger: #f87171;
+  --green: #34d399;
+  --dark: #0f172a;
+  --paper: #1e1b4b;
+  --card-bg: #1e293b;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: radial-gradient(ellipse at top, #0d1b3e 0%, #0f172a 60%, #1a0533 100%);
+  min-height: 100vh;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Starfield */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px);
+  background-size: 80px 80px, 40px 40px;
+  background-position: 0 0, 20px 20px;
+  pointer-events: none;
+  animation: twinkle 6s infinite alternate;
+  z-index: 0;
+}
+@keyframes twinkle { 0% { opacity: 0.4; } 100% { opacity: 1; } }
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px;
+  text-decoration: none; font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem; box-shadow: 0 4px 0 rgba(129,140,248,0.4);
+  z-index: 100; backdrop-filter: blur(10px);
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(129,140,248,0.4); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; position: relative; z-index: 1; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--secondary); text-shadow: 0 0 20px rgba(251,191,36,0.5); line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 620px; position: relative; z-index: 1; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+.card {
+  background: rgba(30, 27, 75, 0.85);
+  border: 3px solid rgba(129, 140, 248, 0.4);
+  border-radius: 24px;
+  padding: 28px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(129,140,248,0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Category buttons */
+.cat-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 20px; }
+.cat-btn {
+  background: rgba(255,255,255,0.05);
+  border: 3px solid rgba(129,140,248,0.5);
+  border-radius: 16px; padding: 16px 20px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 18px;
+  text-align: left; color: #f8fafc;
+}
+.cat-btn:hover { background: rgba(129,140,248,0.2); border-color: var(--primary); transform: translateX(4px); }
+.cat-btn:active { transform: translateY(2px); }
+.cat-icon { font-size: 3rem; }
+.cat-info h3 { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--secondary); }
+.cat-info p { font-size: 0.95rem; color: #94a3b8; font-weight: 700; margin-top: 3px; }
+
+/* Mode buttons */
+.mode-btn {
+  width: 100%; display: flex; align-items: center; gap: 15px;
+  background: rgba(255,255,255,0.05);
+  border: 3px solid rgba(129,140,248,0.5);
+  border-radius: 18px; padding: 16px 20px; margin-bottom: 14px;
+  cursor: pointer; text-align: left; color: #f8fafc;
+  transition: all 0.2s;
+}
+.mode-btn:hover { background: rgba(129,140,248,0.2); border-color: var(--primary); }
+.mode-icon { font-size: 2.5rem; }
+
+/* Game area */
+.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 14px; }
+.timer-container { width: 100%; height: 18px; background: rgba(0,0,0,0.5); border-radius: 20px; border: 2px solid rgba(255,255,255,0.1); overflow: hidden; margin-bottom: 22px; position: relative; }
+.timer-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 100%; transition: width 0.3s linear; }
+.time-plus { position: absolute; right: 10px; top: -5px; color: var(--secondary); font-weight: 900; font-size: 1.2rem; opacity: 0; }
+.time-plus.show { animation: floatUpFade 1s ease-out forwards; }
+@keyframes floatUpFade { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+
+.flashcard { display: flex; flex-direction: column; align-items: center; margin-bottom: 22px; min-height: 180px; justify-content: center; }
+.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--primary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.card-emoji { font-size: 6rem; animation: orbit 4s infinite ease-in-out; filter: drop-shadow(0 0 15px rgba(251,191,36,0.4)); line-height: 1; }
+@keyframes orbit { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+.item-name { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--secondary); margin-top: 8px; }
+.item-fact { font-size: 1rem; color: #94a3b8; font-weight: 700; margin-top: 6px; max-width: 340px; line-height: 1.4; }
+
+/* Explore mode (flashcard learn) */
+.explore-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(129,140,248,0.3);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.explore-emoji { font-size: 5rem; margin-bottom: 10px; display: block; animation: orbit 4s infinite ease-in-out; }
+.explore-name { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--secondary); }
+.explore-fact { font-size: 1.05rem; color: #cbd5e1; font-weight: 700; margin-top: 8px; line-height: 1.5; }
+.explore-tag { display: inline-block; background: rgba(129,140,248,0.2); border: 1px solid rgba(129,140,248,0.4); border-radius: 50px; padding: 4px 14px; font-size: 0.85rem; color: var(--primary); font-weight: 800; margin-top: 8px; }
+.nav-row { display: flex; gap: 12px; margin-top: 10px; }
+.nav-btn { flex: 1; font-family: 'Fredoka One', cursive; font-size: 1.3rem; background: rgba(129,140,248,0.2); border: 3px solid var(--primary); color: var(--primary); border-radius: 14px; padding: 12px; cursor: pointer; transition: all 0.15s; }
+.nav-btn:active { transform: translateY(3px); }
+
+/* Options */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.opt-btn {
+  font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+  background: rgba(255,255,255,0.07); border: 3px solid rgba(129,140,248,0.4);
+  color: #f8fafc; border-radius: 14px; padding: 14px 8px;
+  cursor: pointer; transition: all 0.15s;
+}
+.opt-btn:hover { background: rgba(129,140,248,0.2); border-color: var(--primary); }
+.opt-btn:active { transform: translateY(3px); }
+.opt-btn.correct { background: rgba(52,211,153,0.3); border-color: var(--green); color: var(--green); }
+.opt-btn.wrong { background: rgba(248,113,113,0.3); border-color: var(--danger); color: var(--danger); }
+
+.btn-primary {
+  width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+  background: linear-gradient(135deg, var(--primary), #6366f1);
+  color: white; border: none; border-radius: 14px;
+  padding: 14px; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(129,140,248,0.4);
+  transition: all 0.15s;
+}
+.btn-primary:active { transform: translateY(3px); box-shadow: 0 2px 10px rgba(129,140,248,0.4); }
+.btn-back { background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer; margin-bottom: 14px; text-decoration: underline; font-size: 1rem; }
+
+.feedback-star { position: absolute; font-size: 3.5rem; opacity: 0; pointer-events: none; z-index: 10; }
+.feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes starPop { 0% { opacity: 1; transform: scale(0); } 60% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0; transform: scale(1) translateY(-40px); } }
+
+.score-big { font-size: 5rem; font-family: 'Fredoka One', cursive; color: var(--secondary); line-height: 1; margin: 10px 0; }
+.end-msg { font-size: 1.2rem; font-weight: 800; color: #94a3b8; margin-bottom: 22px; }
+
+/* Constellation viewer */
+.constellation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+.const-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(129,140,248,0.3); border-radius: 16px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.const-card:hover { border-color: var(--secondary); background: rgba(251,191,36,0.08); }
+.const-stars { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 6px; }
+.const-name { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--secondary); }
+.const-shape { font-size: 0.85rem; color: #94a3b8; font-weight: 700; }
+
+/* Modal for constellation detail */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.active { display: flex; }
+.modal-box { background: #1e1b4b; border: 3px solid var(--primary); border-radius: 24px; padding: 30px; max-width: 400px; width: 100%; text-align: center; animation: popIn 0.3s ease; position: relative; }
+.modal-emoji { font-size: 5rem; display: block; margin-bottom: 10px; }
+.modal-title { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--secondary); }
+.modal-desc { color: #cbd5e1; font-size: 1.05rem; font-weight: 700; line-height: 1.5; margin: 12px 0; }
+.modal-close { font-family: 'Fredoka One', cursive; font-size: 1.3rem; background: rgba(129,140,248,0.2); border: 2px solid var(--primary); color: var(--primary); border-radius: 12px; padding: 10px 24px; cursor: pointer; margin-top: 8px; }
+
+@media(max-width: 500px) {
+  h1 { font-size: 2.4rem; }
+  .cat-btn { gap: 12px; }
+  .cat-icon { font-size: 2.4rem; }
+  .options-grid { grid-template-columns: 1fr 1fr; }
+  .opt-btn { font-size: 1.1rem; padding: 12px 6px; }
+  .constellation-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Space Adventure</h1>
+  <div class="subtitle">Planets • Stars • Astronauts 🌌</div>
+</header>
+
+<!-- CATEGORY SCREEN -->
+<div id="categoryScreen" class="screen active">
+  <div class="card">
+    <h2 style="font-family:'Fredoka One'; font-size:1.9rem; color: var(--secondary);">Mission Control 🛸</h2>
+    <p style="color:#94a3b8; font-weight:700; margin-top:6px;">Pick your mission, astronaut!</p>
+    <div class="cat-grid">
+      <button class="cat-btn" onclick="selectCategory('planets')">
+        <span class="cat-icon">🪐</span>
+        <div class="cat-info">
+          <h3>Planet Explorer</h3>
+          <p>Learn every planet in our Solar System!</p>
+        </div>
+      </button>
+      <button class="cat-btn" onclick="selectCategory('constellations')">
+        <span class="cat-icon">⭐</span>
+        <div class="cat-info">
+          <h3>Star Constellations</h3>
+          <p>Discover amazing shapes made by stars!</p>
+        </div>
+      </button>
+      <button class="cat-btn" onclick="selectCategory('astronaut')">
+        <span class="cat-icon">👨‍🚀</span>
+        <div class="cat-info">
+          <h3>Astronaut Academy</h3>
+          <p>Space facts & quiz — blast off!</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODE SCREEN -->
+<div id="modeScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back to Mission Control</button>
+    <h2 style="font-family:'Fredoka One'; font-size:1.8rem; color:var(--secondary); margin-bottom:18px;">Choose Mode</h2>
+
+    <button class="mode-btn" onclick="startGame('explore')" id="exploreBtn">
+      <span class="mode-icon">🔭</span>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size:1.4rem; color:var(--secondary);">Explore Mode</h3>
+        <p style="color:#94a3b8; font-weight:700;">Browse and learn at your own pace.</p>
+      </div>
+    </button>
+
+    <button class="mode-btn" onclick="startGame('quiz')">
+      <span class="mode-icon">🚀</span>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size:1.4rem; color:var(--secondary);">Quiz Blast!</h3>
+        <p style="color:#94a3b8; font-weight:700;">Race the clock and answer fast!</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- EXPLORE SCREEN (Planets & Astronaut) -->
+<div id="exploreScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('modeScreen')">🔙 Back</button>
+    <div id="exploreArea"></div>
+    <div class="nav-row">
+      <button class="nav-btn" onclick="explorePrev()">← Prev</button>
+      <button class="nav-btn" onclick="exploreNext()">Next →</button>
+    </div>
+    <button class="btn-primary" style="margin-top:12px;" onclick="switchScreen('categoryScreen')">Done Exploring ✅</button>
+  </div>
+</div>
+
+<!-- CONSTELLATION SCREEN -->
+<div id="constellationScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back</button>
+    <h2 style="font-family:'Fredoka One'; font-size:1.7rem; color:var(--secondary); margin-bottom:6px;">Star Constellations ✨</h2>
+    <p style="color:#94a3b8; font-weight:700; margin-bottom:14px;">Tap a constellation to learn more!</p>
+    <div class="constellation-grid" id="constellationGrid"></div>
+  </div>
+</div>
+
+<!-- GAME SCREEN (Quiz) -->
+<div id="gameScreen" class="screen">
+  <div class="card" style="position:relative;">
+    <div class="feedback-star" id="fStar">⭐</div>
+    <div class="top-bar">
+      <div>Score: <span id="scoreDisplay">0</span></div>
+      <div id="modeDisplay" style="color:var(--secondary);">🚀 Quiz</div>
+    </div>
+    <div class="timer-container">
+      <div class="timer-fill" id="timerFill"></div>
+      <div class="time-plus" id="timePlus">+5s</div>
+    </div>
+    <div id="problemArea" class="flashcard"></div>
+    <div class="options-grid" id="optionsContainer"></div>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="screen">
+  <div class="card">
+    <div style="font-size:4rem; margin-bottom:10px;">🏆</div>
+    <h2 style="font-family:'Fredoka One'; font-size:2.2rem; color:var(--secondary);">Mission Complete!</h2>
+    <div class="score-big" id="finalScore">0</div>
+    <div class="end-msg" id="endMessage">Great job, astronaut!</div>
+    <button class="btn-primary" onclick="switchScreen('categoryScreen')">New Mission 🚀</button>
+  </div>
+</div>
+
+<!-- CONSTELLATION MODAL -->
+<div class="modal-overlay" id="constModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <span class="modal-emoji" id="modalEmoji">⭐</span>
+    <div class="modal-title" id="modalName">Orion</div>
+    <div class="modal-desc" id="modalDesc">A great hunter in the sky!</div>
+    <div style="font-size:0.9rem; color:#64748b; font-weight:700; margin-bottom:10px;" id="modalFun"></div>
+    <button class="modal-close" onclick="document.getElementById('constModal').classList.remove('active')">Close ✕</button>
+  </div>
+</div>
+
+<script src="sounds.js"></script>
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const PLANETS = [
+  { e: "☀️", name: "The Sun", fact: "The Sun is a giant star! It's so big, 1 million Earths could fit inside it. It gives us light and warmth.", tag: "⭐ Star (not a planet!)" },
+  { e: "🌑", name: "Mercury", fact: "Mercury is the smallest planet and closest to the Sun. It has no air to breathe and gets super hot in the day!", tag: "1st Planet" },
+  { e: "🌕", name: "Venus", fact: "Venus is the hottest planet — even hotter than Mercury! It shines so bright you can see it at night.", tag: "2nd Planet • Hottest!" },
+  { e: "🌍", name: "Earth", fact: "Earth is our home! It's the only planet with oceans, trees, and living creatures. We are very lucky!", tag: "3rd Planet • Our Home 🏡" },
+  { e: "🔴", name: "Mars", fact: "Mars is called the Red Planet because its soil is red-orange! Scientists are planning to send people there one day.", tag: "4th Planet • Red Planet" },
+  { e: "🟠", name: "Jupiter", fact: "Jupiter is the BIGGEST planet in our Solar System. It has a giant storm called the Great Red Spot that has lasted 300 years!", tag: "5th Planet • Biggest!" },
+  { e: "🪐", name: "Saturn", fact: "Saturn has beautiful rings made of ice and rock! It is so light it would float on water.", tag: "6th Planet • Has Rings 💍" },
+  { e: "🔵", name: "Uranus", fact: "Uranus spins on its side! It looks blue-green because of a gas called methane. It's super cold — minus 224°C!", tag: "7th Planet • Tilted!" },
+  { e: "🌊", name: "Neptune", fact: "Neptune is the farthest planet and has the strongest winds in the Solar System — faster than any storm on Earth!", tag: "8th Planet • Farthest" },
+  { e: "🌙", name: "The Moon", fact: "Our Moon isn't a planet — it goes around Earth! Astronauts first walked on the Moon in 1969. There's no air or weather there.", tag: "🌙 Earth's Moon" }
+];
+
+const ASTRONAUT = [
+  { e: "👨‍🚀", name: "Astronaut Suit", fact: "An astronaut's space suit weighs 127 kg on Earth! It protects them from extreme heat, cold, and the vacuum of space.", tag: "Space Gear" },
+  { e: "🚀", name: "Rocket Ship", fact: "Rockets travel at about 28,000 km per hour to escape Earth's gravity. It takes just 8 minutes to reach space!", tag: "Lift Off!" },
+  { e: "🛸", name: "Space Station", fact: "The International Space Station (ISS) is a lab in space where astronauts live and work. It orbits Earth every 90 minutes!", tag: "ISS" },
+  { e: "🌍", name: "Zero Gravity", fact: "In space there is no gravity, so astronauts float around! Food, water, and even tears float as bubbles.", tag: "Weightlessness" },
+  { e: "🌌", name: "The Milky Way", fact: "Our Solar System lives inside a huge galaxy called the Milky Way! It has billions of stars and is shaped like a swirling disc.", tag: "Our Galaxy" },
+  { e: "🌠", name: "Shooting Stars", fact: "Shooting stars are actually tiny rocks called meteoroids burning up as they enter Earth's atmosphere. They make a bright streak!", tag: "Meteoroids" },
+  { e: "🔭", name: "Telescope", fact: "A telescope makes faraway things look closer. The Hubble Space Telescope orbits Earth and has taken pictures of galaxies billions of light-years away!", tag: "Sky Watching" },
+  { e: "🌑", name: "Black Holes", fact: "A black hole is a place in space where gravity is so strong that nothing — not even light — can escape! They form from dying stars.", tag: "Gravity Monster" }
+];
+
+const CONSTELLATIONS = [
+  { e: "🦁", stars: "✦✦✦✦✦✦", name: "Leo the Lion", desc: "Leo looks like a lion with a big mane made of stars. It is one of the easiest constellations to spot! The brightest star is called Regulus.", fun: "Fun fact: Lions were worshipped in Ancient Egypt!" },
+  { e: "🐻", stars: "✦✦✦✦✦✦✦", name: "Ursa Major", desc: "Ursa Major means 'Great Bear'. It has 7 bright stars shaped like a big dipper or ladle. It helps sailors find north!", fun: "Fun fact: You can see it all year from the Northern Hemisphere!" },
+  { e: "🏹", stars: "✦✦✦✦✦✦✦", name: "Orion the Hunter", desc: "Orion is a mighty hunter in the sky! He has 3 stars in a row called 'Orion's Belt'. His brightest star is Betelgeuse — a red giant!", fun: "Fun fact: Betelgeuse is 700 times bigger than our Sun!" },
+  { e: "🦂", stars: "✦✦✦✦✦✦✦✦", name: "Scorpius", desc: "Scorpius looks like a scorpion with a curling tail! Its bright red star Antares is one of the largest stars we know.", fun: "Fun fact: It's best seen in summer from the Southern sky!" },
+  { e: "🐦", stars: "✦✦✦✦✦", name: "Cygnus the Swan", desc: "Cygnus looks like a swan flying through the Milky Way! It's also called the Northern Cross. Its brightest star is Deneb.", fun: "Fun fact: Cygnus contains many exoplanets — planets around other stars!" },
+  { e: "🐑", stars: "✦✦✦✦", name: "Aries the Ram", desc: "Aries is a constellation shaped like a ram (a male sheep)! It's part of the Zodiac — the 12 constellations the Sun passes through.", fun: "Fun fact: Aries marks the beginning of spring in the Northern sky!" },
+  { e: "♊", stars: "✦✦✦✦✦✦", name: "Gemini the Twins", desc: "Gemini has two bright stars side by side — Castor and Pollux — named after mythical twins! They look like two brothers holding hands.", fun: "Fun fact: Castor is actually made up of 6 stars!" },
+  { e: "🐠", stars: "✦✦✦✦✦", name: "Pisces the Fish", desc: "Pisces is two fish connected by a ribbon of stars! It's a very old constellation that ancient Babylonians discovered thousands of years ago.", fun: "Fun fact: Pisces is best seen in November sky!" }
+];
+
+const QUIZ_QUESTIONS = [
+  { q: "Which is the largest planet?", e: "🪐", a: "Jupiter", w: ["Saturn", "Earth", "Uranus"] },
+  { q: "Which planet has beautiful rings?", e: "🪐", a: "Saturn", w: ["Jupiter", "Neptune", "Mars"] },
+  { q: "Which planet do we live on?", e: "🌍", a: "Earth", w: ["Mars", "Venus", "Mercury"] },
+  { q: "Which planet is called the Red Planet?", e: "🔴", a: "Mars", w: ["Jupiter", "Saturn", "Venus"] },
+  { q: "Which planet is closest to the Sun?", e: "☀️", a: "Mercury", w: ["Venus", "Earth", "Mars"] },
+  { q: "Which is the farthest planet from the Sun?", e: "🌊", a: "Neptune", w: ["Uranus", "Saturn", "Jupiter"] },
+  { q: "What do we call stars that form a picture?", e: "⭐", a: "Constellation", w: ["Galaxy", "Nebula", "Comet"] },
+  { q: "What is the name of our galaxy?", e: "🌌", a: "Milky Way", w: ["Andromeda", "Solar Way", "Star River"] },
+  { q: "What are Saturn's rings made of?", e: "🪐", a: "Ice and Rock", w: ["Fire", "Gas", "Water"] },
+  { q: "What do astronauts float in space because of?", e: "👨‍🚀", a: "No Gravity", w: ["No Air", "Zero Wind", "Magic"] },
+  { q: "How long does it take to travel from Earth to space?", e: "🚀", a: "8 Minutes", w: ["8 Hours", "8 Days", "8 Seconds"] },
+  { q: "What is a shooting star really made of?", e: "🌠", a: "A tiny rock", w: ["A broken star", "Ice", "Fire"] },
+  { q: "Which planet spins on its side?", e: "🔵", a: "Uranus", w: ["Neptune", "Mars", "Saturn"] },
+  { q: "What is the name of Earth's moon?", e: "🌙", a: "The Moon", w: ["Luna Star", "Phobos", "Titan"] },
+  { q: "Which planet has the strongest winds?", e: "🌊", a: "Neptune", w: ["Jupiter", "Saturn", "Uranus"] }
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentCategory = '';
+let currentMode = '';
+let score = 0;
+let timeLeft = 0, timeTotal = 0;
+let timerInterval;
+let correctAnswer = null;
+let exploreIndex = 0;
+let exploreData = [];
+
+const SECONDS = 20;
+const BONUS = 5;
+
+const screens = {};
+['categoryScreen','modeScreen','exploreScreen','constellationScreen','gameScreen','endScreen'].forEach(id => {
+  screens[id] = document.getElementById(id);
+});
+
+function switchScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+  clearInterval(timerInterval);
+}
+
+function selectCategory(cat) {
+  currentCategory = cat;
+  if (cat === 'constellations') {
+    showConstellations();
+  } else {
+    switchScreen('modeScreen');
+    // Hide explore btn for astronaut in quiz-only if desired
+  }
+}
+
+// ── CONSTELLATIONS ─────────────────────────
+function showConstellations() {
+  const grid = document.getElementById('constellationGrid');
+  grid.innerHTML = '';
+  CONSTELLATIONS.forEach((c, i) => {
+    grid.innerHTML += `
+      <div class="const-card" onclick="openConst(${i})">
+        <div class="const-stars">${c.stars}</div>
+        <div style="font-size:2rem;">${c.e}</div>
+        <div class="const-name">${c.name}</div>
+      </div>
+    `;
+  });
+  switchScreen('constellationScreen');
+}
+
+function openConst(i) {
+  const c = CONSTELLATIONS[i];
+  document.getElementById('modalEmoji').textContent = c.e;
+  document.getElementById('modalName').textContent = c.name;
+  document.getElementById('modalDesc').textContent = c.desc;
+  document.getElementById('modalFun').textContent = c.fun;
+  document.getElementById('constModal').classList.add('active');
+  if (typeof playSound !== 'undefined') playSound('correct');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('constModal')) {
+    document.getElementById('constModal').classList.remove('active');
+  }
+}
+
+// ── EXPLORE ────────────────────────────────
+function startGame(mode) {
+  currentMode = mode;
+  if (mode === 'explore') {
+    exploreData = currentCategory === 'planets' ? PLANETS : ASTRONAUT;
+    exploreIndex = 0;
+    renderExplore();
+    switchScreen('exploreScreen');
+  } else {
+    score = 0;
+    document.getElementById('scoreDisplay').textContent = 0;
+    timeLeft = timeTotal = SECONDS;
+    updateTimerUI();
+    generateQuestion();
+    switchScreen('gameScreen');
+    clearInterval(timerInterval);
+    timerInterval = setInterval(countdown, 1000);
+  }
+}
+
+function renderExplore() {
+  const d = exploreData[exploreIndex];
+  document.getElementById('exploreArea').innerHTML = `
+    <div class="explore-card">
+      <span class="explore-emoji">${d.e}</span>
+      <div class="explore-name">${d.name}</div>
+      <div class="explore-tag">${d.tag}</div>
+      <div class="explore-fact">${d.fact}</div>
+    </div>
+    <div style="text-align:center; color:#64748b; font-weight:700; font-size:0.9rem;">${exploreIndex + 1} / ${exploreData.length}</div>
+  `;
+}
+
+function explorePrev() { if (exploreIndex > 0) { exploreIndex--; renderExplore(); } }
+function exploreNext() { if (exploreIndex < exploreData.length - 1) { exploreIndex++; renderExplore(); } }
+
+// ── QUIZ ───────────────────────────────────
+function countdown() {
+  timeLeft--;
+  updateTimerUI();
+  if (timeLeft <= 0) endGame();
+}
+
+function updateTimerUI() {
+  let pct = Math.max(0, Math.min(100, (timeLeft / timeTotal) * 100));
+  document.getElementById('timerFill').style.width = pct + '%';
+}
+
+function generateQuestion() {
+  document.getElementById('problemArea').innerHTML = '';
+  let pool = currentCategory === 'astronaut'
+    ? QUIZ_QUESTIONS.filter(q => ["Milky Way","shooting star","Black Holes","Zero Gravity","Space Station","Telescope","Rocket Ship"].some(k => q.q.toLowerCase().includes(k.toLowerCase()) || q.a.toLowerCase().includes(k.toLowerCase())))
+    : QUIZ_QUESTIONS;
+  if (pool.length === 0) pool = QUIZ_QUESTIONS;
+  const item = pool[Math.floor(Math.random() * pool.length)];
+  correctAnswer = item.a;
+  document.getElementById('problemArea').innerHTML = `
+    <div class="hint-text">Space Quiz! 🌌</div>
+    <div class="card-emoji">${item.e}</div>
+    <div style="font-size:1.3rem; font-weight:800; color:#e2e8f0; margin-top:10px; line-height:1.4;">${item.q}</div>
+  `;
+  const opts = [item.a, ...item.w].sort(() => Math.random() - 0.5);
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt;
+    if (opt.length > 10) btn.style.fontSize = '1.1rem';
+    btn.onclick = () => checkAnswer(opt, btn);
+    container.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  if (selected === correctAnswer) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('scoreDisplay').textContent = score;
+    const star = document.getElementById('fStar');
+    star.classList.remove('pop'); void star.offsetWidth; star.classList.add('pop');
+    timeLeft += BONUS;
+    if (timeLeft > timeTotal) timeTotal = timeLeft;
+    document.getElementById('timePlus').classList.remove('show');
+    void document.getElementById('timePlus').offsetWidth;
+    document.getElementById('timePlus').classList.add('show');
+    updateTimerUI();
+    if (typeof playSound !== 'undefined') playSound('correct');
+    setTimeout(generateQuestion, 700);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => { if (b.textContent === correctAnswer) b.classList.add('correct'); });
+    if (typeof playSound !== 'undefined') playSound('wrong');
+    setTimeout(generateQuestion, 1500);
+  }
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  document.getElementById('finalScore').textContent = score;
+  let msg = "Keep exploring the stars! 🌟";
+  if (score >= 5) msg = "Space Cadet! Great work! 🚀";
+  if (score >= 10) msg = "Astronaut Ace! Amazing! 🏆";
+  if (score >= 15) msg = "GALACTIC GENIUS! Incredible! 🌌";
+  document.getElementById('endMessage').textContent = msg;
+  let xp = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', xp + score);
+  if (typeof playSound !== 'undefined') playSound('win');
+  switchScreen('endScreen');
+}
+</script>
+</body>
+</html>
