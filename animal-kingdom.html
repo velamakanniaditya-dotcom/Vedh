@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animal Kingdom 🦁 - Vedh's Kingdom</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #22c55e;   /* Forest Green */
+  --secondary: #f97316; /* Earthy Orange */
+  --danger: #f87171;
+  --blue: #38bdf8;
+  --purple: #c084fc;
+  --dark: #1e293b;
+  --paper: #ffffff;
+  --bg: #f0fdf4;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f0fdf4;
+  background-image:
+    radial-gradient(circle, rgba(34,197,94,0.12) 2px, transparent 2px);
+  background-size: 35px 35px;
+  color: var(--dark);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px;
+  background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px;
+  text-decoration: none; font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #475569; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 620px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity:0; transform:scale(0.9) translateY(20px); } 100% { opacity:1; transform:scale(1) translateY(0); } }
+
+.card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 28px; box-shadow: 0 10px 0 rgba(30,41,59,0.1); text-align: center; position: relative; }
+
+/* Category Grid */
+.cat-grid { display: grid; grid-template-columns: 1fr; gap: 13px; margin-top: 18px; }
+.cat-btn {
+  background: white; border: 4px solid var(--dark); border-radius: 16px;
+  padding: 14px 18px; cursor: pointer; transition: all 0.1s;
+  display: flex; align-items: center; gap: 18px; text-align: left;
+  box-shadow: 0 6px 0 var(--dark);
+}
+.cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.cat-icon { font-size: 3.2rem; }
+.cat-info h3 { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--dark); }
+.cat-info p { font-size: 0.95rem; color: #64748b; font-weight: 700; margin-top: 3px; }
+
+/* Mode */
+.mode-btn { width: 100%; display: flex; align-items: center; gap: 15px; background: white; border: 4px solid var(--dark); border-radius: 18px; padding: 14px 18px; margin-bottom: 13px; cursor: pointer; text-align: left; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.mode-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.mode-icon { font-size: 2.5rem; }
+.btn-back { background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer; margin-bottom: 14px; text-decoration: underline; font-size: 1rem; }
+
+/* Game */
+.top-bar { display: flex; justify-content: space-between; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 13px; }
+.timer-container { width: 100%; height: 18px; background: #e2e8f0; border-radius: 20px; border: 3px solid var(--dark); overflow: hidden; margin-bottom: 20px; position: relative; }
+.timer-fill { height: 100%; background: var(--primary); width: 100%; transition: width 0.3s linear; }
+.time-plus { position: absolute; right: 10px; top: -5px; color: var(--primary); font-weight: 900; font-size: 1.1rem; opacity: 0; }
+.time-plus.show { animation: floatUpFade 1s ease-out forwards; }
+@keyframes floatUpFade { 0% { opacity:1; transform:translateY(0); } 100% { opacity:0; transform:translateY(-20px); } }
+
+.flashcard { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; min-height: 180px; justify-content: center; }
+.hint-text { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.card-emoji { font-size: 7rem; animation: bounce 2s infinite ease-in-out; line-height: 1; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.item-name { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--dark); margin-top: 8px; }
+.item-question { font-size: 1.3rem; font-weight: 800; color: var(--dark); line-height: 1.4; margin-top: 8px; padding: 0 10px; }
+
+/* Options */
+.options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 1.35rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 14px; padding: 13px 8px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.opt-btn.correct { background: #dcfce7; color: #16a34a; border-color: var(--primary); box-shadow: 0 6px 0 #16a34a; }
+.opt-btn.wrong { background: #fee2e2; color: #dc2626; border-color: var(--danger); box-shadow: 0 6px 0 #dc2626; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.4rem; background: var(--primary); color: white; border: 4px solid #16a34a; border-radius: 14px; padding: 13px; cursor: pointer; box-shadow: 0 6px 0 #16a34a; transition: all 0.1s; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #16a34a; }
+
+.feedback-star { position: absolute; font-size: 3.5rem; opacity: 0; pointer-events: none; z-index: 10; }
+.feedback-star.pop { animation: starPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes starPop { 0% { opacity:1; transform:scale(0); } 60% { opacity:1; transform:scale(1.3); } 100% { opacity:0; transform:scale(1) translateY(-40px); } }
+
+/* Explore (Animal Facts) */
+.animal-fact-card { background: white; border: 4px solid var(--dark); border-radius: 20px; padding: 22px; margin-bottom: 12px; text-align: center; box-shadow: 0 6px 0 rgba(30,41,59,0.1); }
+.fact-emoji { font-size: 5rem; display: block; margin-bottom: 10px; animation: bounce 2s infinite ease-in-out; }
+.fact-name { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--dark); }
+.fact-group { display: inline-block; background: #dcfce7; border: 2px solid var(--primary); border-radius: 50px; padding: 3px 14px; font-size: 0.9rem; color: var(--primary); font-weight: 800; margin: 6px 0; }
+.fact-text { font-size: 1rem; color: #475569; font-weight: 700; line-height: 1.5; margin-top: 8px; }
+.nav-row { display: flex; gap: 12px; margin-top: 10px; }
+.nav-btn { flex: 1; font-family: 'Fredoka One', cursive; font-size: 1.3rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 12px; padding: 11px; cursor: pointer; box-shadow: 0 5px 0 var(--dark); transition: all 0.1s; }
+.nav-btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--dark); }
+
+/* Sound challenge */
+.sound-prompt { font-size: 1.6rem; font-weight: 800; color: var(--dark); margin: 12px 0; }
+.sound-answer-reveal { background: #fef9c3; border: 3px solid #fbbf24; border-radius: 14px; padding: 12px 20px; font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: #92400e; margin-top: 14px; display: none; }
+
+@media(max-width: 500px) {
+  h1 { font-size: 2.4rem; }
+  .cat-icon { font-size: 2.5rem; }
+  .card-emoji { font-size: 5rem; }
+  .opt-btn { font-size: 1.1rem; padding: 11px 6px; }
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Animal Kingdom</h1>
+  <div class="subtitle">Classify • Habitats • Sounds 🌿</div>
+</header>
+
+<!-- CATEGORY -->
+<div id="categoryScreen" class="screen active">
+  <div class="card">
+    <h2 style="font-family:'Fredoka One'; font-size:1.9rem; color:var(--dark);">Pick Your Safari! 🦁</h2>
+    <p style="color:#64748b; font-weight:700; margin-top:6px;">What do you want to explore?</p>
+    <div class="cat-grid">
+      <button class="cat-btn" onclick="selectCategory('classify')">
+        <span class="cat-icon">🐾</span>
+        <div class="cat-info">
+          <h3 style="color:#7c3aed;">Animal Types</h3>
+          <p>Mammal, Bird, Reptile, Fish, or Amphibian?</p>
+        </div>
+      </button>
+      <button class="cat-btn" onclick="selectCategory('habitats')">
+        <span class="cat-icon">🌴</span>
+        <div class="cat-info">
+          <h3 style="color:var(--primary);">Where Do I Live?</h3>
+          <p>Match animals to their homes — jungle, ocean & more!</p>
+        </div>
+      </button>
+      <button class="cat-btn" onclick="selectCategory('sounds')">
+        <span class="cat-icon">🔊</span>
+        <div class="cat-info">
+          <h3 style="color:var(--secondary);">Animal Sounds</h3>
+          <p>What sound does each animal make?</p>
+        </div>
+      </button>
+      <button class="cat-btn" onclick="selectCategory('facts')">
+        <span class="cat-icon">📚</span>
+        <div class="cat-info">
+          <h3 style="color:var(--blue);">Animal Facts</h3>
+          <p>Amazing facts about all kinds of animals!</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODE -->
+<div id="modeScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back to Safari</button>
+    <h2 style="font-family:'Fredoka One'; font-size:1.8rem; color:var(--dark); margin-bottom:16px;">How do you want to play?</h2>
+    <button class="mode-btn" style="border-color:var(--primary); box-shadow:0 6px 0 var(--primary);" onclick="startGame('chill')">
+      <span class="mode-icon">🌿</span>
+      <div>
+        <h3 style="font-family:'Fredoka One'; font-size:1.4rem; color:var(--dark);">Jungle Stroll</h3>
+        <p style="color:#64748b; font-weight:700;">Relaxed — timer resets each question.</p>
+      </div>
+    </button>
+    <button class="mode-btn" style="border-color:var(--secondary); box-shadow:0 6px 0 var(--secondary);" onclick="startGame('race')">
+      <span class="mode-icon">🏃</span>
+      <div>
+        <h3 style="font-family:'Fredoka One', cursive; font-size:1.4rem; color:var(--dark);">Wild Race!</h3>
+        <p style="color:#64748b; font-weight:700;">Survival — +5s for correct answers!</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- EXPLORE (Facts) -->
+<div id="exploreScreen" class="screen">
+  <div class="card">
+    <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back</button>
+    <div id="exploreArea"></div>
+    <div class="nav-row">
+      <button class="nav-btn" onclick="explorePrev()">← Prev</button>
+      <button class="nav-btn" onclick="exploreNext()">Next →</button>
+    </div>
+    <button class="btn-primary" style="margin-top:12px;" onclick="switchScreen('categoryScreen')">Done! ✅</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="card" style="position:relative;">
+    <div class="feedback-star" id="fStar">🌟</div>
+    <div class="top-bar">
+      <div>Score: <span id="scoreDisplay">0</span></div>
+      <div id="modeDisplay" style="color:var(--primary);">🌿 Stroll</div>
+    </div>
+    <div class="timer-container">
+      <div class="timer-fill" id="timerFill"></div>
+      <div class="time-plus" id="timePlus">+5s</div>
+    </div>
+    <div id="problemArea" class="flashcard"></div>
+    <div class="options-grid" id="optionsContainer"></div>
+  </div>
+</div>
+
+<!-- END -->
+<div id="endScreen" class="screen">
+  <div class="card">
+    <div style="font-size:4rem; margin-bottom:10px;">🏆</div>
+    <h2 style="font-family:'Fredoka One'; font-size:2.2rem; color:var(--dark);">Safari Complete!</h2>
+    <div style="font-size:5rem; font-family:'Fredoka One'; color:var(--primary); line-height:1; margin:10px 0;" id="finalScore">0</div>
+    <div style="font-size:1.2rem; font-weight:800; color:#64748b; margin-bottom:22px;" id="endMessage">Great wildlife explorer!</div>
+    <button class="btn-primary" onclick="switchScreen('categoryScreen')">New Safari 🦁</button>
+  </div>
+</div>
+
+<script src="sounds.js"></script>
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const CLASSIFY = [
+  { e:"🐶", n:"Dog",         a:"Mammal",     w:["Bird","Reptile","Fish"] },
+  { e:"🐦", n:"Parrot",      a:"Bird",        w:["Mammal","Reptile","Fish"] },
+  { e:"🐊", n:"Crocodile",   a:"Reptile",     w:["Mammal","Bird","Fish"] },
+  { e:"🐟", n:"Goldfish",    a:"Fish",        w:["Mammal","Bird","Reptile"] },
+  { e:"🐸", n:"Frog",        a:"Amphibian",   w:["Mammal","Reptile","Fish"] },
+  { e:"🦁", n:"Lion",        a:"Mammal",      w:["Bird","Reptile","Amphibian"] },
+  { e:"🦅", n:"Eagle",       a:"Bird",        w:["Mammal","Reptile","Fish"] },
+  { e:"🐢", n:"Turtle",      a:"Reptile",     w:["Mammal","Bird","Amphibian"] },
+  { e:"🦈", n:"Shark",       a:"Fish",        w:["Mammal","Reptile","Amphibian"] },
+  { e:"🦎", n:"Lizard",      a:"Reptile",     w:["Mammal","Bird","Fish"] },
+  { e:"🐘", n:"Elephant",    a:"Mammal",      w:["Bird","Reptile","Fish"] },
+  { e:"🐧", n:"Penguin",     a:"Bird",        w:["Mammal","Reptile","Fish"] },
+  { e:"🦋", n:"Salamander",  a:"Amphibian",   w:["Reptile","Bird","Fish"] },
+  { e:"🐬", n:"Dolphin",     a:"Mammal",      w:["Fish","Reptile","Bird"] },
+  { e:"🐍", n:"Snake",       a:"Reptile",     w:["Mammal","Fish","Amphibian"] },
+  { e:"🦜", n:"Flamingo",    a:"Bird",        w:["Mammal","Reptile","Amphibian"] }
+];
+
+const HABITATS = [
+  { e:"🦁", n:"Lion",        a:"Grassland / Savanna", w:["Ocean","Arctic","Rainforest"] },
+  { e:"🐬", n:"Dolphin",     a:"Ocean",               w:["Desert","Arctic","Rainforest"] },
+  { e:"🐼", n:"Giant Panda", a:"Bamboo Forest",       w:["Ocean","Desert","Arctic"] },
+  { e:"🐧", n:"Penguin",     a:"Arctic / Antarctic",  w:["Desert","Ocean","Rainforest"] },
+  { e:"🐪", n:"Camel",       a:"Desert",              w:["Ocean","Arctic","Rainforest"] },
+  { e:"🦒", n:"Giraffe",     a:"Grassland / Savanna", w:["Ocean","Desert","Arctic"] },
+  { e:"🐊", n:"Crocodile",   a:"Swamp / River",       w:["Desert","Arctic","Ocean"] },
+  { e:"🦜", n:"Parrot",      a:"Rainforest",          w:["Desert","Arctic","Ocean"] },
+  { e:"🦭", n:"Seal",        a:"Arctic / Antarctic",  w:["Desert","Rainforest","Grassland"] },
+  { e:"🐙", n:"Octopus",     a:"Ocean",               w:["Desert","Rainforest","Arctic"] },
+  { e:"🐻‍❄️",n:"Polar Bear", a:"Arctic / Antarctic",  w:["Desert","Rainforest","Savanna"] },
+  { e:"🦥", n:"Sloth",       a:"Rainforest",          w:["Desert","Ocean","Arctic"] },
+  { e:"🦊", n:"Fox",         a:"Forest / Tundra",     w:["Ocean","Desert","Rainforest"] }
+];
+
+const SOUNDS = [
+  { e:"🐶", n:"Dog",      a:"Woof / Bark",    w:["Moo","Roar","Tweet"] },
+  { e:"🐱", n:"Cat",      a:"Meow / Purr",    w:["Woof","Moo","Roar"] },
+  { e:"🐄", n:"Cow",      a:"Moo",            w:["Oink","Baa","Cluck"] },
+  { e:"🐷", n:"Pig",      a:"Oink / Snort",   w:["Moo","Baa","Tweet"] },
+  { e:"🐑", n:"Sheep",    a:"Baa / Bleat",    w:["Moo","Oink","Roar"] },
+  { e:"🦁", n:"Lion",     a:"Roar",           w:["Moo","Tweet","Oink"] },
+  { e:"🐸", n:"Frog",     a:"Ribbit / Croak", w:["Roar","Oink","Tweet"] },
+  { e:"🐦", n:"Bird",     a:"Tweet / Chirp",  w:["Moo","Roar","Bark"] },
+  { e:"🐘", n:"Elephant", a:"Trumpet",        w:["Moo","Tweet","Bark"] },
+  { e:"🐍", n:"Snake",    a:"Hiss",           w:["Roar","Tweet","Moo"] },
+  { e:"🐴", n:"Horse",    a:"Neigh / Whinny", w:["Moo","Oink","Tweet"] },
+  { e:"🦆", n:"Duck",     a:"Quack",          w:["Moo","Roar","Oink"] },
+  { e:"🐺", n:"Wolf",     a:"Howl",           w:["Roar","Bark","Tweet"] },
+  { e:"🐝", n:"Bee",      a:"Buzz",           w:["Hiss","Tweet","Roar"] }
+];
+
+const FACTS = [
+  { e:"🦁", n:"Lion",       group:"Mammal",    fact:"Lions are called the King of the Jungle! But they actually live in grasslands. A group of lions is called a pride. Lionesses do most of the hunting." },
+  { e:"🐘", n:"Elephant",   group:"Mammal",    fact:"Elephants are the biggest land animals on Earth! They use their trunks to smell, pick things up, and drink water. Baby elephants are called calves." },
+  { e:"🦋", n:"Butterfly",  group:"Insect",    fact:"Butterflies taste with their feet! They start life as caterpillars and change into butterflies in a cocoon. This is called metamorphosis." },
+  { e:"🐬", n:"Dolphin",    group:"Mammal",    fact:"Dolphins are very smart! They talk to each other using clicks and whistles. They sleep with one eye open and can jump really high out of water!" },
+  { e:"🦒", n:"Giraffe",    group:"Mammal",    fact:"Giraffes are the tallest animals on Earth — up to 6 metres tall! Their long necks help them eat leaves from the tops of trees." },
+  { e:"🐙", n:"Octopus",    group:"Mollusc",   fact:"An octopus has 3 hearts and blue blood! It can change colour to hide from enemies and can squeeze through tiny spaces because it has no bones." },
+  { e:"🦈", n:"Shark",      group:"Fish",      fact:"Sharks have been around for 450 million years — longer than dinosaurs! They can smell a drop of blood from far away and have rows of sharp teeth." },
+  { e:"🐧", n:"Penguin",    group:"Bird",      fact:"Penguins are birds that cannot fly, but they are amazing swimmers! They live in cold places and huddle together to stay warm in freezing storms." },
+  { e:"🦎", n:"Chameleon",  group:"Reptile",   fact:"Chameleons change colour to show their mood — not just to hide! Their tongue is longer than their body and shoots out like a rocket to catch bugs." },
+  { e:"🐼", n:"Giant Panda",group:"Mammal",    fact:"Giant pandas eat bamboo for up to 16 hours a day! They have a special wrist bone that acts like a thumb to grip bamboo shoots." },
+  { e:"🦅", n:"Eagle",      group:"Bird",      fact:"Eagles have eyesight 4 times stronger than humans! They can spot a rabbit from 3 kilometres away. Their nests are called eyries and can be huge!" },
+  { e:"🐸", n:"Frog",       group:"Amphibian", fact:"Frogs drink water through their skin — they don't have to swallow it! They can jump 20 times their own body length and hibernate in winter." },
+  { e:"🐝", n:"Honey Bee",  group:"Insect",    fact:"A honey bee visits over 1,000 flowers to make just one teaspoon of honey! They dance to tell other bees where to find flowers." },
+  { e:"🦊", n:"Fox",        group:"Mammal",    fact:"Foxes are very clever! They use the Earth's magnetic field like a compass to hunt. A fox's tail is called a 'brush' and helps with balance." }
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentCategory = '';
+let currentMode = '';
+let score = 0;
+let timeLeft = 0, timeTotal = 0;
+let timerInterval;
+let correctAnswer = null;
+let exploreIndex = 0;
+
+const SECONDS = 20;
+const BONUS = 5;
+
+const scrs = {};
+['categoryScreen','modeScreen','exploreScreen','gameScreen','endScreen'].forEach(id => {
+  scrs[id] = document.getElementById(id);
+});
+
+function switchScreen(name) {
+  Object.values(scrs).forEach(s => s.classList.remove('active'));
+  scrs[name].classList.add('active');
+  clearInterval(timerInterval);
+}
+
+function selectCategory(cat) {
+  currentCategory = cat;
+  if (cat === 'facts') {
+    exploreIndex = 0;
+    renderFact();
+    switchScreen('exploreScreen');
+  } else {
+    switchScreen('modeScreen');
+  }
+}
+
+// ── FACTS EXPLORE ──────────────────────────
+function renderFact() {
+  const d = FACTS[exploreIndex];
+  document.getElementById('exploreArea').innerHTML = `
+    <div class="animal-fact-card">
+      <span class="fact-emoji">${d.e}</span>
+      <div class="fact-name">${d.n}</div>
+      <div class="fact-group">${d.group}</div>
+      <div class="fact-text">${d.fact}</div>
+    </div>
+    <div style="text-align:center; color:#94a3b8; font-weight:700; font-size:0.9rem;">${exploreIndex + 1} / ${FACTS.length}</div>
+  `;
+}
+function explorePrev() { if (exploreIndex > 0) { exploreIndex--; renderFact(); } }
+function exploreNext() { if (exploreIndex < FACTS.length - 1) { exploreIndex++; renderFact(); } }
+
+// ── GAME ───────────────────────────────────
+function startGame(mode) {
+  currentMode = mode;
+  score = 0;
+  document.getElementById('scoreDisplay').textContent = 0;
+
+  if (mode === 'chill') {
+    document.getElementById('modeDisplay').innerHTML = '🌿 Stroll';
+    document.getElementById('modeDisplay').style.color = 'var(--primary)';
+    timeLeft = timeTotal = SECONDS;
+  } else {
+    document.getElementById('modeDisplay').innerHTML = '🏃 Race';
+    document.getElementById('modeDisplay').style.color = 'var(--secondary)';
+    timeLeft = timeTotal = SECONDS;
+  }
+
+  updateTimerUI();
+  generateQuestion();
+  switchScreen('gameScreen');
+  clearInterval(timerInterval);
+  timerInterval = setInterval(countdown, 1000);
+}
+
+function countdown() {
+  timeLeft--;
+  updateTimerUI();
+  if (timeLeft <= 0) endGame();
+}
+
+function updateTimerUI() {
+  let pct = Math.max(0, Math.min(100, (timeLeft / timeTotal) * 100));
+  document.getElementById('timerFill').style.width = pct + '%';
+}
+
+function generateQuestion() {
+  if (currentMode === 'chill') { timeLeft = SECONDS; timeTotal = SECONDS; updateTimerUI(); }
+  document.getElementById('problemArea').innerHTML = '';
+
+  let data, hint, makeOptions;
+
+  if (currentCategory === 'classify') {
+    const item = CLASSIFY[Math.floor(Math.random() * CLASSIFY.length)];
+    correctAnswer = item.a;
+    document.getElementById('problemArea').innerHTML = `
+      <div class="hint-text" style="color:#7c3aed;">What type of animal am I?</div>
+      <div class="card-emoji">${item.e}</div>
+      <div class="item-name">${item.n}</div>
+    `;
+    renderOptions([item.a, ...item.w]);
+
+  } else if (currentCategory === 'habitats') {
+    const item = HABITATS[Math.floor(Math.random() * HABITATS.length)];
+    correctAnswer = item.a;
+    document.getElementById('problemArea').innerHTML = `
+      <div class="hint-text" style="color:var(--primary);">Where do I live?</div>
+      <div class="card-emoji">${item.e}</div>
+      <div class="item-name">${item.n}</div>
+    `;
+    renderOptions([item.a, ...item.w]);
+
+  } else if (currentCategory === 'sounds') {
+    const item = SOUNDS[Math.floor(Math.random() * SOUNDS.length)];
+    correctAnswer = item.a;
+    document.getElementById('problemArea').innerHTML = `
+      <div class="hint-text" style="color:var(--secondary);">What sound do I make?</div>
+      <div class="card-emoji">${item.e}</div>
+      <div class="item-name">${item.n}</div>
+    `;
+    renderOptions([item.a, ...item.w]);
+  }
+}
+
+function renderOptions(opts) {
+  opts.sort(() => Math.random() - 0.5);
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  container.style.gridTemplateColumns = '1fr 1fr';
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt;
+    if (opt.length > 12) btn.style.fontSize = '1rem';
+    btn.onclick = () => checkAnswer(opt, btn);
+    container.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  if (selected === correctAnswer) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('scoreDisplay').textContent = score;
+    const star = document.getElementById('fStar');
+    star.classList.remove('pop'); void star.offsetWidth; star.classList.add('pop');
+    if (currentMode === 'race') {
+      timeLeft += BONUS;
+      if (timeLeft > timeTotal) timeTotal = timeLeft;
+      const plus = document.getElementById('timePlus');
+      plus.classList.remove('show'); void plus.offsetWidth; plus.classList.add('show');
+      updateTimerUI();
+    }
+    if (typeof playSound !== 'undefined') playSound('correct');
+    setTimeout(generateQuestion, 700);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => { if (b.textContent === correctAnswer) b.classList.add('correct'); });
+    if (typeof playSound !== 'undefined') playSound('wrong');
+    setTimeout(generateQuestion, 1500);
+  }
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  document.getElementById('finalScore').textContent = score;
+  let msg = "Keep exploring the wild! 🌿";
+  if (score >= 5)  msg = "Junior Ranger! Great job! 🦁";
+  if (score >= 10) msg = "Wildlife Expert! Amazing! 🏆";
+  if (score >= 20) msg = "ANIMAL GENIUS! Incredible! 🌍";
+  document.getElementById('endMessage').textContent = msg;
+  let xp = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', xp + score);
+  if (typeof playSound !== 'undefined') playSound('win');
+  switchScreen('endScreen');
+}
+</script>
+</body>
+</html>
