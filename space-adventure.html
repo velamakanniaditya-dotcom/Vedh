@@ -170,8 +170,9 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 .end-msg { font-size: 1.2rem; font-weight: 800; color: #94a3b8; margin-bottom: 22px; }
 
 /* Constellation viewer */
-.constellation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-.const-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(129,140,248,0.3); border-radius: 16px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.constellation-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; gap: 12px; margin-top: 10px; padding: 4px 4px 14px; scrollbar-width: none; }
+.constellation-grid::-webkit-scrollbar { display: none; }
+.const-card { flex: 0 0 calc(50% - 6px); background: rgba(255,255,255,0.04); border: 2px solid rgba(129,140,248,0.3); border-radius: 16px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; scroll-snap-align: start; }
 .const-card:hover { border-color: var(--secondary); background: rgba(251,191,36,0.08); }
 .const-stars { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 6px; }
 .const-name { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--secondary); }
@@ -192,7 +193,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
   .cat-icon { font-size: 2.4rem; }
   .options-grid { grid-template-columns: 1fr 1fr; }
   .opt-btn { font-size: 1.1rem; padding: 12px 6px; }
-  .constellation-grid { grid-template-columns: 1fr 1fr; }
+  .const-card { flex: 0 0 calc(80% - 6px); }
 }
 </style>
 </head>
@@ -278,7 +279,8 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
   <div class="card">
     <button class="btn-back" onclick="switchScreen('categoryScreen')">🔙 Back</button>
     <h2 style="font-family:'Fredoka One'; font-size:1.7rem; color:var(--secondary); margin-bottom:6px;">Star Constellations ✨</h2>
-    <p style="color:#94a3b8; font-weight:700; margin-bottom:14px;">Tap a constellation to learn more!</p>
+    <p style="color:#94a3b8; font-weight:700; margin-bottom:6px;">Tap a constellation to learn more!</p>
+    <p style="color:#64748b; font-size:0.85rem; font-weight:700; margin-bottom:10px;">👉 Swipe to see more!</p>
     <div class="constellation-grid" id="constellationGrid"></div>
   </div>
 </div>

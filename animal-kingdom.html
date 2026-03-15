@@ -423,8 +423,10 @@ function generateQuestion() {
       <div class="hint-text" style="color:var(--secondary);">What sound do I make?</div>
       <div class="card-emoji">${item.e}</div>
       <div class="item-name">${item.n}</div>
+      <button onclick="if(typeof playAnimalSound!=='undefined')playAnimalSound('${item.n}')" style="margin-top:6px;background:rgba(251,191,36,0.15);border:2px solid var(--secondary);color:var(--secondary);border-radius:12px;padding:6px 18px;font-size:1.1rem;font-weight:800;cursor:pointer;">🔊 Hear it!</button>
     `;
     renderOptions([item.a, ...item.w]);
+    setTimeout(() => { if (typeof playAnimalSound !== 'undefined') playAnimalSound(item.n); }, 300);
   }
 }
 
