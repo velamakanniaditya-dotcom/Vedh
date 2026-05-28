@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Math 🍎 - Super Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   VISUAL MATH THEME
+══════════════════════════════════════════ */
+:root {
+  --primary: #f97316; /* Orange */
+  --secondary: #14b8a6; /* Teal */
+  --danger: #ef4444; 
+  --dark: #1e293b; 
+  --paper: #ffffff;
+  --grid: #ffedd5;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #fff7ed;
+  background-image: linear-gradient(var(--grid) 2px, transparent 2px), linear-gradient(90deg, var(--grid) 2px, transparent 2px);
+  background-size: 30px 30px; color: var(--dark);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: white; border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #fff; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #64748b; margin-top: 5px; }
+
+.screen { display: none; width: 100%; max-width: 700px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.screen.active { display: block; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+.worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(51, 65, 85, 0.1); text-align: center; position: relative; }
+
+/* MINI BADGE BOARD (PRESTIGE EDITION) */
+.mini-badge-board { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; background: #f8fafc; border: 4px solid #cbd5e1; border-radius: 16px; padding: 15px; }
+.badge-board-title { width: 100%; font-family: 'Fredoka One'; font-size: 1.2rem; color: #64748b; margin-bottom: 5px; }
+.mini-badge { font-size: 2.5rem; transition: all 0.3s ease; }
+.mini-badge.unlocked { filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15)); animation: popIn 0.3s ease; }
+.mini-badge.locked { filter: grayscale(100%) contrast(0.2); opacity: 0.3; }
+
+/* Category Grid */
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+.cat-btn {
+  background: white; border: 4px solid var(--dark); border-radius: 16px; padding: 20px 10px;
+  cursor: pointer; font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--dark);
+  box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.cat-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.cat-icon { font-size: 3rem; }
+
+/* Visual Math Display Area */
+.visual-area { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; background: #f1f5f9; border-radius: 20px; border: 4px dashed #cbd5e1; min-height: 150px; }
+.emoji-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 250px; }
+.visual-emoji { font-size: 3.5rem; transition: transform 0.2s; user-select: none; }
+.visual-emoji:active { transform: scale(1.2); } /* Fun interaction when tapped */
+.visual-crossed { opacity: 0.3; filter: grayscale(100%); position: relative; }
+.visual-crossed::after { content: "❌"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; opacity: 0.8; }
+.math-operator { font-family: 'Fredoka One'; font-size: 4rem; color: var(--dark); padding: 0 10px; }
+
+/* Options Grid */
+.options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.opt-btn { font-family: 'Fredoka One', cursive; font-size: 2.5rem; background: white; border: 4px solid var(--dark); color: var(--dark); border-radius: 16px; padding: 15px 5px; cursor: pointer; box-shadow: 0 6px 0 var(--dark); transition: all 0.1s; }
+.opt-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--dark); }
+.opt-btn.correct { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 6px 0 #0f766e; }
+.opt-btn.wrong { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 6px 0 #dc2626; }
+
+.btn-primary { width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.5rem; background: var(--primary); color: white; border: 4px solid #c2410c; border-radius: 16px; padding: 15px; cursor: pointer; box-shadow: 0 6px 0 #c2410c; margin-top: 20px; }
+.btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #c2410c; }
+
+/* Alerts */
+.sticker-alert { background: #fef08a; border: 4px solid #ca8a04; border-radius: 16px; padding: 15px; margin-top: 20px; display: none; animation: popIn 0.5s ease; }
+.sticker-alert.show { display: block; }
+
+.top-bar { display: flex; justify-content: space-between; align-items: center; font-family: 'Fredoka One', cursive; font-size: 1.5rem; margin-bottom: 15px; color: var(--dark); }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Visual Math 🍎</h1>
+  <div class="subtitle">Count, Add, and Subtract!</div>
+</header>
+
+<div id="categoryScreen" class="screen active">
+  <div class="worksheet-card">
+    
+    <!-- PHASE 2: PRESTIGE BADGE BOARD -->
+    <div class="mini-badge-board" id="miniBadgeBoard">
+      <div class="badge-board-title" id="badgeBoardTitle">Collect all 12 Food Badges! 🍔</div>
+      <!-- Badges injected here -->
+    </div>
+
+    <h2 style="font-family:'Fredoka One'; font-size: 1.8rem; color: var(--dark); margin-bottom: 20px;">Choose a Game!</h2>
+    <div class="cat-grid">
+      <button class="cat-btn" style="border-color: #10b981; color: #10b981;" onclick="startGame('add_apples')">
+        <span class="cat-icon">🍎</span> Apple Addition
+      </button>
+      <button class="cat-btn" style="border-color: #f43f5e; color: #f43f5e;" onclick="startGame('sub_pizza')">
+        <span class="cat-icon">🍕</span> Pizza Subtraction
+      </button>
+      <button class="cat-btn" style="border-color: #3b82f6; color: #3b82f6;" onclick="startGame('add_cars')">
+        <span class="cat-icon">🚗</span> Car Counting
+      </button>
+      <button class="cat-btn" style="border-color: #8b5cf6; color: #8b5cf6;" onclick="startGame('sub_balloons')">
+        <span class="cat-icon">🎈</span> Popping Balloons
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="worksheet-card">
+    <div class="top-bar">
+      <div>Score: <span id="scoreDisplay">0</span></div>
+      <button style="background:none; border:none; color:var(--danger); font-weight:bold; cursor:pointer; font-family:'Fredoka One';" onclick="endGame()">Quit ✖</button>
+    </div>
+    
+    <!-- This is where the interactive objects appear -->
+    <div class="visual-area" id="visualArea"></div>
+    
+    <div class="options-grid" id="optionsContainer"></div>
+  </div>
+</div>
+
+<div id="endScreen" class="screen">
+  <div class="worksheet-card">
+    <h2 style="font-family:'Fredoka One'; font-size: 2.8rem; color: var(--dark);" id="endTitle">Great Job!</h2>
+    <div style="font-size: 5rem; margin: 15px 0; color: var(--primary); font-family: 'Fredoka One'; line-height: 1;" id="finalScore">0</div>
+    <div style="font-size: 1.3rem; font-weight: 800; color: #64748b; margin-bottom: 25px;">You are a visual math master!</div>
+    
+    <div id="gameStickerAlert" class="sticker-alert">
+      <h3 style="font-family:'Fredoka One'; color:#ca8a04; margin-bottom:5px;">🎉 NEW BADGE UNLOCKED!</h3>
+      <div id="gameUnlockedEmoji" style="font-size: 4.5rem; margin-top: 10px;"></div>
+    </div>
+
+    <button class="btn-primary" onclick="switchScreen('categoryScreen')">Back to Menu 📚</button>
+  </div>
+</div>
+
+<script src="sounds.js"></script>
+
+<script>
+// --- PHASE 2 BADGE SYSTEM ---
+// The user has multiple "Tiers" of badges to keep them playing longer!
+const BADGE_TIERS = [
+  { name: "Food Badges", color: "#cbd5e1", items: ['🍏', '🍌', '🍉', '🍇', '🍓', '🍔', '🍟', '🌭', '🍿', '🍩', '🍪', '🍫'] },
+  { name: "Animal Badges", color: "#fcd34d", items: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮'] },
+  { name: "Space Badges", color: "#c084fc", items: ['🌍', '🌕', '☀️', '⭐', '☄️', '🌌', '🚀', '🛸', '🛰️', '👨‍🚀', '👽', '🪐'] }
+];
+
+function getBadgeData() {
+  let totalUnlocked = parseInt(localStorage.getItem('vedhVisualBadges')) || 0;
+  let tierIndex = Math.floor(totalUnlocked / 12);
+  if (tierIndex >= BADGE_TIERS.length) tierIndex = BADGE_TIERS.length - 1; // Max tier
+  
+  let badgesInCurrentTier = totalUnlocked % 12;
+  if (totalUnlocked >= BADGE_TIERS.length * 12) badgesInCurrentTier = 12; // Fully completed
+
+  return { total: totalUnlocked, tier: tierIndex, count: badgesInCurrentTier };
+}
+
+function unlockSticker() {
+  let bData = getBadgeData();
+  let maxPossible = BADGE_TIERS.length * 12;
+  
+  if (bData.total < maxPossible) {
+    localStorage.setItem('vedhVisualBadges', bData.total + 1);
+    if(typeof playSound === 'function') playSound('win');
+    
+    // Fetch the new data to show the correct emoji
+    let newBData = getBadgeData();
+    let unlockedEmoji = BADGE_TIERS[newBData.tier].items[(newBData.count - 1 + 12) % 12];
+    return unlockedEmoji;
+  }
+  return null; 
+}
+
+function refreshTopBadges() {
+  const container = document.getElementById('miniBadgeBoard');
+  const bData = getBadgeData();
+  const currentTier = BADGE_TIERS[bData.tier];
+  
+  document.getElementById('badgeBoardTitle').innerText = `Collect all 12 ${currentTier.name}!`;
+  container.style.borderColor = currentTier.color;
+  
+  // Clear old badges (keep the title)
+  Array.from(container.children).forEach(child => {
+    if (!child.classList.contains('badge-board-title')) child.remove();
+  });
+  
+  currentTier.items.forEach((sticker, i) => {
+    let badge = document.createElement('div');
+    badge.innerText = sticker;
+    badge.className = i < bData.count ? 'mini-badge unlocked' : 'mini-badge locked';
+    container.appendChild(badge);
+  });
+}
+
+// ══════════════════════════════════════════════
+// GAME ENGINE
+// ══════════════════════════════════════════════
+const screens = {
+  categoryScreen: document.getElementById('categoryScreen'),
+  gameScreen: document.getElementById('gameScreen'),
+  endScreen: document.getElementById('endScreen')
+};
+
+function switchScreen(screenName) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[screenName].classList.add('active');
+  if(screenName === 'categoryScreen') refreshTopBadges();
+}
+
+let currentMode = '';
+let score = 0;
+let correctAnswer = 0;
+let questionCount = 0;
+const MAX_QUESTIONS = 10; // Play 10 rounds then end
+
+function startGame(mode) {
+  currentMode = mode;
+  score = 0;
+  questionCount = 0;
+  document.getElementById('scoreDisplay').innerText = score;
+  
+  generateVisualQuestion();
+  switchScreen('gameScreen');
+}
+
+function generateVisualQuestion() {
+  questionCount++;
+  if (questionCount > MAX_QUESTIONS) {
+    endGame();
+    return;
+  }
+
+  let visualArea = document.getElementById('visualArea');
+  visualArea.innerHTML = '';
+  
+  let n1, n2, ans, emoji;
+
+  if (currentMode === 'add_apples' || currentMode === 'add_cars') {
+    emoji = currentMode === 'add_apples' ? '🍎' : '🚗';
+    // Max 5 for each side so it doesn't clutter
+    n1 = Math.floor(Math.random() * 5) + 1; 
+    n2 = Math.floor(Math.random() * 5) + 1;
+    ans = n1 + n2;
+    
+    let group1 = createEmojiGroup(emoji, n1, false);
+    let group2 = createEmojiGroup(emoji, n2, false);
+    
+    visualArea.appendChild(group1);
+    let plus = document.createElement('div');
+    plus.className = 'math-operator';
+    plus.innerText = '+';
+    visualArea.appendChild(plus);
+    visualArea.appendChild(group2);
+    
+  } else if (currentMode === 'sub_pizza' || currentMode === 'sub_balloons') {
+    emoji = currentMode === 'sub_pizza' ? '🍕' : '🎈';
+    // Start with up to 10 items
+    n1 = Math.floor(Math.random() * 8) + 3; // 3 to 10 items
+    n2 = Math.floor(Math.random() * (n1 - 1)) + 1; // Take away at least 1, but not all
+    ans = n1 - n2;
+    
+    let totalGroup = document.createElement('div');
+    totalGroup.className = 'emoji-group';
+    
+    // Draw the remaining ones
+    for(let i=0; i<ans; i++) {
+      let el = document.createElement('div');
+      el.className = 'visual-emoji';
+      el.innerText = emoji;
+      totalGroup.appendChild(el);
+    }
+    // Draw the crossed out ones
+    for(let i=0; i<n2; i++) {
+      let el = document.createElement('div');
+      el.className = 'visual-emoji visual-crossed';
+      el.innerText = emoji;
+      totalGroup.appendChild(el);
+    }
+    visualArea.appendChild(totalGroup);
+  }
+
+  correctAnswer = ans;
+  renderOptions(generateOptions(ans));
+}
+
+function createEmojiGroup(emoji, count, isCrossed) {
+  let group = document.createElement('div');
+  group.className = 'emoji-group';
+  for(let i=0; i<count; i++) {
+    let el = document.createElement('div');
+    el.className = isCrossed ? 'visual-emoji visual-crossed' : 'visual-emoji';
+    el.innerText = emoji;
+    group.appendChild(el);
+  }
+  return group;
+}
+
+function generateOptions(correct) {
+  let opts = [correct];
+  while(opts.length < 3) { // 3 big buttons
+    let offset = Math.floor(Math.random() * 4) + 1;
+    let wrong = Math.random() > 0.5 ? correct + offset : correct - offset;
+    if(wrong >= 0 && !opts.includes(wrong)) opts.push(wrong);
+  }
+  return opts.sort(() => Math.random() - 0.5);
+}
+
+function renderOptions(options) {
+  let optsEl = document.getElementById('optionsContainer');
+  optsEl.innerHTML = '';
+  options.forEach(opt => {
+    let btn = document.createElement('button');
+    btn.className = 'opt-btn'; btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt, btn);
+    optsEl.appendChild(btn);
+  });
+}
+
+function checkAnswer(selected, btn) {
+  document.querySelectorAll('#optionsContainer .opt-btn').forEach(b => b.disabled = true);
+  if (selected === correctAnswer) {
+    if(typeof playSound === 'function') playSound('correct');
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('scoreDisplay').innerText = score;
+    setTimeout(generateVisualQuestion, 800);
+  } else {
+    if(typeof playSound === 'function') playSound('wrong');
+    btn.classList.add('wrong');
+    document.querySelectorAll('#optionsContainer .opt-btn').forEach(b => { if (b.innerText == correctAnswer) b.classList.add('correct'); });
+    setTimeout(generateVisualQuestion, 1500);
+  }
+}
+
+function endGame() {
+  if(typeof playSound === 'function') playSound('win');
+  document.getElementById('endTitle').innerText = "Game Complete!";
+  document.getElementById('finalScore').innerText = `${score}/10`;
+  document.getElementById('gameStickerAlert').classList.remove('show'); 
+  
+  // Award a badge if score is 8 or higher
+  if (score >= 8) {
+    let newSticker = unlockSticker();
+    if (newSticker) {
+      document.getElementById('gameUnlockedEmoji').innerText = newSticker;
+      document.getElementById('gameStickerAlert').classList.add('show');
+    }
+  }
+
+  // Save XP
+  let currentXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+  localStorage.setItem('vedhTotalXP', currentXP + (score * 2));
+  
+  switchScreen('endScreen');
+}
+
+refreshTopBadges();
+</script>
+</body>
+</html>
+
