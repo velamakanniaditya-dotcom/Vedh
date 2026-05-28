@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drogo's Lair 🐉 - Super Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   DROGO'S LAIR THEME
+══════════════════════════════════════════ */
+:root {
+  --primary: #f97316; /* Dragon Orange */
+  --secondary: #10b981; /* Emerald Green */
+  --danger: #ef4444; 
+  --dark: #0f172a; /* Dark Cave Blue */
+  --paper: #1e293b; /* Lighter Cave */
+  --grid: #334155;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--dark);
+  background-image: radial-gradient(var(--grid) 2px, transparent 2px);
+  background-size: 30px 30px; 
+  color: white;
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: var(--paper); border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primary); text-shadow: 2px 2px 0 #000; line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #94a3b8; margin-top: 5px; }
+
+/* The XP Bank Widget */
+.xp-bank {
+  background: #fef08a; border: 4px solid #ca8a04; border-radius: 20px; padding: 15px 30px;
+  margin-bottom: 30px; text-align: center; color: #854d0e; font-family: 'Fredoka One'; font-size: 1.5rem;
+  box-shadow: 0 6px 0 #ca8a04;
+}
+.xp-bank span { color: #b45309; font-size: 2.5rem; }
+
+.lair-card { 
+  background: var(--paper); border: 4px solid #334155; border-radius: 30px; 
+  padding: 40px 30px; box-shadow: 0 15px 0 rgba(0,0,0,0.3); text-align: center; 
+  position: relative; width: 100%; max-width: 500px;
+}
+
+/* Drogo's Display Stage */
+.dragon-stage {
+  height: 250px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+  position: relative; margin-bottom: 20px;
+}
+
+.drogo-emoji {
+  font-size: 7rem; transition: all 0.5s ease; filter: drop-shadow(0 15px 10px rgba(0,0,0,0.5));
+}
+
+.drogo-speech {
+  position: absolute; top: -20px; background: white; color: var(--dark); font-family: 'Fredoka One';
+  padding: 10px 20px; border-radius: 20px; border: 3px solid #cbd5e1;
+  opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none;
+}
+.drogo-speech::after {
+  content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+  border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent transparent;
+}
+.drogo-speech.show { opacity: 1; transform: translateY(0); }
+
+/* Progress Bar */
+.feed-bar-container {
+  width: 100%; background: #0f172a; border: 4px solid #475569; border-radius: 50px;
+  height: 35px; overflow: hidden; position: relative; margin-bottom: 10px;
+}
+.feed-fill {
+  height: 100%; background: var(--secondary); width: 0%; 
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,0.2);
+}
+.feed-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: 'Fredoka One'; color: white; text-shadow: 1px 1px 0 #000; font-size: 1.1rem;
+}
+
+/* Feed Button */
+.btn-feed {
+  width: 100%; font-family: 'Fredoka One', cursive; font-size: 1.8rem; background: var(--primary); 
+  color: white; border: 4px solid #c2410c; border-radius: 20px; padding: 20px; cursor: pointer; 
+  box-shadow: 0 8px 0 #c2410c; margin-top: 20px; transition: all 0.1s; display: flex; justify-content: center; align-items: center; gap: 10px;
+}
+.btn-feed:active:not(:disabled) { transform: translateY(8px); box-shadow: 0 0 0 #c2410c; }
+.btn-feed:disabled { background: #64748b; border-color: #334155; box-shadow: 0 8px 0 #334155; cursor: not-allowed; opacity: 0.7; }
+
+/* Level Info */
+.level-badge {
+  display: inline-block; background: #6366f1; color: white; font-family: 'Fredoka One';
+  padding: 5px 15px; border-radius: 20px; font-size: 1.2rem; margin-bottom: 20px;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes wiggle { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+.anim-wiggle { animation: wiggle 1.5s infinite ease-in-out; }
+
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+.anim-bounce { animation: bounce 1s infinite ease-in-out; }
+
+@keyframes float { 0%, 100% { transform: translateY(0) scale(1.1); } 50% { transform: translateY(-30px) scale(1.1); } }
+.anim-float { animation: float 2s infinite ease-in-out; }
+
+@keyframes fire-glow { 0%, 100% { filter: drop-shadow(0 0 20px #f97316); transform: scale(1.2); } 50% { filter: drop-shadow(0 0 40px #ef4444); transform: scale(1.3); } }
+.anim-fire { animation: fire-glow 1.5s infinite ease-in-out; }
+
+@keyframes popInScale { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+
+/* Fire particles */
+.fire-particle {
+  position: absolute; font-size: 2rem; pointer-events: none; animation: floatUp 1s forwards;
+}
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(0.5); } 100% { opacity: 0; transform: translateY(-100px) scale(1.5); } }
+
+/* Level Up Screen Overlay */
+#levelUpScreen {
+  position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(15,23,42,0.95);
+  z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  display: none;
+}
+#levelUpScreen.active { display: flex; animation: popInScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.lvl-up-title { font-family: 'Fredoka One'; font-size: 4rem; color: #fef08a; text-shadow: 0 5px 0 #ca8a04; margin-bottom: 20px; text-align: center; }
+.btn-continue { font-family: 'Fredoka One'; font-size: 1.5rem; background: #10b981; color: white; border: 4px solid #047857; padding: 15px 30px; border-radius: 20px; box-shadow: 0 8px 0 #047857; cursor: pointer; margin-top: 30px; }
+.btn-continue:active { transform: translateY(8px); box-shadow: 0 0 0 #047857; }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🔙 Back to Games</a>
+
+<header>
+  <h1>Drogo's Lair 🐉</h1>
+  <div class="subtitle">Play games to earn XP and feed him!</div>
+</header>
+
+<div class="xp-bank">
+  Your XP Bank: <br><span id="totalXpDisplay">0</span> ⭐
+</div>
+
+<div class="lair-card">
+  <div class="level-badge" id="drogoLevelDisplay">Level 1: The Egg</div>
+  
+  <div class="dragon-stage" id="stageContainer">
+    <div class="drogo-speech" id="speechBubble">...</div>
+    <div class="drogo-emoji" id="drogoEmoji">🥚</div>
+  </div>
+
+  <div class="feed-bar-container">
+    <div class="feed-fill" id="feedFill"></div>
+    <div class="feed-text" id="feedText">0 / 50 XP</div>
+  </div>
+
+  <button class="btn-feed" id="feedBtn" onclick="feedDrogo()">
+    Feed Drogo 🍎 <span style="font-size:1.2rem; background:rgba(0,0,0,0.2); padding:5px 10px; border-radius:10px;">-10 XP</span>
+  </button>
+  <div id="feedWarning" style="color:#ef4444; font-weight:bold; margin-top:10px; display:none;">
+    You need more XP! Go play some games! 🎮
+  </div>
+</div>
+
+<!-- LEVEL UP CELEBRATION -->
+<div id="levelUpScreen">
+  <div class="lvl-up-title">DROGO EVOLVED! 🎉</div>
+  <div class="drogo-emoji anim-bounce" id="lvlUpEmoji" style="font-size: 8rem;">🦎</div>
+  <div style="font-family:'Fredoka One'; font-size:2rem; color:white; margin-top:20px;" id="lvlUpName">Baby Drogo</div>
+  <button class="btn-continue" onclick="closeLevelUp()">Awesome!</button>
+</div>
+
+<script>
+// --- DROGO'S EVOLUTION DATA ---
+const FEED_COST = 10;
+
+const DROGO_STAGES = [
+  { level: 1, name: "The Egg", emoji: "🥚", target: 50, anim: "anim-wiggle", speech: "..." },
+  { level: 2, name: "Baby Drogo", emoji: "🦎", target: 100, anim: "anim-bounce", speech: "Squeak! Squeak! 🍎" },
+  { level: 3, name: "Growing Drogo", emoji: "🦕", target: 200, anim: "anim-bounce", speech: "Yummy! More XP please!" },
+  { level: 4, name: "Winged Drogo", emoji: "🐉", target: 400, anim: "anim-float", speech: "Look! I can fly!" },
+  { level: 5, name: "Epic Drogo", emoji: "🐲", target: 1000, anim: "anim-fire", speech: "Hi Vedh! Let's do some Math! 🔥" }
+];
+
+// --- LOAD DATA ---
+let bankXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+let drogoLevel = parseInt(localStorage.getItem('vedhDrogoLevel')) || 1;
+let drogoFedAmount = parseInt(localStorage.getItem('vedhDrogoFedAmount')) || 0;
+
+const uiBankXP = document.getElementById('totalXpDisplay');
+const uiEmoji = document.getElementById('drogoEmoji');
+const uiLevel = document.getElementById('drogoLevelDisplay');
+const uiFeedFill = document.getElementById('feedFill');
+const uiFeedText = document.getElementById('feedText');
+const uiBtn = document.getElementById('feedBtn');
+const uiWarning = document.getElementById('feedWarning');
+const uiSpeech = document.getElementById('speechBubble');
+
+function init() {
+  updateUI();
+}
+
+function getCurrentStage() {
+  // If he maxes out level 5, keep him at level 5
+  if (drogoLevel >= DROGO_STAGES.length) return DROGO_STAGES[DROGO_STAGES.length - 1];
+  return DROGO_STAGES.find(s => s.level === drogoLevel);
+}
+
+function updateUI() {
+  uiBankXP.innerText = bankXP;
+  
+  let stage = getCurrentStage();
+  uiLevel.innerText = `Level ${stage.level}: ${stage.name}`;
+  
+  // Update Emoji and animation
+  uiEmoji.innerText = stage.emoji;
+  uiEmoji.className = `drogo-emoji ${stage.anim}`;
+
+  // Check if fully maxed
+  if (drogoLevel > DROGO_STAGES.length) {
+    uiFeedText.innerText = "MAX LEVEL!";
+    uiFeedFill.style.width = "100%";
+    uiBtn.disabled = true;
+    uiBtn.innerHTML = "Drogo is full! 👑";
+    return;
+  }
+
+  // Update Progress Bar
+  let percent = (drogoFedAmount / stage.target) * 100;
+  uiFeedFill.style.width = `${percent}%`;
+  uiFeedText.innerText = `${drogoFedAmount} / ${stage.target} XP`;
+
+  // Button State
+  if (bankXP < FEED_COST) {
+    uiBtn.disabled = true;
+    uiWarning.style.display = "block";
+  } else {
+    uiBtn.disabled = false;
+    uiWarning.style.display = "none";
+  }
+}
+
+function showSpeech(text) {
+  uiSpeech.innerText = text;
+  uiSpeech.classList.add('show');
+  setTimeout(() => {
+    uiSpeech.classList.remove('show');
+  }, 2500);
+}
+
+function spawnFood() {
+  // Create a little apple floating to the dragon
+  let apple = document.createElement('div');
+  apple.innerText = "🍎";
+  apple.style.position = "absolute";
+  apple.style.fontSize = "2rem";
+  apple.style.bottom = "0px";
+  apple.style.left = "50%";
+  apple.style.transform = "translateX(-50%)";
+  apple.style.transition = "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+  
+  document.getElementById('stageContainer').appendChild(apple);
+  
+  // Animate it up into Drogo's mouth
+  setTimeout(() => {
+    apple.style.bottom = "120px";
+    apple.style.opacity = "0";
+    apple.style.transform = "translateX(-50%) scale(0.5)";
+  }, 50);
+
+  setTimeout(() => { apple.remove(); }, 600);
+}
+
+function spawnFire() {
+  if (drogoLevel < 5) return; // Only epic drogo breathes fire
+  let fire = document.createElement('div');
+  fire.innerText = "🔥";
+  fire.className = "fire-particle";
+  fire.style.left = (Math.random() * 60 + 20) + "%";
+  fire.style.bottom = "100px";
+  document.getElementById('stageContainer').appendChild(fire);
+  setTimeout(() => { fire.remove(); }, 1000);
+}
+
+function feedDrogo() {
+  if (bankXP < FEED_COST) return;
+
+  // Deduct from bank, add to Drogo
+  bankXP -= FEED_COST;
+  drogoFedAmount += FEED_COST;
+
+  // Save to iPad memory
+  localStorage.setItem('vedhTotalXP', bankXP);
+  localStorage.setItem('vedhDrogoFedAmount', drogoFedAmount);
+
+  spawnFood();
+
+  let stage = getCurrentStage();
+
+  // Did he level up?
+  if (drogoFedAmount >= stage.target) {
+    setTimeout(triggerLevelUp, 600); // Wait for apple animation
+  } else {
+    updateUI();
+    // Random chance to talk or breathe fire
+    if (Math.random() > 0.6) showSpeech(stage.speech);
+    spawnFire();
+  }
+}
+
+function triggerLevelUp() {
+  drogoLevel++;
+  drogoFedAmount = 0; // Reset bar for next level
+
+  localStorage.setItem('vedhDrogoLevel', drogoLevel);
+  localStorage.setItem('vedhDrogoFedAmount', drogoFedAmount);
+
+  let newStage = getCurrentStage();
+
+  // Show Celebration Screen
+  document.getElementById('lvlUpEmoji').innerText = newStage.emoji;
+  document.getElementById('lvlUpEmoji').className = `drogo-emoji ${newStage.anim}`;
+  document.getElementById('lvlUpName').innerText = newStage.name;
+  document.getElementById('levelUpScreen').classList.add('active');
+
+  updateUI();
+}
+
+function closeLevelUp() {
+  document.getElementById('levelUpScreen').classList.remove('active');
+  let stage = getCurrentStage();
+  showSpeech(stage.speech);
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
