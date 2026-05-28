@@ -51,7 +51,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
   padding: 25px;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
   backdrop-filter: blur(10px);
   display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -79,6 +79,53 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
 .streak-icon { font-size: 2rem; animation: fireFlicker 1.5s infinite alternate; }
 .streak-text { font-family: 'Fredoka One', cursive; color: #f97316; font-size: 1.2rem; }
 @keyframes fireFlicker { 0% { transform: scale(1); filter: brightness(1); } 100% { transform: scale(1.1); filter: brightness(1.2); } }
+
+/* ══════════════════════════════════════════
+   DROGO'S LAIR BANNER
+══════════════════════════════════════════ */
+.drogo-banner {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
+  border: 3px solid #f97316;
+  border-radius: 24px;
+  padding: 20px 30px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(249, 115, 22, 0.1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.drogo-banner:hover {
+  transform: translateY(-5px);
+  border-color: #fbbf24;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(249, 115, 22, 0.3);
+}
+
+.drogo-left { display: flex; align-items: center; gap: 25px; }
+.drogo-avatar { font-size: 4.5rem; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.6)); }
+.drogo-info h2 { font-family: 'Fredoka One', cursive; color: #f97316; font-size: 2.2rem; margin-bottom: 5px; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+.drogo-info p { color: #f1f5f9; font-weight: 800; font-size: 1.1rem; }
+
+.drogo-btn {
+  background: #f97316; color: white; font-family: 'Fredoka One', cursive;
+  padding: 15px 25px; border-radius: 16px; font-size: 1.3rem;
+  border: 4px solid #c2410c; box-shadow: 0 6px 0 #c2410c;
+  transition: all 0.1s;
+}
+.drogo-banner:hover .drogo-btn { transform: translateY(2px); box-shadow: 0 4px 0 #c2410c; }
+
+/* Drogo Animations */
+@keyframes wiggle { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+.anim-wiggle { animation: wiggle 1.5s infinite ease-in-out; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+.anim-bounce { animation: bounce 1s infinite ease-in-out; }
+@keyframes float { 0%, 100% { transform: translateY(0) scale(1.1); } 50% { transform: translateY(-20px) scale(1.1); } }
+.anim-float { animation: float 2s infinite ease-in-out; }
+@keyframes fire-glow { 0%, 100% { filter: drop-shadow(0 0 15px #f97316); transform: scale(1.1); } 50% { filter: drop-shadow(0 0 30px #ef4444); transform: scale(1.2); } }
+.anim-fire { animation: fire-glow 1.5s infinite ease-in-out; }
+
 
 /* ══════════════════════════════════════════
    GAME GRID
@@ -113,6 +160,9 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
   .profile-card { flex-direction: column; text-align: center; }
   .profile-left { flex-direction: column; }
   .xp-container { width: 100%; }
+  
+  .drogo-banner { flex-direction: column; text-align: center; gap: 15px; }
+  .drogo-left { flex-direction: column; gap: 10px; }
 }
 </style>
 </head>
@@ -149,6 +199,18 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
     </div>
   </div>
 
+  <!-- DROGO'S LAIR BANNER -->
+  <a href="drogo.html" class="drogo-banner">
+    <div class="drogo-left">
+      <div class="drogo-avatar anim-wiggle" id="homeDrogoEmoji">🥚</div>
+      <div class="drogo-info">
+        <h2>Drogo's Lair</h2>
+        <p id="homeDrogoText">Level 1: The Egg is waiting...</p>
+      </div>
+    </div>
+    <div class="drogo-btn">Visit Drogo 🐉</div>
+  </a>
+
   <div class="games-grid">
     
     <a href="maths-blast.html" class="game-card" style="--card-color: #4ade80;">
@@ -157,6 +219,16 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
         <h2 class="card-title">Maths Blast!</h2>
         <p class="card-desc">Master addition, subtraction, division, and geometry with fun interactive worksheets!</p>
         <div class="cta-btn">Play Maths</div>
+      </div>
+    </a>
+
+    <!-- LINK FOR NEW VISUAL MATH -->
+    <a href="visual-math.html" class="game-card" style="--card-color: #f97316;">
+      <div class="card-content">
+        <span class="card-icon">🍎</span>
+        <h2 class="card-title">Visual Math</h2>
+        <p class="card-desc">See the numbers! Tap and count objects like apples, cars, and pizzas to learn math.</p>
+        <div class="cta-btn">Start Counting</div>
       </div>
     </a>
 
@@ -196,15 +268,16 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
       </div>
     </a>
 
-    <a href="memory-master.html" class="game-card" style="--card-color: #f97316;">
+    <a href="memory-master.html" class="game-card" style="--card-color: #fcd34d; color: #0f172a;">
       <div class="card-content">
         <span class="card-icon">🧠</span>
-        <h2 class="card-title">Memory Master</h2>
-        <p class="card-desc">Flip the cards and find the matching pairs to train your brain's memory muscles!</p>
-        <div class="cta-btn">Train Memory</div>
+        <h2 class="card-title" style="color: #fcd34d;">Memory Master</h2>
+        <p class="card-desc" style="color: #cbd5e1;">Flip the cards and find the matching pairs to train your brain's memory muscles!</p>
+        <div class="cta-btn" style="color: #0f172a;">Train Memory</div>
       </div>
     </a>
-<a href="logic-labyrinth.html" class="game-card" style="--card-color: #06b6d4;">
+    
+    <a href="logic-labyrinth.html" class="game-card" style="--card-color: #06b6d4;">
       <div class="card-content">
         <span class="card-icon">🤖</span>
         <h2 class="card-title">Logic Labyrinth</h2>
@@ -240,13 +313,13 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
       </div>
     </a>
      <a href="biology-lab.html" class="game-card" style="--card-color: #f43f5e;">
-  <div class="card-content">
-    <span class="card-icon">🧬</span>
-    <h2 class="card-title">Biology Lab</h2>
-    <p class="card-desc">Learn about the human body, the 5 senses, and incredible animal superpowers!</p>
-    <div class="cta-btn">Examine</div>
-  </div>
-</a>
+      <div class="card-content">
+        <span class="card-icon">🧬</span>
+        <h2 class="card-title">Biology Lab</h2>
+        <p class="card-desc">Learn about the human body, the 5 senses, and incredible animal superpowers!</p>
+        <div class="cta-btn">Examine</div>
+      </div>
+    </a>
 
     <a href="space-adventure.html" class="game-card" style="--card-color: #818cf8;">
       <div class="card-content">
@@ -295,6 +368,15 @@ const LEVELS = [
   { level: 8, name: "Galactic Genius 🌌", xpReq: 5000 }
 ];
 
+// 2. Define Drogo's Stages so Home Screen knows what he looks like!
+const DROGO_STAGES = [
+  { level: 1, name: "The Egg", emoji: "🥚", anim: "anim-wiggle" },
+  { level: 2, name: "Baby Drogo", emoji: "🦎", anim: "anim-bounce" },
+  { level: 3, name: "Growing Drogo", emoji: "🦕", anim: "anim-bounce" },
+  { level: 4, name: "Winged Drogo", emoji: "🐉", anim: "anim-float" },
+  { level: 5, name: "Epic Drogo", emoji: "🐲", anim: "anim-fire" }
+];
+
 function updateProfile() {
   // Get XP from browser memory (Default to 0 if new)
   let totalXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
@@ -308,10 +390,6 @@ function updateProfile() {
       currentLevelObj = LEVELS[i];
       // Check if there is a next level
       nextLevelObj = LEVELS[i + 1] ? LEVELS[i + 1] : LEVELS[i];
-       if (totalXP >= currentLevelObj.xpReq && totalXP > 0) {
-      // If you want a sound when he opens the app and sees he leveled up
-      // playSound('win'); 
-  }
     }
   }
 
@@ -335,6 +413,19 @@ function updateProfile() {
     }, 100);
   }
 
+  // --- DROGO'S LAIR UPDATE LOGIC ---
+  let drogoLevel = parseInt(localStorage.getItem('vedhDrogoLevel')) || 1;
+  let stageIndex = drogoLevel - 1;
+  if (stageIndex >= DROGO_STAGES.length) stageIndex = DROGO_STAGES.length - 1; 
+  
+  let currentDrogo = DROGO_STAGES[stageIndex];
+  
+  let emojiEl = document.getElementById('homeDrogoEmoji');
+  emojiEl.innerText = currentDrogo.emoji;
+  emojiEl.className = `drogo-avatar ${currentDrogo.anim}`;
+  document.getElementById('homeDrogoText').innerText = `Level ${currentDrogo.level}: ${currentDrogo.name} is waiting!`;
+
+
   // --- STREAK SYSTEM ---
   let lastLogin = localStorage.getItem('vedhLastDate');
   let currentStreak = parseInt(localStorage.getItem('vedhStreak')) || 0;
@@ -348,12 +439,10 @@ function updateProfile() {
   let yesterday = yesterdayObj.toISOString().split('T')[0];
 
   if (lastLogin === yesterday) {
-    // He played yesterday, increase streak!
     currentStreak++;
     localStorage.setItem('vedhStreak', currentStreak);
     localStorage.setItem('vedhLastDate', today);
   } else if (lastLogin !== today) {
-    // He missed a day (or it's his first day). Reset to 1.
     currentStreak = 1;
     localStorage.setItem('vedhStreak', currentStreak);
     localStorage.setItem('vedhLastDate', today);
