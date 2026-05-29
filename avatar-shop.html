@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avatar Shop 🛒 - Super Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   AVATAR SHOP THEME
+══════════════════════════════════════════ */
+:root {
+  --primary: #a855f7; /* Purple */
+  --secondary: #38bdf8; /* Blue */
+  --gold: #fbbf24;
+  --dark: #0f172a; 
+  --paper: #1e293b; 
+  --grid: #334155;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--dark);
+  background-image: radial-gradient(var(--grid) 2px, transparent 2px);
+  background-size: 30px 30px; color: white;
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+
+.home-btn {
+  position: absolute; top: 20px; left: 20px; background: var(--paper); border: 3px solid var(--primary);
+  color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
+  font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
+}
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
+
+header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--secondary); text-shadow: 0 4px 10px rgba(56,189,248,0.3); line-height: 1; }
+.subtitle { font-size: 1.2rem; font-weight: 800; color: #94a3b8; margin-top: 5px; }
+
+/* XP Balance Card */
+.bank-card {
+  background: #fef08a; border: 4px solid #ca8a04; border-radius: 20px; padding: 15px 30px;
+  margin-bottom: 25px; text-align: center; color: #854d0e; font-family: 'Fredoka One'; font-size: 1.5rem;
+  box-shadow: 0 6px 0 #ca8a04;
+}
+.bank-card span { color: #b45309; font-size: 2.2rem; }
+
+/* Main layout split into Avatar View and Shop Grid */
+.shop-layout { display: flex; flex-direction: column; gap: 25px; width: 100%; max-width: 950px; }
+
+@media (min-width: 768px) {
+  .shop-layout { flex-direction: row; }
+}
+
+/* ══════════════════════════════════════════
+   AVATAR PREVIEW COMPONENT
+══════════════════════════════════════════ */
+.avatar-preview-box {
+  flex: 1; background: var(--paper); border: 4px solid #334155; border-radius: 24px;
+  padding: 30px 20px; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; box-shadow: 0 10px 0 rgba(0,0,0,0.3); min-height: 350px; position: sticky; top: 20px;
+}
+.preview-title { font-family: 'Fredoka One'; color: var(--secondary); font-size: 1.5rem; margin-bottom: 20px; }
+
+/* Interactive Layered Character View */
+.stage { position: relative; width: 220px; height: 200px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 10px; }
+.layer { position: absolute; font-size: 6.5rem; line-height: 1; transition: all 0.3s; user-select: none; }
+
+/* Item offsets for accurate placement */
+.layer-body  { z-index: 10; font-size: 6rem; }
+.layer-hat   { z-index: 30; top: -45px; font-size: 4rem; }
+.layer-suit  { z-index: 20; top: 18px; font-size: 5.5rem; opacity: 0.9; }
+.layer-sport { z-index: 15; bottom: -10px; right: -15px; font-size: 4rem; }
+.layer-drogo { z-index: 5;  bottom: -5px; left: -35px; font-size: 4.5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); }
+
+/* Dynamic Animations based on vehicles */
+@keyframes hoverFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.stage.has-float-vehicle { animation: hoverFloat 1.2s infinite ease-in-out; }
+
+@keyframes drogoWiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(-5px); } }
+.layer-drogo { animation: drogoWiggle 2s infinite ease-in-out; }
+
+/* ══════════════════════════════════════════
+   SHOP AND TABS
+══════════════════════════════════════════ */
+.shop-box { flex: 1.8; display: flex; flex-direction: column; }
+.tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+.tab-btn {
+  flex: 1; background: #334155; border: 3px solid #475569; border-radius: 12px;
+  color: #94a3b8; font-family: 'Fredoka One'; padding: 12px; cursor: pointer; font-size: 1.1rem;
+}
+.tab-btn.active { background: var(--primary); border-color: #c084fc; color: white; }
+
+.items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
+/* Custom scrollbar for shop items */
+.items-grid::-webkit-scrollbar { width: 8px; }
+.items-grid::-webkit-scrollbar-track { background: var(--dark); border-radius: 10px; }
+.items-grid::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+
+/* Shop Item Card */
+.item-card {
+  background: var(--paper); border: 3px solid #334155; border-radius: 16px;
+  padding: 15px; text-align: center; display: flex; flex-direction: column;
+  align-items: center; gap: 8px; box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+}
+.item-emoji { font-size: 3rem; margin-bottom: 5px; }
+.item-name { font-family: 'Fredoka One'; font-size: 1.2rem; }
+
+.btn-shop {
+  width: 100%; font-family: 'Fredoka One'; padding: 8px; border-radius: 10px;
+  border: none; cursor: pointer; font-size: 1.1rem; margin-top: auto; transition: all 0.1s;
+}
+.btn-buy  { background: var(--gold); color: #78350f; box-shadow: 0 4px 0 #d97706; }
+.btn-buy:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
+.btn-wear { background: var(--secondary); color: white; box-shadow: 0 4px 0 #0284c7; }
+.btn-wear:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
+.btn-active-equip { background: #10b981; color: white; border: 2px solid white; cursor: default; }
+
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn">🏠 Home</a>
+
+<header>
+  <h1>Kingdom Custom Shop 🛒</h1>
+  <div class="subtitle">Dress Vedh & Equip Items with Your XP!</div>
+</header>
+
+<div class="bank-card">
+  Available Funds: <span id="shopXpDisplay">0</span> ⭐
+</div>
+
+<div class="shop-layout">
+  
+  <!-- LEFT SIDE: CHARACTER STAGE -->
+  <div class="avatar-preview-box">
+    <div class="preview-title">Vedh & Drogo 🌟</div>
+    
+    <div class="stage" id="avatarStage">
+      <!-- Layered Elements -->
+      <div class="layer layer-drogo" id="viewDrogo">🥚</div>
+      <div class="layer layer-sport" id="viewSport"></div>
+      <div class="layer layer-suit" id="viewSuit"></div>
+      <div class="layer layer-body">👦🏽</div>
+      <div class="layer layer-hat" id="viewHat"></div>
+    </div>
+    
+    <p style="font-weight: 800; color: #94a3b8; margin-top: 15px; font-size: 0.95rem;">Tap owned items to put them on or off!</p>
+  </div>
+
+  <!-- RIGHT SIDE: THE SHOP GRID -->
+  <div class="shop-box">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('hat', this)">Hats 👑</button>
+      <button class="tab-btn" onclick="switchTab('suit', this)">Clothes 🥋</button>
+      <button class="tab-btn" onclick="switchTab('sport', this)">Items 🛴</button>
+    </div>
+
+    <div class="items-grid" id="shopItemsContainer">
+      <!-- Injected Dynamically by JS -->
+    </div>
+  </div>
+
+</div>
+
+<script src="sounds.js"></script>
+
+<script>
+// ══════════════════════════════════════════════
+// THE EXTENDED 30-ITEM SHOP REGISTRY
+// ══════════════════════════════════════════════
+const ITEM_SHOP = [
+  // --- HATS CATEGORY (10 Items) ---
+  { id: "hat_cap",         type: "hat",   name: "Cool Cap",         emoji: "🧢", cost: 20 },
+  { id: "hat_crown",       type: "hat",   name: "Royal Crown",      emoji: "👑", cost: 40 },
+  { id: "hat_mask",        type: "hat",   name: "Hero Mask",        emoji: "🎭", cost: 60 },
+  { id: "hat_ninja",       type: "hat",   name: "Ninja Bandana",    emoji: "🥷", cost: 80 },
+  { id: "hat_pirate",      type: "hat",   name: "Pirate Hat",       emoji: "🏴‍☠️", cost: 100 },
+  { id: "hat_astronaut",   type: "hat",   name: "Space Helmet",     emoji: "👨‍🚀", cost: 150 },
+  { id: "hat_chef",        type: "hat",   name: "Master Chef Hat",  emoji: "👨‍🍳", cost: 50 },
+  { id: "hat_wizard",      type: "hat",   name: "Wizard Hat",       emoji: "🧙", cost: 110 },
+  { id: "hat_detective",   type: "hat",   name: "Spy Deerstalker",  emoji: "🕵️‍♂️", cost: 70 },
+  { id: "hat_dragon",      type: "hat",   name: "Drogo Hat",        emoji: "🐲", cost: 250 }, // Luxury Item!
+
+  // --- CLOTHES CATEGORY (10 Items) ---
+  { id: "suit_gi",         type: "suit",  name: "Karate Gi",        emoji: "🥋", cost: 45 },
+  { id: "suit_wizard",     type: "suit",  name: "Wizard Robes",     emoji: "🔮", cost: 50 },
+  { id: "suit_football",   type: "suit",  name: "Soccer Jersey",    emoji: "🎽", cost: 35 },
+  { id: "suit_armor",      type: "suit",  name: "Knight Armor",     emoji: "🛡️", cost: 100 },
+  { id: "suit_hoodie",     type: "suit",  name: "Neon Hoodie",      emoji: "🧥", cost: 150 },
+  { id: "suit_suit",       type: "suit",  name: "Secret Agent Suit",emoji: "👔", cost: 120 },
+  { id: "suit_astro",      type: "suit",  name: "Glow Space Suit",  emoji: "🚀", cost: 220 },
+  { id: "suit_cape",       type: "suit",  name: "Fire Cape",        emoji: "💥", cost: 180 },
+  { id: "suit_king",       type: "suit",  name: "King Cloak",       emoji: "🔱", cost: 300 }, // Luxury Item!
+  { id: "suit_gold",       type: "suit",  name: "Golden Armor",     emoji: "✨", cost: 500 }, // Mega Luxury!
+
+  // --- SPORTS & VEHICLES CATEGORY (10 Items) ---
+  { id: "sport_ball",      type: "sport", name: "Soccer Ball",      emoji: "⚽", cost: 30 },
+  { id: "sport_skate",     type: "sport", name: "Skateboard",       emoji: "🛹", cost: 70 },
+  { id: "sport_scooter",   type: "sport", name: "Turbo Scooter",    emoji: "🛴", cost: 90 },
+  { id: "sport_sword",     type: "sport", name: "Laser Sword",      emoji: "⚔️", cost: 120 },
+  { id: "sport_bike",      type: "sport", name: "Stunt Bicycle",    emoji: "🚲", cost: 160 },
+  { id: "sport_hover",     type: "sport", name: "Hoverboard",       emoji: "🛸", cost: 200 }, // Floats!
+  { id: "sport_carpet",    type: "sport", name: "Magic Carpet",     emoji: "🧹", cost: 280 }, // Floats!
+  { id: "sport_kart",      type: "sport", name: "Racing Go-Kart",    emoji: "🏎️", cost: 350 },
+  { id: "sport_wings",     type: "sport", name: "Jetpack Wings",     emoji: "🎒", cost: 400 }, // Floats!
+  { id: "sport_ufo",       type: "sport", name: "Mini Alien UFO",   emoji: "👽", cost: 600 }  // Ultimate Trophy Item!
+];
+
+// Floating list configurations
+const FLOATING_VEHICLES = ["sport_hover", "sport_carpet", "sport_wings", "sport_ufo"];
+
+// Drogo Companion Stage Mirror Mapping
+const DROGO_EMOJIS = ["🥚", "🦎", "🦕", "🐉", "🐲"];
+
+// --- PERSISTENT DATA STATES ---
+let bankXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
+let drogoLevel = parseInt(localStorage.getItem('vedhDrogoLevel')) || 1;
+
+// Lists tracking unlocked items and active equippables
+let ownedItems = JSON.parse(localStorage.getItem('vedhOwnedItems')) || [];
+let equippedItems = JSON.parse(localStorage.getItem('vedhEquippedItems')) || { hat: "", suit: "", sport: "" };
+
+let currentTab = "hat";
+
+function initShop() {
+  renderAvatarPreview();
+  renderShopGrid();
+}
+
+// ══════════════════════════════════════════════
+// LAYER GRAPHICS GENERATOR
+// ══════════════════════════════════════════════
+function renderAvatarPreview() {
+  document.getElementById('shopXpDisplay').innerText = bankXP;
+  
+  // Get Drogo Level Component from Lair State
+  let dIndex = drogoLevel - 1;
+  if (dIndex >= DROGO_EMOJIS.length) dIndex = DROGO_EMOJIS.length - 1;
+  document.getElementById('viewDrogo').innerText = DROGO_EMOJIS[dIndex];
+
+  // Map Category Item Layer Visualizer References
+  const layers = {
+    hat: document.getElementById('viewHat'),
+    suit: document.getElementById('viewSuit'),
+    sport: document.getElementById('viewSport')
+  };
+
+  // Determine Active Structural Overlays
+  Object.keys(layers).forEach(type => {
+    let activeId = equippedItems[type];
+    let matchedItem = ITEM_SHOP.find(i => i.id === activeId);
+    
+    if (matchedItem) {
+      layers[type].innerText = matchedItem.emoji;
+      layers[type].style.display = "block";
+    } else {
+      layers[type].innerText = "";
+      layers[type].style.display = "none";
+    }
+  });
+
+  // Activate Floating Animation for high-tier floating items
+  let stage = document.getElementById('avatarStage');
+  if (FLOATING_VEHICLES.includes(equippedItems.sport)) {
+    stage.classList.add('has-float-vehicle');
+  } else {
+    stage.classList.remove('has-float-vehicle');
+  }
+}
+
+// ══════════════════════════════════════════════
+// STORE INTERFACE ENGINE
+// ══════════════════════════════════════════════
+function switchTab(tabType, buttonEl) {
+  currentTab = tabType;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  buttonEl.classList.add('active');
+  renderShopGrid();
+}
+
+function renderShopGrid() {
+  const container = document.getElementById('shopItemsContainer');
+  container.innerHTML = '';
+
+  // Filter View Node List Registry Array via Selected Tab Type Element Category Identifier
+  let filteredItems = ITEM_SHOP.filter(item => item.type === currentTab);
+
+  filteredItems.forEach(item => {
+    let card = document.createElement('div');
+    card.className = 'item-card';
+    
+    let isOwned = ownedItems.includes(item.id);
+    let isEquipped = equippedItems[item.type] === item.id;
+    
+    let actionButtonHTML = '';
+
+    if (isEquipped) {
+      actionButtonHTML = `<button class="btn-shop btn-active-equip">Equipped ✅</button>`;
+      card.style.borderColor = 'var(--secondary)';
+    } else if (isOwned) {
+      actionButtonHTML = `<button class="btn-shop btn-wear" onclick="toggleEquip('${item.id}')">Wear Item</button>`;
+      card.style.borderColor = 'var(--primary)';
+    } else {
+      let canAfford = bankXP >= item.cost;
+      actionButtonHTML = `
+        <button class="btn-shop btn-buy" ${canAfford ? '' : 'disabled style="opacity:0.5; background:#64748b; box-shadow:none; color:#cbd5e1;"'} onclick="buyItem('${item.id}', ${item.cost})">
+          Buy: ${item.cost} XP
+        </button>
+      `;
+      card.style.borderColor = '#334155';
+    }
+
+    card.innerHTML = `
+      <div class="item-emoji">${item.emoji}</div>
+      <div class="item-name">${item.name}</div>
+      ${actionButtonHTML}
+    `;
+    
+    container.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+// ACTION CONTROLLERS
+// ══════════════════════════════════════════════
+function buyItem(id, cost) {
+  if (bankXP < cost) return;
+
+  bankXP -= cost;
+  ownedItems.push(id);
+
+  // Save State variables back inside Local Cache Subsections
+  localStorage.setItem('vedhTotalXP', bankXP);
+  localStorage.setItem('vedhOwnedItems', JSON.stringify(ownedItems));
+
+  if (typeof playSound === 'function') playSound('correct');
+
+  initShop();
+}
+
+function toggleEquip(id) {
+  let item = ITEM_SHOP.find(i => i.id === id);
+  if (!item) return;
+
+  // Toggle setup: if already wearing click clears layer slot, otherwise sets slot to item
+  if (equippedItems[item.type] === id) {
+    equippedItems[item.type] = "";
+  } else {
+    equippedItems[item.type] = id;
+  }
+
+  localStorage.setItem('vedhEquippedItems', JSON.stringify(equippedItems));
+  if (typeof playSound === 'function') playSound('click');
+
+  initShop();
+}
+
+// Run the initialization routine inside active load context bounds window element
+initShop();
+</script>
+</body>
+</html>
