@@ -116,7 +116,8 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--second
 .btn-buy:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
 .btn-wear { background: var(--secondary); color: white; box-shadow: 0 4px 0 #0284c7; }
 .btn-wear:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
-.btn-active-equip { background: #10b981; color: white; border: 2px solid white; cursor: default; }
+.btn-active-equip { background: #10b981; color: white; border: 2px solid white; cursor: pointer; box-shadow: 0 4px 0 #047857; }
+.btn-active-equip:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
 
 @media (max-width: 400px) {
   .items-grid { grid-template-columns: 1fr; }
@@ -302,7 +303,8 @@ function renderShopGrid() {
     let actionButtonHTML = '';
 
     if (isEquipped) {
-      actionButtonHTML = `<button class="btn-shop btn-active-equip">Equipped ✅</button>`;
+      // FIX: Added onclick="toggleEquip('${item.id}')" to the Equipped button!
+      actionButtonHTML = `<button class="btn-shop btn-active-equip" onclick="toggleEquip('${item.id}')">Equipped ✅</button>`;
       card.style.borderColor = 'var(--secondary)';
     } else if (isOwned) {
       actionButtonHTML = `<button class="btn-shop btn-wear" onclick="toggleEquip('${item.id}')">Wear Item</button>`;
