@@ -3,19 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Avatar Shop 🛒 - Super Worksheets</title>
+<title>3D Kingdom Custom Shop 🛒</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<!-- Include the Three.js 3D Engine Graphic Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-/* ══════════════════════════════════════════
-   AVATAR SHOP THEME
-══════════════════════════════════════════ */
 :root {
-  --primary: #a855f7; /* Purple */
+  --primary: #6366f1; /* Indigo */
   --secondary: #38bdf8; /* Blue */
   --gold: #fbbf24;
-  --dark: #0f172a; 
-  --paper: #1e293b; 
-  --grid: #334155;
+  --dark: #0b0f19; 
+  --paper: #111827; 
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -23,9 +21,9 @@
 body {
   font-family: 'Nunito', sans-serif;
   background-color: var(--dark);
-  background-image: radial-gradient(var(--grid) 2px, transparent 2px);
-  background-size: 30px 30px; color: white;
+  color: white;
   min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px;
+  overflow-x: hidden;
 }
 
 .home-btn {
@@ -33,100 +31,77 @@ body {
   color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
   font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
 }
-.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
 
-header { text-align: center; margin-top: 40px; margin-bottom: 20px; }
-h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--secondary); text-shadow: 0 4px 10px rgba(56,189,248,0.3); line-height: 1; }
-.subtitle { font-size: 1.2rem; font-weight: 800; color: #94a3b8; margin-top: 5px; }
+header { text-align: center; margin-top: 40px; margin-bottom: 10px; }
+h1 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: var(--secondary); text-shadow: 0 4px 15px rgba(56,189,248,0.4); }
+.subtitle { font-size: 1.1rem; font-weight: 800; color: #94a3b8; }
 
-/* XP Balance Card */
 .bank-card {
-  background: #fef08a; border: 4px solid #ca8a04; border-radius: 20px; padding: 15px 30px;
-  margin-bottom: 25px; text-align: center; color: #854d0e; font-family: 'Fredoka One'; font-size: 1.5rem;
-  box-shadow: 0 6px 0 #ca8a04;
+  background: #fef08a; border: 4px solid #ca8a04; border-radius: 20px; padding: 10px 25px;
+  margin: 15px 0; text-align: center; color: #854d0e; font-family: 'Fredoka One'; font-size: 1.3rem;
 }
-.bank-card span { color: #b45309; font-size: 2.2rem; }
+.bank-card span { color: #b45309; font-size: 2rem; }
 
-/* Main layout split into Avatar View and Shop Grid */
-.shop-layout { display: flex; flex-direction: column; gap: 25px; width: 100%; max-width: 950px; }
+/* Layout Split */
+.shop-layout { display: flex; flex-direction: column; gap: 25px; width: 100%; max-width: 1050px; margin-top: 10px; }
 
 @media (min-width: 768px) {
   .shop-layout { flex-direction: row; }
 }
 
-/* ══════════════════════════════════════════
-   AVATAR PREVIEW COMPONENT
-══════════════════════════════════════════ */
-.avatar-preview-box {
-  flex: 1; background: var(--paper); border: 4px solid #334155; border-radius: 24px;
-  padding: 30px 20px; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; box-shadow: 0 10px 0 rgba(0,0,0,0.3); min-height: 350px; position: sticky; top: 20px;
+/* 3D CANVAS VIEWPORT STAGE */
+.stage-3d-box {
+  flex: 1.2; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); 
+  border: 4px solid #334155; border-radius: 24px; overflow: hidden;
+  display: flex; flex-direction: column; position: relative; min-height: 450px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
-.preview-title { font-family: 'Fredoka One'; color: var(--secondary); font-size: 1.5rem; margin-bottom: 20px; }
+#canvas3d { width: 100%; height: 100%; flex-grow: 1; cursor: grab; }
+#canvas3d:active { cursor: grabbing; }
 
-/* Interactive Layered Character View */
-.stage { position: relative; width: 220px; height: 200px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 10px; }
-.layer { position: absolute; font-size: 6.5rem; line-height: 1; transition: all 0.3s; user-select: none; }
+.stage-overlay-text {
+  position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.6); padding: 6px 16px; border-radius: 20px;
+  font-size: 0.9rem; color: #94a3b8; font-weight: 700; pointer-events: none; text-align: center;
+}
 
-/* Item offsets for accurate placement */
-.layer-body  { z-index: 10; font-size: 6rem; }
-.layer-hat   { z-index: 30; top: -45px; font-size: 4rem; }
-.layer-suit  { z-index: 20; top: 18px; font-size: 5.5rem; opacity: 0.9; }
-.layer-sport { z-index: 15; bottom: -10px; right: -15px; font-size: 4rem; }
-.layer-drogo { z-index: 5;  bottom: -5px; left: -35px; font-size: 4.5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); }
-
-/* Dynamic Animations based on vehicles */
-@keyframes hoverFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-.stage.has-float-vehicle { animation: hoverFloat 1.2s infinite ease-in-out; }
-
-@keyframes drogoWiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(-5px); } }
-.layer-drogo { animation: drogoWiggle 2s infinite ease-in-out; }
-
-/* ══════════════════════════════════════════
-   SHOP AND TABS
-══════════════════════════════════════════ */
-.shop-box { flex: 1.8; display: flex; flex-direction: column; }
+/* SHOP HUB COLUMN */
+.shop-box { flex: 1; display: flex; flex-direction: column; }
 .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
 .tab-btn {
-  flex: 1; background: #334155; border: 3px solid #475569; border-radius: 12px;
+  flex: 1; background: #1f2937; border: 3px solid #374151; border-radius: 12px;
   color: #94a3b8; font-family: 'Fredoka One'; padding: 12px; cursor: pointer; font-size: 1.1rem;
 }
-.tab-btn.active { background: var(--primary); border-color: #c084fc; color: white; }
+.tab-btn.active { background: var(--primary); border-color: #818cf8; color: white; }
 
-.items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
-/* Custom scrollbar for shop items */
-.items-grid::-webkit-scrollbar { width: 8px; }
-.items-grid::-webkit-scrollbar-track { background: var(--dark); border-radius: 10px; }
-.items-grid::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+.items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-height: 420px; overflow-y: auto; padding-right: 5px; }
+.items-grid::-webkit-scrollbar { width: 6px; }
+.items-grid::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
 
-/* Shop Item Card */
 .item-card {
-  background: var(--paper); border: 3px solid #334155; border-radius: 16px;
+  background: var(--paper); border: 3px solid #374151; border-radius: 16px;
   padding: 15px; text-align: center; display: flex; flex-direction: column;
-  align-items: center; gap: 8px; box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+  align-items: center; gap: 8px; box-shadow: 0 6px 0 rgba(0,0,0,0.3);
 }
-.item-emoji { font-size: 3rem; margin-bottom: 5px; }
-.item-name { font-family: 'Fredoka One'; font-size: 1.2rem; }
+.item-emoji { font-size: 2.5rem; }
+.item-name { font-family: 'Fredoka One'; font-size: 1.1rem; color: #f3f4f6; }
 
 .btn-shop {
-  width: 100%; font-family: 'Fredoka One'; padding: 8px; border-radius: 10px;
-  border: none; cursor: pointer; font-size: 1.1rem; margin-top: auto; transition: all 0.1s;
+  width: 100%; font-family: 'Fredoka One'; padding: 10px; border-radius: 10px;
+  border: none; cursor: pointer; font-size: 1rem; margin-top: auto; transition: all 0.1s;
 }
 .btn-buy  { background: var(--gold); color: #78350f; box-shadow: 0 4px 0 #d97706; }
-.btn-buy:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
 .btn-wear { background: var(--secondary); color: white; box-shadow: 0 4px 0 #0284c7; }
-.btn-wear:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
 .btn-active-equip { background: #10b981; color: white; border: 2px solid white; cursor: default; }
-
 </style>
 </head>
 <body>
 
-<a href="index.html" class="home-btn">🏠 Home</a>
+<a href="index.html" class="home-btn">尊 Home</a>
 
 <header>
-  <h1>Kingdom Custom Shop 🛒</h1>
-  <div class="subtitle">Dress Vedh & Equip Items with Your XP!</div>
+  <h1>3D Anime Custom Shop 🛒</h1>
+  <div class="subtitle">Interactive Live 3D Viewport Engine</div>
 </header>
 
 <div class="bank-card">
@@ -135,145 +110,308 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--second
 
 <div class="shop-layout">
   
-  <!-- LEFT SIDE: CHARACTER STAGE -->
-  <div class="avatar-preview-box">
-    <div class="preview-title">Vedh & Drogo 🌟</div>
-    
-    <div class="stage" id="avatarStage">
-      <!-- Layered Elements -->
-      <div class="layer layer-drogo" id="viewDrogo">🥚</div>
-      <div class="layer layer-sport" id="viewSport"></div>
-      <div class="layer layer-suit" id="viewSuit"></div>
-      <div class="layer layer-body">👦🏽</div>
-      <div class="layer layer-hat" id="viewHat"></div>
-    </div>
-    
-    <p style="font-weight: 800; color: #94a3b8; margin-top: 15px; font-size: 0.95rem;">Tap owned items to put them on or off!</p>
+  <!-- LEFT SIDE: INTERACTIVE INTERACTIVE 3D VIEWPORT -->
+  <div class="stage-3d-box">
+    <div id="canvas3d"></div>
+    <div class="stage-overlay-text">Drag left/right to rotate camera 🔄</div>
   </div>
 
-  <!-- RIGHT SIDE: THE SHOP GRID -->
+  <!-- RIGHT SIDE: THE ITEM RETAIL CATALOG -->
   <div class="shop-box">
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('hat', this)">Hats 👑</button>
       <button class="tab-btn" onclick="switchTab('suit', this)">Clothes 🥋</button>
-      <button class="tab-btn" onclick="switchTab('sport', this)">Items 🛴</button>
+      <button class="tab-btn" onclick="switchTab('sport', this)">Items ⚔️</button>
     </div>
 
-    <div class="items-grid" id="shopItemsContainer">
-      <!-- Injected Dynamically by JS -->
-    </div>
+    <div class="items-grid" id="shopItemsContainer"></div>
   </div>
 
 </div>
 
-<script src="sounds.js"></script>
-
 <script>
 // ══════════════════════════════════════════════
-// THE EXTENDED 30-ITEM SHOP REGISTRY
+// DATA LOGISTICS REGISTRY
 // ══════════════════════════════════════════════
 const ITEM_SHOP = [
-  // --- HATS CATEGORY (10 Items) ---
-  { id: "hat_cap",         type: "hat",   name: "Cool Cap",         emoji: "🧢", cost: 20 },
-  { id: "hat_crown",       type: "hat",   name: "Royal Crown",      emoji: "👑", cost: 40 },
-  { id: "hat_mask",        type: "hat",   name: "Hero Mask",        emoji: "🎭", cost: 60 },
-  { id: "hat_ninja",       type: "hat",   name: "Ninja Bandana",    emoji: "🥷", cost: 80 },
-  { id: "hat_pirate",      type: "hat",   name: "Pirate Hat",       emoji: "🏴‍☠️", cost: 100 },
-  { id: "hat_astronaut",   type: "hat",   name: "Space Helmet",     emoji: "👨‍🚀", cost: 150 },
-  { id: "hat_chef",        type: "hat",   name: "Master Chef Hat",  emoji: "👨‍🍳", cost: 50 },
-  { id: "hat_wizard",      type: "hat",   name: "Wizard Hat",       emoji: "🧙", cost: 110 },
-  { id: "hat_detective",   type: "hat",   name: "Spy Deerstalker",  emoji: "🕵️‍♂️", cost: 70 },
-  { id: "hat_dragon",      type: "hat",   name: "Drogo Hat",        emoji: "🐲", cost: 250 }, // Luxury Item!
+  { id: "hat_crown",    type: "hat",   name: "Royal Crown",   emoji: "👑", cost: 40,  color: 0xfbbf24 },
+  { id: "hat_ninja",    type: "hat",   name: "Ninja Band",    emoji: "🥷", cost: 80,  color: 0xef4444 },
+  { id: "hat_wizard",   type: "hat",   name: "Wizard Hat",    emoji: "🧙", cost: 110, color: 0x4f46e5 },
+  
+  { id: "suit_wizard",  type: "suit",  name: "Wizard Robes",   emoji: "🔮", cost: 50,  color: 0x6366f1 },
+  { id: "suit_armor",   type: "suit",  name: "Knight Armor",  emoji: "🛡️", cost: 100, color: 0x94a3b8 },
+  { id: "suit_gold",    type: "suit",  name: "Golden Armor",  emoji: "✨", cost: 400, color: 0xf59e0b },
 
-  // --- CLOTHES CATEGORY (10 Items) ---
-  { id: "suit_gi",         type: "suit",  name: "Karate Gi",        emoji: "🥋", cost: 45 },
-  { id: "suit_wizard",     type: "suit",  name: "Wizard Robes",     emoji: "🔮", cost: 50 },
-  { id: "suit_football",   type: "suit",  name: "Soccer Jersey",    emoji: "🎽", cost: 35 },
-  { id: "suit_armor",      type: "suit",  name: "Knight Armor",     emoji: "🛡️", cost: 100 },
-  { id: "suit_hoodie",     type: "suit",  name: "Neon Hoodie",      emoji: "🧥", cost: 150 },
-  { id: "suit_suit",       type: "suit",  name: "Secret Agent Suit",emoji: "👔", cost: 120 },
-  { id: "suit_astro",      type: "suit",  name: "Glow Space Suit",  emoji: "🚀", cost: 220 },
-  { id: "suit_cape",       type: "suit",  name: "Fire Cape",        emoji: "💥", cost: 180 },
-  { id: "suit_king",       type: "suit",  name: "King Cloak",       emoji: "🔱", cost: 300 }, // Luxury Item!
-  { id: "suit_gold",       type: "suit",  name: "Golden Armor",     emoji: "✨", cost: 500 }, // Mega Luxury!
-
-  // --- SPORTS & VEHICLES CATEGORY (10 Items) ---
-  { id: "sport_ball",      type: "sport", name: "Soccer Ball",      emoji: "⚽", cost: 30 },
-  { id: "sport_skate",     type: "sport", name: "Skateboard",       emoji: "🛹", cost: 70 },
-  { id: "sport_scooter",   type: "sport", name: "Turbo Scooter",    emoji: "🛴", cost: 90 },
-  { id: "sport_sword",     type: "sport", name: "Laser Sword",      emoji: "⚔️", cost: 120 },
-  { id: "sport_bike",      type: "sport", name: "Stunt Bicycle",    emoji: "🚲", cost: 160 },
-  { id: "sport_hover",     type: "sport", name: "Hoverboard",       emoji: "🛸", cost: 200 }, // Floats!
-  { id: "sport_carpet",    type: "sport", name: "Magic Carpet",     emoji: "🧹", cost: 280 }, // Floats!
-  { id: "sport_kart",      type: "sport", name: "Racing Go-Kart",    emoji: "🏎️", cost: 350 },
-  { id: "sport_wings",     type: "sport", name: "Jetpack Wings",     emoji: "🎒", cost: 400 }, // Floats!
-  { id: "sport_ufo",       type: "sport", name: "Mini Alien UFO",   emoji: "👽", cost: 600 }  // Ultimate Trophy Item!
+  { id: "sport_sword",  type: "sport", name: "Laser Sword",   emoji: "⚔️", cost: 120, color: 0x06b6d4 },
+  { id: "sport_shield", type: "sport", name: "Knight Shield",  emoji: "🛡️", cost: 90,  color: 0x3b82f6 },
+  { id: "sport_staff",  type: "sport", name: "Magic Staff",   emoji: "🪄", cost: 150, color: 0x10b981 }
 ];
 
-// Floating list configurations
-const FLOATING_VEHICLES = ["sport_hover", "sport_carpet", "sport_wings", "sport_ufo"];
-
-// Drogo Companion Stage Mirror Mapping
-const DROGO_EMOJIS = ["🥚", "🦎", "🦕", "🐉", "🐲"];
-
-// --- PERSISTENT DATA STATES ---
 let bankXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
 let drogoLevel = parseInt(localStorage.getItem('vedhDrogoLevel')) || 1;
-
-// Lists tracking unlocked items and active equippables
 let ownedItems = JSON.parse(localStorage.getItem('vedhOwnedItems')) || [];
 let equippedItems = JSON.parse(localStorage.getItem('vedhEquippedItems')) || { hat: "", suit: "", sport: "" };
-
 let currentTab = "hat";
 
-function initShop() {
-  renderAvatarPreview();
-  renderShopGrid();
+// ══════════════════════════════════════════════
+// THREE.JS 3DGRAPHICS ENGINE ENGINE
+// ══════════════════════════════════════════════
+let scene, camera, renderer;
+let characterGroup, drogoMesh;
+let equippedHatMesh, equippedSuitMesh, equippedWeaponMesh;
+let isDragging = false, previousMousePosition = { x: 0 };
+
+function init3DEngine() {
+  const container = document.getElementById('canvas3d');
+  
+  // 1. Establish Scene & Camera
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+  camera.position.set(0, 2.5, 6);
+  camera.lookAt(0, 1.5, 0);
+
+  // 2. Establish WebGL Hardware Renderer
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.shadowMap.enabled = true;
+  container.appendChild(renderer.domElement);
+
+  // 3. Setup Cinematic Ambient & Spotlight Illumination Array
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirLight.position.set(5, 10, 7);
+  dirLight.castShadow = true;
+  scene.add(dirLight);
+
+  // Add a fancy glowing grid stage ring floor
+  const floorGeo = new THREE.CylinderGeometry(2.5, 2.5, 0.1, 32);
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.5 });
+  const floor = new THREE.Mesh(floorGeo, floorMat);
+  floor.position.y = -0.05;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // 4. Assemble the Core Character Group Node Architecture Tree
+  characterGroup = new THREE.Group();
+  scene.add(characterGroup);
+
+  buildProceduralAnimeCharacter();
+  buildProceduralDrogo();
+  updateEquipped3DAssets();
+
+  // 5. Establish Interactive Camera Drag Rotation Controls
+  container.addEventListener('mousedown', () => isDragging = true);
+  container.addEventListener('touchstart', (e) => { isDragging = true; previousMousePosition.x = e.touches[0].clientX; });
+  
+  window.addEventListener('mouseup', () => isDragging = false);
+  window.addEventListener('touchend', () => isDragging = false);
+  
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    let deltaX = e.clientX - previousMousePosition.x;
+    characterGroup.rotation.y += deltaX * 0.01;
+    if(drogoMesh) drogoMesh.rotation.y += deltaX * 0.01;
+    previousMousePosition.x = e.clientX;
+  });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    let deltaX = e.touches[0].clientX - previousMousePosition.x;
+    characterGroup.rotation.y += deltaX * 0.01;
+    if(drogoMesh) drogoMesh.rotation.y += deltaX * 0.01;
+    previousMousePosition.x = e.touches[0].clientX;
+  });
+
+  // Track window resizing seamlessly
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+
+  animate();
+}
+
+// Assemble character anatomy layers (Procedural Vector Mesh Shell Blocks)
+function buildProceduralAnimeCharacter() {
+  // Head (Sphere)
+  const headGeo = new THREE.SphereGeometry(0.35, 32, 32);
+  const headMat = new THREE.MeshStandardMaterial({ color: 0xffdbac, roughness: 0.8 }); // Skin color
+  const head = new THREE.Mesh(headGeo, headMat);
+  head.position.y = 1.9;
+  characterGroup.add(head);
+
+  // Hair Anime Spikes Base Overlays
+  const hairGeo = new THREE.SphereGeometry(0.37, 16, 16, 0, Math.PI*2, 0, Math.PI/2);
+  const hairMat = new THREE.MeshStandardMaterial({ color: 0x1e1b4b, roughness: 0.9 }); // Dark indigo hair
+  const hair = new THREE.Mesh(hairGeo, hairMat);
+  hair.position.set(0, 1.95, 0);
+  characterGroup.add(hair);
+
+  // Eyes
+  const eyeGeo = new THREE.SphereGeometry(0.04, 8, 8);
+  const eyeMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
+  const leftEye = new THREE.Mesh(eyeGeo, eyeMat); leftEye.position.set(0.12, 1.95, 0.3);
+  const rightEye = new THREE.Mesh(eyeGeo, eyeMat); rightEye.position.set(-0.12, 1.95, 0.3);
+  characterGroup.add(leftEye, rightEye);
+
+  // Torso/Body (Cylinder Base Outfit layer)
+  const bodyGeo = new THREE.CylinderGeometry(0.3, 0.25, 0.8, 16);
+  this.defaultSuitMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.6 }); // Base Blue shirt
+  this.torsoMesh = new THREE.Mesh(bodyGeo, this.defaultSuitMat);
+  this.torsoMesh.position.y = 1.2;
+  characterGroup.add(this.torsoMesh);
+
+  // Left & Right Hands (Joint Connected Cylinders)
+  const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.5, 8);
+  const armMat = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+  
+  this.leftArm = new THREE.Mesh(armGeo, armMat); this.leftArm.position.set(0.45, 1.3, 0); this.leftArm.rotation.z = -0.2;
+  this.rightArm = new THREE.Mesh(armGeo, armMat); this.rightArm.position.set(-0.45, 1.3, 0); this.rightArm.rotation.z = 0.2;
+  characterGroup.add(this.leftArm, this.rightArm);
+
+  // Left & Right Moving Functional Legs
+  const legGeo = new THREE.CylinderGeometry(0.1, 0.08, 0.7, 12);
+  const legMat = new THREE.MeshStandardMaterial({ color: 0x1e293b }); // Pants
+  const leftLeg = new THREE.Mesh(legGeo, legMat); leftLeg.position.set(0.15, 0.45, 0);
+  const rightLeg = new THREE.Mesh(legGeo, legMat); rightLeg.position.set(-0.15, 0.45, 0);
+  characterGroup.add(leftLeg, rightLeg);
+}
+
+function buildProceduralDrogo() {
+  // Clear any existing mesh
+  if(drogoMesh) scene.remove(drogoMesh);
+
+  drogoMesh = new THREE.Group();
+  let dMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.5 }); // Green dragon skin
+
+  if (drogoLevel === 1) { // Egg shape
+    const eggGeo = new THREE.SphereGeometry(0.25, 32, 32);
+    eggGeo.scale(1, 1.4, 1);
+    const egg = new THREE.Mesh(eggGeo, dMat);
+    drogoMesh.add(egg);
+    drogoMesh.position.set(-1.2, 0.35, 0.5);
+  } else { // Baby/Adult Dragon Model Compilation shape
+    // Body base
+    const bGeo = new THREE.SphereGeometry(0.28, 16, 16);
+    const body = new THREE.Mesh(bGeo, dMat); body.position.y = 0.3; drogoMesh.add(body);
+    // Head
+    const hGeo = new THREE.SphereGeometry(0.18, 16, 16);
+    const head = new THREE.Mesh(hGeo, dMat); head.position.set(0, 0.6, 0.1); drogoMesh.add(head);
+    // Tail
+    const tGeo = new THREE.ConeGeometry(0.08, 0.3, 8);
+    const tail = new THREE.Mesh(tGeo, dMat); tail.position.set(0, 0.15, -0.3); tail.rotation.x = -1; drogoMesh.add(tail);
+
+    if (drogoLevel >= 4) { // Add 3D Wings!
+      let wingMat = new THREE.MeshStandardMaterial({ color: 0x047857 });
+      const wGeo = new THREE.BoxGeometry(0.4, 0.15, 0.02);
+      this.leftWing = new THREE.Mesh(wGeo, wingMat); this.leftWing.position.set(0.3, 0.45, -0.1); this.leftWing.rotation.y = 0.5;
+      this.rightWing = new THREE.Mesh(wGeo, wingMat); this.rightWing.position.set(-0.3, 0.45, -0.1); this.rightWing.rotation.y = -0.5;
+      drogoMesh.add(this.leftWing, this.rightWing);
+    }
+    drogoMesh.position.set(-1.2, 0, 0.5);
+  }
+  scene.add(drogoMesh);
 }
 
 // ══════════════════════════════════════════════
-// LAYER GRAPHICS GENERATOR
+// DYNAMIC 3D ITEM SOCKET APPARATUS SYSTEM
 // ══════════════════════════════════════════════
-function renderAvatarPreview() {
-  document.getElementById('shopXpDisplay').innerText = bankXP;
-  
-  // Get Drogo Level Component from Lair State
-  let dIndex = drogoLevel - 1;
-  if (dIndex >= DROGO_EMOJIS.length) dIndex = DROGO_EMOJIS.length - 1;
-  document.getElementById('viewDrogo').innerText = DROGO_EMOJIS[dIndex];
+function updateEquipped3DAssets() {
+  // 1. CLEAR PREVIOUS SELECTIONS
+  if(equippedHatMesh) characterGroup.remove(equippedHatMesh);
+  if(equippedWeaponMesh) characterGroup.remove(equippedWeaponMesh);
+  if(this.torsoMesh) this.torsoMesh.material.color.setHex(0x3b82f6); // Reset clothing loop
 
-  // Map Category Item Layer Visualizer References
-  const layers = {
-    hat: document.getElementById('viewHat'),
-    suit: document.getElementById('viewSuit'),
-    sport: document.getElementById('viewSport')
-  };
-
-  // Determine Active Structural Overlays
-  Object.keys(layers).forEach(type => {
-    let activeId = equippedItems[type];
-    let matchedItem = ITEM_SHOP.find(i => i.id === activeId);
+  // 2. INJECT 3D HATS ON OVERLAY LAYER Sockets
+  let activeHat = ITEM_SHOP.find(i => i.id === equippedItems.hat);
+  if (activeHat) {
+    equippedHatMesh = new THREE.Group();
+    let mat = new THREE.MeshStandardMaterial({ color: activeHat.color, metalness: 0.3, roughness: 0.3 });
     
-    if (matchedItem) {
-      layers[type].innerText = matchedItem.emoji;
-      layers[type].style.display = "block";
-    } else {
-      layers[type].innerText = "";
-      layers[type].style.display = "none";
+    if (activeHat.id === "hat_crown") {
+      const geo = new THREE.CylinderGeometry(0.28, 0.22, 0.15, 8, 1, true);
+      const mesh = new THREE.Mesh(geo, mat); mesh.position.y = 2.3;
+      equippedHatMesh.add(mesh);
+    } else if (activeHat.id === "hat_wizard") {
+      const cone = new THREE.ConeGeometry(0.3, 0.6, 16);
+      const brim = new THREE.CylinderGeometry(0.45, 0.45, 0.02, 16);
+      const m1 = new THREE.Mesh(cone, mat); m1.position.y = 2.5;
+      const m2 = new THREE.Mesh(brim, mat); m2.position.y = 2.22;
+      equippedHatMesh.add(m1, m2);
+    } else if (activeHat.id === "hat_ninja") {
+      const band = new THREE.CylinderGeometry(0.36, 0.36, 0.08, 16, 1, true);
+      const mesh = new THREE.Mesh(band, mat); mesh.position.y = 2.0;
+      equippedHatMesh.add(mesh);
     }
-  });
+    characterGroup.add(equippedHatMesh);
+  }
 
-  // Activate Floating Animation for high-tier floating items
-  let stage = document.getElementById('avatarStage');
-  if (FLOATING_VEHICLES.includes(equippedItems.sport)) {
-    stage.classList.add('has-float-vehicle');
-  } else {
-    stage.classList.remove('has-float-vehicle');
+  // 3. APPLY TEXTURE INJECTION OVER SUIT SHIELDS
+  let activeSuit = ITEM_SHOP.find(i => i.id === equippedItems.suit);
+  if(activeSuit && this.torsoMesh) {
+    this.torsoMesh.material.color.setHex(activeSuit.color);
+  }
+
+  // 4. ATTACH WEAPONS DIRECTLY INTO HAND ANATOMY GROUPS
+  let activeWeapon = ITEM_SHOP.find(i => i.id === equippedItems.sport);
+  if (activeWeapon) {
+    equippedWeaponMesh = new THREE.Group();
+    let mat = new THREE.MeshStandardMaterial({ color: activeWeapon.color, metalness: 0.5 });
+    
+    if (activeWeapon.id === "sport_sword") {
+      const blade = new THREE.CylinderGeometry(0.03, 0.02, 0.8, 8);
+      const mesh = new THREE.Mesh(blade, mat); mesh.position.set(0.5, 1.4, 0.3); mesh.rotation.x = 1;
+      equippedWeaponMesh.add(mesh);
+    } else if (activeWeapon.id === "sport_shield") {
+      const shield = new THREE.CylinderGeometry(0.25, 0.25, 0.04, 16);
+      shield.scale(1, 1, 0.5);
+      const mesh = new THREE.Mesh(shield, mat); mesh.position.set(0.5, 1.2, 0.2); mesh.rotation.y = 1.5;
+      equippedWeaponMesh.add(mesh);
+    } else if (activeWeapon.id === "sport_staff") {
+      const staff = new THREE.CylinderGeometry(0.02, 0.02, 1.1, 8);
+      const crystal = new THREE.SphereGeometry(0.08, 8, 8);
+      const m1 = new THREE.Mesh(staff, new THREE.MeshStandardMaterial({color: 0x78350f})); m1.position.set(0.5, 1.2, 0.2); m1.rotation.x = 0.5;
+      const m2 = new THREE.Mesh(crystal, mat); m2.position.set(0.5, 1.7, 0.4);
+      equippedWeaponMesh.add(m1, m2);
+    }
+    characterGroup.add(equippedWeaponMesh);
   }
 }
 
+// Real-time Frame Animation Loop Engine Render Call
+let clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  let time = clock.getElapsedTime();
+
+  // Subtle breathing animation idling loop for character
+  if(characterGroup && !isDragging) {
+    characterGroup.position.y = Math.sin(time * 2) * 0.03;
+    leftArm.rotation.x = Math.sin(time * 2) * 0.1;
+    rightArm.rotation.x = -Math.sin(time * 2) * 0.1;
+  }
+
+  // Drogo animation loop updates
+  if(drogoMesh) {
+    if (drogoLevel === 1) {
+      drogoMesh.rotation.z = Math.sin(time * 4) * 0.08; // Wiggling egg
+    } else {
+      drogoMesh.position.y = Math.abs(Math.sin(time * 2.5)) * 0.15; // Bouncing dragon
+      if(this.leftWing && this.rightWing) {
+        this.leftWing.rotation.z = Math.sin(time * 10) * 0.3; // Rapid wing flaps
+        this.rightWing.rotation.z = -Math.sin(time * 10) * 0.3;
+      }
+    }
+  }
+
+  renderer.render(scene, camera);
+}
+
 // ══════════════════════════════════════════════
-// STORE INTERFACE ENGINE
+// HTML RETAIL INTERFACE INJECTION CONROLLERS
 // ══════════════════════════════════════════════
 function switchTab(tabType, buttonEl) {
   currentTab = tabType;
@@ -285,82 +423,59 @@ function switchTab(tabType, buttonEl) {
 function renderShopGrid() {
   const container = document.getElementById('shopItemsContainer');
   container.innerHTML = '';
-
-  // Filter View Node List Registry Array via Selected Tab Type Element Category Identifier
   let filteredItems = ITEM_SHOP.filter(item => item.type === currentTab);
 
   filteredItems.forEach(item => {
     let card = document.createElement('div');
     card.className = 'item-card';
-    
     let isOwned = ownedItems.includes(item.id);
     let isEquipped = equippedItems[item.type] === item.id;
-    
     let actionButtonHTML = '';
 
     if (isEquipped) {
       actionButtonHTML = `<button class="btn-shop btn-active-equip">Equipped ✅</button>`;
       card.style.borderColor = 'var(--secondary)';
     } else if (isOwned) {
-      actionButtonHTML = `<button class="btn-shop btn-wear" onclick="toggleEquip('${item.id}')">Wear Item</button>`;
+      actionButtonHTML = `<button class="btn-shop btn-wear" onclick="toggleEquip('${item.id}')">Equip Item</button>`;
       card.style.borderColor = 'var(--primary)';
     } else {
       let canAfford = bankXP >= item.cost;
       actionButtonHTML = `
-        <button class="btn-shop btn-buy" ${canAfford ? '' : 'disabled style="opacity:0.5; background:#64748b; box-shadow:none; color:#cbd5e1;"'} onclick="buyItem('${item.id}', ${item.cost})">
+        <button class="btn-shop btn-buy" ${canAfford ? '' : 'disabled style="opacity:0.4; background:#374151; box-shadow:none; color:#94a3b8;"'} onclick="buyItem('${item.id}', ${item.cost})">
           Buy: ${item.cost} XP
         </button>
       `;
-      card.style.borderColor = '#334155';
+      card.style.borderColor = '#27272a';
     }
 
-    card.innerHTML = `
-      <div class="item-emoji">${item.emoji}</div>
-      <div class="item-name">${item.name}</div>
-      ${actionButtonHTML}
-    `;
-    
+    card.innerHTML = `<div class="item-emoji">${item.emoji}</div><div class="item-name">${item.name}</div>${actionButtonHTML}`;
     container.appendChild(card);
   });
 }
 
-// ══════════════════════════════════════════════
-// ACTION CONTROLLERS
-// ══════════════════════════════════════════════
 function buyItem(id, cost) {
   if (bankXP < cost) return;
-
   bankXP -= cost;
   ownedItems.push(id);
-
-  // Save State variables back inside Local Cache Subsections
   localStorage.setItem('vedhTotalXP', bankXP);
   localStorage.setItem('vedhOwnedItems', JSON.stringify(ownedItems));
-
-  if (typeof playSound === 'function') playSound('correct');
-
-  initShop();
+  document.getElementById('shopXpDisplay').innerText = bankXP;
+  renderShopGrid();
 }
 
 function toggleEquip(id) {
   let item = ITEM_SHOP.find(i => i.id === id);
   if (!item) return;
-
-  // Toggle setup: if already wearing click clears layer slot, otherwise sets slot to item
-  if (equippedItems[item.type] === id) {
-    equippedItems[item.type] = "";
-  } else {
-    equippedItems[item.type] = id;
-  }
-
+  equippedItems[item.type] = (equippedItems[item.type] === id) ? "" : id;
   localStorage.setItem('vedhEquippedItems', JSON.stringify(equippedItems));
-  if (typeof playSound === 'function') playSound('click');
-
-  initShop();
+  renderShopGrid();
+  updateEquipped3DAssets();
 }
 
-// Run the initialization routine inside active load context bounds window element
-initShop();
+// Initial Launch sequence
+document.getElementById('shopXpDisplay').innerText = bankXP;
+renderShopGrid();
+window.onload = () => { init3DEngine(); };
 </script>
 </body>
 </html>
