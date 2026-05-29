@@ -28,7 +28,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Starfield Animation */
 body::before {
   content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
   background-image: radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px);
@@ -81,36 +80,54 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
 @keyframes fireFlicker { 0% { transform: scale(1); filter: brightness(1); } 100% { transform: scale(1.1); filter: brightness(1.2); } }
 
 /* ══════════════════════════════════════════
+   ROYAL MEDAL GALLERY (NEW)
+══════════════════════════════════════════ */
+.medal-case {
+  background: rgba(15, 23, 42, 0.7);
+  border: 2px solid rgba(251, 191, 36, 0.3);
+  border-radius: 24px;
+  padding: 25px;
+  margin-bottom: 25px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 30px rgba(251, 191, 36, 0.05);
+  text-align: center;
+}
+.medal-case-title {
+  font-family: 'Fredoka One', cursive;
+  color: var(--gold);
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.8);
+}
+.medals-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+
+.medal-card {
+  background: rgba(0, 0, 0, 0.4); border: 2px solid #334155; border-radius: 16px;
+  padding: 15px; width: 150px; display: flex; flex-direction: column; align-items: center;
+  transition: all 0.3s;
+}
+.medal-icon { font-size: 3.5rem; margin-bottom: 10px; filter: grayscale(100%) opacity(0.3); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.medal-name { font-family: 'Fredoka One', cursive; color: white; font-size: 1rem; line-height: 1.2; margin-bottom: 5px; }
+.medal-desc { font-size: 0.75rem; color: #94a3b8; font-weight: 800; margin-bottom: 10px; }
+
+.medal-progress-wrap { width: 100%; background: #1e293b; border-radius: 10px; height: 10px; overflow: hidden; border: 1px solid #334155; }
+.medal-progress-fill { height: 100%; background: var(--blue); width: 0%; transition: width 1s ease; }
+.medal-req { font-size: 0.8rem; color: #cbd5e1; font-weight: 900; margin-top: 5px; }
+
+/* Unlocked Medal Styles */
+.medal-card.unlocked { border-color: var(--gold); background: rgba(251, 191, 36, 0.1); box-shadow: 0 0 20px rgba(251, 191, 36, 0.2); }
+.medal-card.unlocked .medal-icon { filter: grayscale(0%) drop-shadow(0 10px 10px rgba(251, 191, 36, 0.5)); animation: floatMedal 3s infinite ease-in-out; }
+@keyframes floatMedal { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.1); } }
+
+/* ══════════════════════════════════════════
    REWARDS ROW (DROGO & AVATAR SHOP)
 ══════════════════════════════════════════ */
-.rewards-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  margin-bottom: 40px;
-}
-@media (min-width: 768px) {
-  .rewards-row { grid-template-columns: 1fr 1fr; }
-}
+.rewards-row { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 40px; }
+@media (min-width: 768px) { .rewards-row { grid-template-columns: 1fr 1fr; } }
 
-.reward-banner {
-  background: rgba(30, 41, 59, 0.8);
-  border-radius: 24px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-decoration: none;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Drogo specific styling */
+.reward-banner { background: rgba(30, 41, 59, 0.8); border-radius: 24px; padding: 20px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .banner-drogo { border: 3px solid #f97316; }
 .banner-drogo:hover { border-color: #fbbf24; box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(249, 115, 22, 0.2); }
-
-/* Shop specific styling */
 .banner-shop { border: 3px solid #a855f7; }
 .banner-shop:hover { border-color: #c084fc; box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(168, 85, 247, 0.2); }
 
@@ -121,16 +138,11 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
 .banner-shop .reward-info h2 { color: #a855f7; }
 .reward-info p { color: #cbd5e1; font-weight: 800; font-size: 1rem; }
 
-.reward-btn {
-  color: white; font-family: 'Fredoka One', cursive;
-  padding: 10px 15px; border-radius: 12px; font-size: 1.1rem; transition: all 0.1s;
-}
+.reward-btn { color: white; font-family: 'Fredoka One', cursive; padding: 10px 15px; border-radius: 12px; font-size: 1.1rem; transition: all 0.1s; }
 .banner-drogo .reward-btn { background: #f97316; border: 3px solid #c2410c; box-shadow: 0 4px 0 #c2410c; }
 .banner-shop .reward-btn { background: #a855f7; border: 3px solid #7c3aed; box-shadow: 0 4px 0 #7c3aed; }
-
 .reward-banner:hover .reward-btn { transform: translateY(2px); box-shadow: 0 2px 0 transparent; }
 
-/* Drogo Animations */
 @keyframes wiggle { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
 .anim-wiggle { animation: wiggle 1.5s infinite ease-in-out; }
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
@@ -145,12 +157,7 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
 ══════════════════════════════════════════ */
 .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
 
-.game-card {
-  position: relative; display: flex; flex-direction: column;
-  background: rgba(30, 41, 59, 0.6); border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px; padding: 25px; text-decoration: none; color: white;
-  overflow: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+.game-card { position: relative; display: flex; flex-direction: column; background: rgba(30, 41, 59, 0.6); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 25px; text-decoration: none; color: white; overflow: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .game-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--card-color), transparent); opacity: 0.1; transition: opacity 0.3s; z-index: 0; }
 .game-card:hover { transform: translateY(-10px); border-color: var(--card-color); box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 20px var(--card-color); }
 .game-card:hover::before { opacity: 0.3; }
@@ -162,16 +169,12 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
 .card-title { font-family: 'Fredoka One', cursive; font-size: 1.8rem; margin-bottom: 8px; color: var(--card-color); }
 .card-desc { font-size: 1rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; flex-grow: 1; }
 
-.cta-btn {
-  background: var(--card-color); color: #fff; font-family: 'Fredoka One', cursive;
-  padding: 12px; border-radius: 12px; text-align: center; font-size: 1.1rem;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.2); transition: all 0.1s; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
-}
+.cta-btn { background: var(--card-color); color: #fff; font-family: 'Fredoka One', cursive; padding: 12px; border-radius: 12px; text-align: center; font-size: 1.1rem; box-shadow: 0 4px 0 rgba(0,0,0,0.2); transition: all 0.1s; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
 .game-card:hover .cta-btn { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
 
 @media(max-width: 600px) {
-  .profile-card { flex-direction: column; text-align: center; }
-  .profile-left { flex-direction: column; }
+  .profile-card, .rewards-row { flex-direction: column; text-align: center; }
+  .profile-left, .reward-left { flex-direction: column; }
   .xp-container { width: 100%; }
 }
 </style>
@@ -207,6 +210,14 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.5rem; color: var(--gold);
     <div class="streak-box">
       <span class="streak-icon">🔥</span>
       <span class="streak-text" id="streakText">0 Days</span>
+    </div>
+  </div>
+
+  <!-- ROYAL MEDAL GALLERY -->
+  <div class="medal-case">
+    <h2 class="medal-case-title">Royal Medal Gallery 🏅</h2>
+    <div class="medals-grid" id="medalsContainer">
+      <!-- Medals injected by JS -->
     </div>
   </div>
 
@@ -400,7 +411,12 @@ const DROGO_STAGES = [
   { level: 2, name: "Baby Drogo", emoji: "🦎", anim: "anim-bounce" },
   { level: 3, name: "Growing Drogo", emoji: "🦕", anim: "anim-bounce" },
   { level: 4, name: "Winged Drogo", emoji: "🐉", anim: "anim-float" },
-  { level: 5, name: "Epic Drogo", emoji: "🐲", anim: "anim-fire" }
+  { level: 5, name: "Epic Drogo", emoji: "🐲", anim: "anim-fire" },
+  { level: 6, name: "Armored Drogo", emoji: "🐲🛡️", anim: "anim-float" },
+  { level: 7, name: "King Drogo", emoji: "🐲👑", anim: "anim-fire" },
+  { level: 8, name: "Galactic Drogo", emoji: "🐲🌌", anim: "anim-float" },
+  { level: 9, name: "Mythic Drogo", emoji: "🐲🔮", anim: "anim-fire" },
+  { level: 10, name: "Infinity Drogo", emoji: "🐲♾️", anim: "anim-float" }
 ];
 
 function updateProfile() {
@@ -449,7 +465,6 @@ function updateProfile() {
   // --- STREAK SYSTEM ---
   let lastLogin = localStorage.getItem('vedhLastDate');
   let currentStreak = parseInt(localStorage.getItem('vedhStreak')) || 0;
-  
   let today = new Date().toISOString().split('T')[0];
   
   let yesterdayObj = new Date();
@@ -465,8 +480,41 @@ function updateProfile() {
     localStorage.setItem('vedhStreak', currentStreak);
     localStorage.setItem('vedhLastDate', today);
   }
-  
   document.getElementById('streakText').innerText = `${currentStreak} Days`;
+
+  // --- ROYAL MEDAL GALLERY LOGIC ---
+  let mathQs = parseInt(localStorage.getItem('vedhMathsTotalQs')) || 0;
+  let wordQs = parseInt(localStorage.getItem('vedhWordTotalQs')) || 0;
+
+  const MEDALS = [
+    { id: "xp_1000", name: "Master Scholar", icon: "👑", current: totalXP, req: 1000, desc: "Earn 1,000 Total XP" },
+    { id: "math_100", name: "The Mathematician", icon: "🧮", current: mathQs, req: 100, desc: "Solve 100 Math Qs" },
+    { id: "word_50", name: "The Poet", icon: "📜", current: wordQs, req: 50, desc: "Solve 50 Spelling Qs" }
+  ];
+
+  const medalContainer = document.getElementById('medalsContainer');
+  medalContainer.innerHTML = '';
+
+  MEDALS.forEach(m => {
+    let isUnlocked = m.current >= m.req;
+    let percent = isUnlocked ? 100 : (m.current / m.req) * 100;
+    
+    let card = document.createElement('div');
+    card.className = `medal-card ${isUnlocked ? 'unlocked' : ''}`;
+    
+    card.innerHTML = `
+      <div class="medal-icon">${m.icon}</div>
+      <div class="medal-name">${m.name}</div>
+      <div class="medal-desc">${m.desc}</div>
+      ${!isUnlocked ? `
+        <div class="medal-progress-wrap"><div class="medal-progress-fill" style="width: ${percent}%"></div></div>
+        <div class="medal-req">${m.current} / ${m.req}</div>
+      ` : `
+        <div class="medal-req" style="color: #fbbf24; font-size:1rem;">Unlocked! ✨</div>
+      `}
+    `;
+    medalContainer.appendChild(card);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', updateProfile);
