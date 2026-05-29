@@ -47,10 +47,10 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primar
 
 .worksheet-card { background: var(--paper); border: 4px solid var(--dark); border-radius: 24px; padding: 30px; box-shadow: 0 10px 0 rgba(51, 65, 85, 0.1); text-align: center; position: relative; }
 
-/* MINI BADGE BOARD */
-.mini-badge-board { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; background: #f8fafc; border: 3px dashed #cbd5e1; border-radius: 16px; padding: 15px; }
-.badge-board-title { width: 100%; font-family: 'Fredoka One'; font-size: 1.1rem; color: #94a3b8; margin-bottom: 5px; }
-.mini-badge { font-size: 2.2rem; transition: all 0.3s ease; }
+/* MINI BADGE BOARD (PRESTIGE EDITION) */
+.mini-badge-board { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; background: #f8fafc; border: 4px solid #cbd5e1; border-radius: 16px; padding: 15px; transition: border-color 0.3s; }
+.badge-board-title { width: 100%; font-family: 'Fredoka One'; font-size: 1.2rem; margin-bottom: 5px; transition: color 0.3s; }
+.mini-badge { font-size: 2.5rem; transition: all 0.3s ease; }
 .mini-badge.unlocked { filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15)); animation: popIn 0.3s ease; }
 .mini-badge.locked { filter: grayscale(100%) contrast(0.2); opacity: 0.3; }
 
@@ -249,38 +249,71 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 3.2rem; color: var(--primar
 <script src="sounds.js"></script>
 
 <script>
-// --- STICKER / BADGE LOGIC (WORD WIZARD THEME!) ---
-const WORD_STICKERS = ['📚', '✍️', '🦉', '🎓', '🏅', '🥇', '🌟', '🎨', '🎭', '🎪', '🏰', '👑'];
+// ══════════════════════════════════════════════
+// UNIVERSAL INFINITE PRESTIGE BADGE ENGINE 🏆
+// ══════════════════════════════════════════════
+const GAME_STORAGE_KEY = 'vedhWordStickers'; 
 
-function getUnlockedStickers() {
-  return parseInt(localStorage.getItem('vedhWordStickers')) || 0;
+const PRESTIGE_TIERS = [
+  { name: "Starter Badges", color: "#64748b", items: ['📚', '✍️', '🦉', '🎓', '🏅', '🥇', '🌟', '🎨', '🎭', '🎪', '🏰', '👑'] },
+  { name: "Fantasy Badges", color: "#a855f7", items: ['🐉', '🦄', '🧙‍♂️', '🧚‍♀️', '🧝‍♂️', '🧜‍♀️', '🧞‍♂️', '🦸‍♂️', '🦹‍♂️', '🏰', '🗺️', '👑'] },
+  { name: "Food Badges",    color: "#f59e0b", items: ['🍏', '🍌', '🍉', '🍇', '🍓', '🍔', '🍟', '🌭', '🍿', '🍩', '🍪', '🍫'] },
+  { name: "Animal Badges",  color: "#10b981", items: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮'] },
+  { name: "Ocean Badges",   color: "#0ea5e9", items: ['🐟', '🐠', '🐡', '🐙', '🐚', '🦀', '🦞', '🐬', '🐳', '🦈', '🦭', '🌊'] },
+  { name: "Bug Badges",     color: "#ec4899", items: ['🦋', '🐛', '🐜', '🐝', '🐞', '🦗', '🕷️', '🦂', '🦟', '🪰', '🪱', '🐌'] }
+];
+
+function getBadgeData() {
+  let totalUnlocked = parseInt(localStorage.getItem(GAME_STORAGE_KEY)) || 0;
+  
+  let loopCount = Math.floor((totalUnlocked > 0 ? totalUnlocked - 1 : 0) / 72);
+  let currentTotal = totalUnlocked > 0 ? ((totalUnlocked - 1) % 72) + 1 : 0;
+  
+  let tierIndex = Math.floor((currentTotal > 0 ? currentTotal - 1 : 0) / 12);
+  let countInTier = currentTotal > 0 ? ((currentTotal - 1) % 12) + 1 : 0;
+
+  return { total: totalUnlocked, tier: tierIndex, count: countInTier, loops: loopCount };
 }
 
 function unlockSticker() {
-  let currentUnlocked = getUnlockedStickers();
-  if (currentUnlocked < WORD_STICKERS.length) {
-    localStorage.setItem('vedhWordStickers', currentUnlocked + 1);
-    if(typeof playSound === 'function') playSound('win');
-    return WORD_STICKERS[currentUnlocked];
-  }
-  return null; 
+  let bData = getBadgeData();
+  let realTotal = parseInt(localStorage.getItem(GAME_STORAGE_KEY)) || 0;
+  
+  localStorage.setItem(vedhWordStickers, realTotal + 1);
+  if(typeof playSound === 'function') playSound('win');
+  
+  let newBData = getBadgeData();
+  return PRESTIGE_TIERS[newBData.tier].items[newBData.count - 1]; 
 }
 
 function refreshTopBadges() {
   const container = document.getElementById('miniBadgeBoard');
-  container.innerHTML = '<div class="badge-board-title">Collect all 12 Badges! 🏆</div>';
+  if (!container) return;
   
-  let unlockedCount = getUnlockedStickers();
+  const bData = getBadgeData();
+  const currentTier = PRESTIGE_TIERS[bData.tier];
   
-  WORD_STICKERS.forEach((sticker, i) => {
+  let starSuffix = bData.loops > 0 ? " " + "⭐".repeat(bData.loops) : "";
+  
+  let titleEl = container.querySelector('.badge-board-title');
+  if (!titleEl) {
+    titleEl = document.createElement('div');
+    titleEl.className = 'badge-board-title';
+    container.appendChild(titleEl);
+  }
+  
+  titleEl.innerText = `Collect all 12 ${currentTier.name}!${starSuffix}`;
+  titleEl.style.color = currentTier.color;
+  container.style.borderColor = currentTier.color;
+  
+  Array.from(container.children).forEach(child => {
+    if (!child.classList.contains('badge-board-title')) child.remove();
+  });
+  
+  currentTier.items.forEach((sticker, i) => {
     let badge = document.createElement('div');
     badge.innerText = sticker;
-    
-    if (i < unlockedCount) {
-      badge.className = 'mini-badge unlocked';
-    } else {
-      badge.className = 'mini-badge locked';
-    }
+    badge.className = i < bData.count ? 'mini-badge unlocked' : 'mini-badge locked';
     container.appendChild(badge);
   });
 }
