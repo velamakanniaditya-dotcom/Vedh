@@ -6,6 +6,9 @@
 <title>Avatar Shop 🛒 - Super Worksheets</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 <style>
+/* ══════════════════════════════════════════
+   AVATAR SHOP THEME
+══════════════════════════════════════════ */
 :root {
   --primary: #a855f7; --secondary: #38bdf8; --gold: #fbbf24;
   --dark: #0f172a; --paper: #1e293b; --grid: #334155;
@@ -27,6 +30,7 @@ body {
   color: var(--primary); padding: 8px 16px; border-radius: 50px; text-decoration: none;
   font-family: 'Fredoka One', cursive; font-size: 1.1rem; box-shadow: 0 4px 0 var(--primary); z-index: 100;
 }
+.home-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--primary); }
 
 header { text-align: center; margin-top: 50px; margin-bottom: 20px; }
 h1 { font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--secondary); text-shadow: 0 4px 10px rgba(56,189,248,0.3); }
@@ -88,8 +92,8 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--second
 .css-leg-l { left: 52px; }
 .css-leg-r { right: 52px; }
 
-/* Item Sockets */
-.slot-hat { position: absolute; top: -35px; font-size: 4.5rem; z-index: 5; text-shadow: 0 5px 10px rgba(0,0,0,0.4); }
+/* Item Sockets - ADJUSTED FOR PURE HATS */
+.slot-hat { position: absolute; top: -45px; font-size: 4rem; z-index: 5; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); }
 .slot-sport { position: absolute; bottom: 0px; right: -30px; font-size: 4rem; z-index: 6; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); }
 .slot-drogo { position: absolute; bottom: 10px; left: -50px; font-size: 4rem; z-index: 4; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); }
 
@@ -141,15 +145,12 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--second
 
 <div class="shop-layout">
   
-  <!-- CSS CHARACTER STAGE -->
   <div class="avatar-preview-box">
     <div class="preview-title">Vedh & Drogo 🌟</div>
     
     <div class="css-avatar-stage" id="avatarStage">
-      <!-- Drogo Pet -->
       <div class="slot-drogo" id="viewDrogo">🥚</div>
       
-      <!-- CSS Body -->
       <div class="css-head">
         <div class="slot-hat" id="viewHat"></div>
         <div class="css-face">👀<br>◡</div>
@@ -162,7 +163,6 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--second
       <div class="css-leg-l"></div>
       <div class="css-leg-r"></div>
 
-      <!-- Item in Hand -->
       <div class="slot-sport" id="viewSport"></div>
     </div>
     
@@ -180,21 +180,23 @@ h1 { font-family: 'Fredoka One', cursive; font-size: 2.8rem; color: var(--second
 
 </div>
 
+<script src="sounds.js"></script>
+
 <script>
-// --- SHOP REGISTRY WITH COLORS FOR CSS BODY ---
+// --- PURE ACCESSORY SHOP REGISTRY WITH COLORS FOR CSS BODY ---
 const ITEM_SHOP = [
-  // Hats
+  // Hats (Strictly pure headwear!)
   { id: "hat_cap", type: "hat", name: "Cool Cap", emoji: "🧢", cost: 20 },
   { id: "hat_crown", type: "hat", name: "Royal Crown", emoji: "👑", cost: 40 },
   { id: "hat_mask", type: "hat", name: "Hero Mask", emoji: "🎭", cost: 60 },
-  { id: "hat_ninja", type: "hat", name: "Ninja Bandana", emoji: "🥷", cost: 80 },
-  { id: "hat_pirate", type: "hat", name: "Pirate Hat", emoji: "🏴‍☠️", cost: 100 },
-  { id: "hat_astronaut", type: "hat", name: "Space Helmet", emoji: "👨‍🚀", cost: 150 },
-  { id: "hat_chef", type: "hat", name: "Master Chef Hat", emoji: "👨‍🍳", cost: 50 },
-  { id: "hat_wizard", type: "hat", name: "Wizard Hat", emoji: "🧙", cost: 110 },
+  { id: "hat_headphones", type: "hat", name: "Pro Headphones", emoji: "🎧", cost: 80 },
+  { id: "hat_tophat", type: "hat", name: "Magic Top Hat", emoji: "🎩", cost: 100 },
+  { id: "hat_helmet", type: "hat", name: "Safety Helmet", emoji: "⛑️", cost: 150 },
+  { id: "hat_grad", type: "hat", name: "Scholar Cap", emoji: "🎓", cost: 50 },
+  { id: "hat_goggles", type: "hat", name: "Lab Goggles", emoji: "🥽", cost: 110 },
   { id: "hat_glowing", type: "hat", name: "Nebula Crown", emoji: "💫", cost: 800 },
 
-  // Clothes (Added hex colors to dye the CSS shirt!)
+  // Clothes (Dyes the CSS shirt!)
   { id: "suit_gi", type: "suit", name: "Karate Gi", emoji: "🥋", cost: 45, color: "#f8fafc" },
   { id: "suit_wizard", type: "suit", name: "Wizard Robes", emoji: "🔮", cost: 50, color: "#9333ea" },
   { id: "suit_football", type: "suit", name: "Soccer Jersey", emoji: "🎽", cost: 35, color: "#ef4444" },
@@ -219,10 +221,11 @@ const ITEM_SHOP = [
 ];
 
 const FLOATING_VEHICLES = ["sport_hover", "sport_carpet", "sport_wings", "sport_ufo", "sport_teleport", "sport_galaxy"];
-const DROGO_EMOJIS = ["🥚", "🦎", "🦕", "🐉", "🐲", "🐲🛡️", "🐲👑", "🐲🌌"];
+const DROGO_EMOJIS = ["🥚", "🦎", "🦕", "🐉", "🐲", "🐲🛡️", "🐲👑", "🐲🌌", "🐲🔮", "🐲♾️"];
 
 let bankXP = parseInt(localStorage.getItem('vedhTotalXP')) || 0;
 let drogoLevel = parseInt(localStorage.getItem('vedhDrogoLevel')) || 1;
+
 let ownedItems = JSON.parse(localStorage.getItem('vedhOwnedItems')) || [];
 let equippedItems = JSON.parse(localStorage.getItem('vedhEquippedItems')) || { hat: "", suit: "", sport: "" };
 
@@ -236,7 +239,7 @@ function initShop() {
 function renderAvatarPreview() {
   document.getElementById('shopXpDisplay').innerText = bankXP;
   
-  // Drogo Logic
+  // Drogo Logic (Up to Level 10!)
   let dIndex = drogoLevel - 1;
   if (dIndex >= DROGO_EMOJIS.length) dIndex = DROGO_EMOJIS.length - 1;
   document.getElementById('viewDrogo').innerText = DROGO_EMOJIS[dIndex];
@@ -319,6 +322,7 @@ function buyItem(id, cost) {
   ownedItems.push(id);
   localStorage.setItem('vedhTotalXP', bankXP);
   localStorage.setItem('vedhOwnedItems', JSON.stringify(ownedItems));
+  if(typeof playSound === 'function') playSound('win');
   initShop();
 }
 
@@ -334,6 +338,7 @@ function toggleEquip(id) {
   }
 
   localStorage.setItem('vedhEquippedItems', JSON.stringify(equippedItems));
+  if(typeof playSound === 'function') playSound('click');
   initShop();
 }
 
